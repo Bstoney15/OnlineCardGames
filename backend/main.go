@@ -11,6 +11,8 @@ func main() {
 	// NewServer sets up the database and router
 	s := server.NewServer()
 
+	
+
 	log.Println("Starting server on :8080")
 	
 	// ListenAndServe is a blocking call that starts the server.
