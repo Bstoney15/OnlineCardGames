@@ -1,8 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Casino Color Palette */
+  --primary-dark-green: #004D3F;    /* Deep Emerald / Forest Green */
+  --accent-gold: #C2A16E;            /* Aged Gold / Brass */
+  --accent-burgundy: #A62B2B;        /* Rich Burgundy / Deep Crimson */
+  --cream: #F2E9D7;                  /* Cream / Off-White */
+  --charcoal: #3B3A3A;               /* Charcoal Grey / Deep Slate */
+
+  /* Default theme (light) */
+  --background: var(--primary-dark-green);
+  --foreground: var(--accent-gold);
 }
 
 @theme inline {
@@ -10,17 +18,47 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: var(--primary-dark-green);
+    --foreground: var(--cream);
   }
 }
 
 body {
-  background: var(--background);
+  background-attachment: fixed;
+  background: linear-gradient(135deg, var(--primary-dark-green) 0%, #000000 30%, var(--primary-dark-green) 50%, #000 70%, var(--primary-dark-green) 100%);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(194, 161, 110, 0.15), transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+body > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Custom button classes */
+.btn-gold {
+  @apply w-32 px-6 py-3 font-semibold rounded-xl transition-colors duration-200 shadow-md text-center;
+  @apply bg-[var(--accent-gold)] text-[var(--primary-dark-green)];
+  @apply hover:bg-[var(--charcoal)] hover:text-[var(--accent-gold)];
+}
+
+.btn-burgundy {
+  @apply w-32 px-6 py-3 font-semibold rounded-xl transition-colors duration-200 shadow-md text-center;
+  @apply bg-[var(--accent-burgundy)] text-[var(--cream)];
+  @apply hover:bg-[var(--accent-gold)] hover:text-[var(--primary-dark-green)];
 }
