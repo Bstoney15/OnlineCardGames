@@ -1,36 +1,98 @@
 /* src/index.css */
 @import "tailwindcss";
 
+/* Vice City Color Palette - Updated for Night Sky Gradient */
 :root {
-  /* Casino Color Palette */
-  --primary-dark-green: #004D3F;    /* Deep Emerald / Forest Green */
-  --accent-gold: #C2A16E;            /* Aged Gold / Brass */
-  --accent-gold-bright: #C5B358;      /* Vegas Gold */
-  --accent-burgundy: #A62B2B;        /* Rich Burgundy / Deep Crimson */
-  --cream: #F2E9D7;                  /* Cream / Off-White */
-  --charcoal: #3B3A3A;               /* Charcoal Grey / Deep Slate */
+  --vice-blue-light: #4361EE; /* A slightly richer, deeper blue for the top */
+  --vice-blue-mid: #2A36C2;  /* An intermediate, dark blue/purple */
+  --vice-blue-dark: #0B022D; /* Very dark, rich purple-blue for the base */
+  --vice-purple-deep: #7209B7; /* Deep rich purple for the mid-to-upper transition */
 
-  /* Default theme (light) */
-  --background: var(--primary-dark-green);
-  --foreground: var(--accent-gold);
+  --vice-night: #0B022D; /* Very dark, rich purple-blue */
+
+  /* These are the "glow" colors radiating from the center */
+  --vice-glow-purple: #7209B7; /* Deep rich purple */
+  --vice-glow-blue: #4361EE;   /* Lighter blue for the center of the glow */
+
+  --vice-pink-rich: #F72585;
+  --vice-pink: #FF00FF; /* Hot Pink */
+  --vice-cyan: #00FFFF; /* Cyan */
+  --vice-yellow-gold: #FFD700; /* Sunset Gold */
+  --white: #FFFFFF; /* White */
+  --dark-grey: #333333; /* Dark Grey */
 }
 
+
 body {
-  background: linear-gradient(135deg, var(--primary-dark-green) 0%, #000000 30%, var(--primary-dark-green) 50%, #000 70%, var(--primary-dark-green) 100%);
-  color: var(--foreground);
+
+  /* Updated Background Gradient */
+  background: radial-gradient(
+    ellipse at 100% 100%,     /* Position the glow at the bottom-center */
+    var(--vice-glow-blue) 0%,  /* The bright blue center of the glow */
+    var(--vice-glow-purple) 15%, /* Fading to deep purple */
+    var(--vice-night) 85%      /* Fading to the dark 'night' color at the edges */
+  );
+
+  color: var(--white);
   font-family: Arial, Helvetica, sans-serif;
   position: relative;
 }
 
-/* Custom button classes */
-.btn-gold {
-  @apply w-64 px-6 py-3 font-semibold rounded-xl transition-colors duration-200 shadow-md text-center;
-  @apply bg-[var(--accent-gold)] text-[var(--primary-dark-green)];
-  @apply hover:bg-[var(--accent-gold-bright)] hover:text-[var(--charcoal)];
+
+body::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;  /* The invisible 1px dot we use as an anchor */
+  height: 2px;
+  background: transparent;
+
+  /* Each box-shadow is one star, formatted as: [x-offset] [y-offset] [color]
+    Using 'vw' (viewport width) and 'vh' (viewport height) 
+    makes them spread out across the whole screen.
+  */
+  box-shadow: 
+    60vw 10vh var(--white),
+    10vw 20vh var(--white),
+    80vw 30vh var(--white),
+    30vw 40vh var(--white),
+    90vw 50vh var(--white),
+    5vw 60vh var(--white),
+    40vw 70vh var(--white),
+    70vw 80vh var(--white),
+    20vw 90vh var(--white),
+    50vw 15vh var(--white),
+    25vw 25vh var(--white),
+    75vw 55vh var(--white),
+    15vw 85vh var(--white);
+  /* --- Add as many stars as you want! --- */
 }
 
-.btn-burgundy {
-  @apply w-32 px-6 py-3 font-semibold rounded-xl transition-colors duration-200 shadow-md text-center;
-  @apply bg-[var(--accent-burgundy)] text-[var(--cream)];
-  @apply hover:bg-[var(--accent-gold)] hover:text-[var(--primary-dark-green)];
+/* Custom button classes */
+.btn-white-glow {
+  @apply w-64 px-6 py-3 font-semibold rounded-xl text-center;
+  @apply transition-all duration-200;
+  @apply bg-transparent border-2 border-[var(--white)] text-[var(--white)];
+  @apply shadow-[0_0_10px_var(--white)] [text-shadow:0_0_5px_var(--white)];
+  @apply hover:bg-[var(--white)] hover:text-[var(--vice-night)];
+  @apply hover:shadow-[0_0_20px_var(--white)] hover:[text-shadow:none];
+}
+
+.btn-cyan-glow {
+  @apply w-64 px-6 py-3 font-semibold rounded-xl text-center;
+  @apply transition-all duration-200;
+  @apply bg-transparent border-2 border-[var(--vice-cyan)] text-[var(--vice-cyan)];
+  @apply shadow-[0_0_10px_var(--vice-cyan)] [text-shadow:0_0_5px_var(--vice-cyan)];
+  @apply hover:bg-[var(--vice-cyan)] hover:text-[var(--vice-night)];
+  @apply hover:shadow-[0_0_20px_var(--vice-cyan)] hover:[text-shadow:none];
+}
+
+.btn-pink-glow {
+  @apply w-64 px-6 py-3 font-semibold rounded-xl text-center;
+  @apply transition-all duration-200;
+  @apply bg-transparent border-2 border-[var(--vice-pink)] text-[var(--vice-pink)];
+  @apply shadow-[0_0_10px_var(--vice-pink)] [text-shadow:0_0_5px_var(--vice-pink)];
+  @apply hover:bg-[var(--vice-pink)] hover:text-[var(--vice-night)];
+  @apply hover:shadow-[0_0_20px_var(--vice-pink)] hover:[text-shadow:none];
 }
