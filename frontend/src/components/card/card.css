@@ -1,0 +1,200 @@
+[class^="card"] {
+        --cardScale: 0.4;
+        --spriteColumns: 15;
+        --spriteRows: 4;
+        --spriteImageWidth: 4000px;
+        --spriteImageHeight: 1463px;
+        --cardWidth: calc(var(--spriteImageWidth) / var(--spriteColumns));
+        --cardHeight: calc(var(--spriteImageHeight) / var(--spriteRows));
+
+        background-image: url(src/assets/cards.jpg);
+        width: calc(var(--cardScale) * var(--cardWidth));
+        height: calc(var(--cardScale) * var(--cardHeight));
+        background-size: calc(var(--spriteColumns) * 100%)
+          calc(var(--spriteRows) * 100%);
+        border-radius: 7px;
+        box-shadow: 2px 1px 1px rgb(0 0 0 / 50%);
+        margin: 3px;
+        border: 1px solid #555;
+      }
+      .card--0-0 {
+        background-position: 100% 0%;
+        transform: rotate(180deg);
+      }
+      .card--S-Joker {
+        background-position: 200% 0%;
+      }
+      .card--S-A {
+        background-position: 300% 0%;
+      }
+      .card--S-K {
+        background-position: 400% 0%;
+      }
+      .card--S-Q {
+        background-position: 500% 0%;
+      }
+      .card--S-J {
+        background-position: 600% 0%;
+      }
+      .card--S-10 {
+        background-position: 700% 0%;
+      }
+      .card--S-9 {
+        background-position: 800% 0%;
+      }
+      .card--S-8 {
+        background-position: 900% 0%;
+      }
+      .card--S-7 {
+        background-position: 1000% 0%;
+      }
+      .card--S-6 {
+        background-position: 1100% 0%;
+      }
+      .card--S-5 {
+        background-position: 1200% 0%;
+      }
+      .card--S-4 {
+        background-position: 1300% 0%;
+      }
+      .card--S-3 {
+        background-position: 1400% 0%;
+      }
+      .card--S-2 {
+        background-position: 0% 0%;
+      }
+      .card--D-Joker {
+        background-position: 200% 100%;
+      }
+      .card--D-A {
+        background-position: 300% 100%;
+      }
+      .card--D-K {
+        background-position: 400% 100%;
+      }
+      .card--D-Q {
+        background-position: 500% 100%;
+      }
+      .card--D-J {
+        background-position: 600% 100%;
+      }
+      .card--D-10 {
+        background-position: 700% 100%;
+      }
+      .card--D-9 {
+        background-position: 800% 100%;
+      }
+      .card--D-8 {
+        background-position: 900% 100%;
+      }
+      .card--D-7 {
+        background-position: 1000% 100%;
+      }
+      .card--D-6 {
+        background-position: 1100% 100%;
+      }
+      .card--D-5 {
+        background-position: 1200% 100%;
+      }
+      .card--D-4 {
+        background-position: 1300% 100%;
+      }
+      .card--D-3 {
+        background-position: 1400% 100%;
+      }
+      .card--D-2 {
+        background-position: 0% 100%;
+      }
+      .card--C-Joker {
+        background-position: 200% 200%;
+      }
+      .card--C-A {
+        background-position: 300% 200%;
+      }
+      .card--C-K {
+        background-position: 400% 200%;
+      }
+      .card--C-Q {
+        background-position: 500% 200%;
+      }
+      .card--C-J {
+        background-position: 600% 200%;
+      }
+      .card--C-10 {
+        background-position: 700% 200%;
+      }
+      .card--C-9 {
+        background-position: 800% 200%;
+      }
+      .card--C-8 {
+        background-position: 900% 200%;
+      }
+      .card--C-7 {
+        background-position: 1000% 200%;
+      }
+      .card--C-6 {
+        background-position: 1100% 200%;
+      }
+      .card--C-5 {
+        background-position: 1200% 200%;
+      }
+      .card--C-4 {
+        background-position: 1300% 200%;
+      }
+      .card--C-3 {
+        background-position: 1400% 200%;
+      }
+      .card--C-2 {
+        background-position: 0% 200%;
+      }
+      .card--H-Joker {
+        background-position: 200% 300%;
+      }
+      .card--H-A {
+        background-position: 300% 300%;
+      }
+      .card--H-K {
+        background-position: 400% 300%;
+      }
+      .card--H-Q {
+        background-position: 500% 300%;
+      }
+      .card--H-J {
+        background-position: 600% 300%;
+      }
+      .card--H-10 {
+        background-position: 700% 300%;
+      }
+      .card--H-9 {
+        background-position: 800% 300%;
+      }
+      .card--H-8 {
+        background-position: 900% 300%;
+      }
+      .card--H-7 {
+        background-position: 1000% 300%;
+      }
+      .card--H-6 {
+        background-position: 1100% 300%;
+      }
+      .card--H-5 {
+        background-position: 1200% 300%;
+      }
+      .card--H-4 {
+        background-position: 1300% 300%;
+      }
+      .card--H-3 {
+        background-position: 1400% 300%;
+      }
+      .card--H-2 {
+        background-position: 0% 300%;
+      }
+      .card--idk {
+        background-position: 100% 100%;
+      }
+      .card--idk2 {
+        background-position: 100% 200%;
+      }
+      .card--Joker {
+        background-position: 100% 300%;
+      }
