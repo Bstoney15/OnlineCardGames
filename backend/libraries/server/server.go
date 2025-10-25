@@ -3,6 +3,7 @@ package server
 import (
 	"log"
 	"net/http"
+	"cardgames/backend/libraries/sessionManager"
 
 	"cardgames/backend/models"
 	"gorm.io/driver/sqlite"
@@ -13,28 +14,31 @@ import (
 type Server struct {
 	DB     *gorm.DB
 	Router *http.ServeMux
+	SM 	   *sessionmanager.SessionManager
 }
 
 // NewServer creates and returns a new Server instance.
 func NewServer() *Server {
-	log.Println("Initializing server...")
 
+	// database set up
 	db, err := gorm.Open(sqlite.Open("cards.db"), &gorm.Config{})
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
-	
 	runMigrations(db)
 
-	log.Println("Setting up router...")
+	// session manager set up
+	sm := sessionmanager.NewSessionManager()
+
+	// set server config
 	s := &Server{
 		DB:     db,
 		Router: http.NewServeMux(),
+		SM: 	sm,
 	}
 	s.setupRoutes()
-	log.Println("Router setup complete.")
 
-	log.Println("Server initialization complete.")
+	log.Println("Server initialization complete. Listening on port 8080")
 	return s
 }
 
