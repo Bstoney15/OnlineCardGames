@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 
 export default function Register() {
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
@@ -26,11 +27,11 @@ export default function Register() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">
-      <Card suit="0" rank="0" />
       <h1 className="my-2">Create Account</h1>
-      <form onSubmit={handleSubmit} className="register-form">
+      <form onSubmit={handleSubmit} className="form-background">
         <label>Username:</label>
         <input
+          className="form-input"
           type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
@@ -38,8 +39,20 @@ export default function Register() {
           required
         />
 
+        <label>Email</label>
+        <input
+          className="form-input"
+          type="text"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Enter Email"
+          required
+        />
+
+
         <label>Password:</label>
         <input
+          className="form-input"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -49,6 +62,7 @@ export default function Register() {
 
         <label>Re-enter Password:</label>
         <input
+          className="form-input"
           type="password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
@@ -58,7 +72,7 @@ export default function Register() {
 
         {error && <p className="error-text">{error}</p>}
 
-        <button type="submit">Create Account</button>
+        <button className="btn-white-glow" type="submit">Create Account</button>
       </form>
 
       <Link to="/" className="btn-cyan-glow my-5">

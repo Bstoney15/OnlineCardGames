@@ -7,5 +7,5 @@ import "net/http"
 func (s *Server) registerHandler(w http.ResponseWriter, r *http.Request) {
 	// you can access s.db to do transactions on the db
 
-	w.Write([]byte("Registered"))
+	SendGenericResponse(w, true, 200, nil)
 }
