@@ -63,8 +63,22 @@ func (sm *SessionManager) deleteExpired() {
 	}
 }
 
+/*
+func (sm *SessionManager) generateSessionID() string {
+	bytes := make([]byte, 16)
+	_, err := rand.Read(bytes)
+	if err != nil {
+		panic(err)
+	}
+	return hex.EncodeToString(bytes)
+}
+*/
+//generates an active session
+
 func (sm *SessionManager) set(userID int) (sessionID string) {
 	randomSting := "test"
+	// randomSting := sm.generateSessionID()
+	// sets the random ssrting to the active session id
 
 	sm.mu.Lock()         //gets full read wrtie lock
 	defer sm.mu.Unlock() // unlocks after the function returns
@@ -90,3 +104,9 @@ func (sm *SessionManager) get(sessionID string) (sessionData, bool) {
 
 	return data, true
 }
+
+func (sm *SessionManager) Stop() {
+	close(sm.stop)
+}
+
+//stops the session
