@@ -5,22 +5,28 @@ import (
 	"log"
 	"net/http"
 
-	"golang.org/x/crypto/bcrypt"
 	"cardgames/backend/models"
+	"golang.org/x/crypto/bcrypt"
 )
+
+type RegisterRequest struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+type RegisterResponse struct {
+	Email   string `json:"email"`
+	Balance int    `json:"balance"`
+}
 
 // registerHandler creates a new user account
 func (s *Server) registerHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
+	if r.Method != http.MethodPost { // can be set in the router and probably should be
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
-	var req struct {
-		Email    string `json:"email"`
-		Password string `json:"password"`
-	}
-
+	var req RegisterRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "invalid request", http.StatusBadRequest)
 		return
@@ -45,9 +51,12 @@ func (s *Server) registerHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("Created new user: %s", account.Email)
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]interface{}{
-		"email":   account.Email,
-		"balance": account.Balance,
-	})
+	res := RegisterResponse{
+		Email:   account.Email,
+		Balance: account.Balance,
+	}
+
+	createSession(w, s.SM.Create(account.ID))
+
+	SendGenericResponse(w, true, http.StatusCreated, res)
 }

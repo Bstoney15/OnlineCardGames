@@ -11,7 +11,7 @@ const sessionLength = 300
 
 // could add more fields to this and store in db so user can see historical how they have done each session
 type sessionData struct {
-	UserID int
+	UserID uint
 	Expiry time.Time
 }
 
@@ -63,7 +63,7 @@ func (sm *SessionManager) deleteExpired() {
 	}
 }
 
-func (sm *SessionManager) set(userID int) (sessionID string) {
+func (sm *SessionManager) Create(userID uint) (sessionID string) {
 	randomSting := "test"
 
 	sm.mu.Lock()         //gets full read wrtie lock
@@ -77,7 +77,7 @@ func (sm *SessionManager) set(userID int) (sessionID string) {
 	return randomSting
 }
 
-func (sm *SessionManager) get(sessionID string) (sessionData, bool) {
+func (sm *SessionManager) Get(sessionID string) (sessionData, bool) {
 	sm.mu.Lock()
 	defer sm.mu.Unlock()
 

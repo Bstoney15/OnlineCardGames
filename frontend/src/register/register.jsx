@@ -41,7 +41,6 @@ export default function Register() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">
-      <Card suit="0" rank="0" />
       <h1 className="my-2">Create Account</h1>
       <form onSubmit={handleSubmit} className="form-background">
         <label>Username:</label>
