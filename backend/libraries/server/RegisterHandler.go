@@ -1,11 +1,53 @@
 package server
 
-import "net/http"
+import (
+	"encoding/json"
+	"log"
+	"net/http"
 
+	"golang.org/x/crypto/bcrypt"
+	"cardgames/backend/models"
+)
 
-// handler func that gets a request and response objects. Write to response object to return objects to requster.
+// registerHandler creates a new user account
 func (s *Server) registerHandler(w http.ResponseWriter, r *http.Request) {
-	// you can access s.db to do transactions on the db
+	if r.Method != http.MethodPost {
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
 
-	SendGenericResponse(w, true, 200, nil)
+	var req struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "invalid request", http.StatusBadRequest)
+		return
+	}
+
+	hashed, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+	if err != nil {
+		http.Error(w, "error creating user", http.StatusInternalServerError)
+		return
+	}
+
+	account := models.Account{
+		Email:        req.Email,
+		PasswordHash: string(hashed),
+		Balance:      100,
+	}
+
+	if err := s.DB.Create(&account).Error; err != nil {
+		http.Error(w, "email already exists", http.StatusConflict)
+		return
+	}
+
+	log.Printf("Created new user: %s", account.Email)
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"email":   account.Email,
+		"balance": account.Balance,
+	})
 }
