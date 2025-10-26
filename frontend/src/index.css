@@ -69,6 +69,38 @@ body::before {
   /* --- Add as many stars as you want! --- */
 }
 
+/* reusable classses */
+
+@layer utilities {
+  @keyframes loading {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(150%);
+    }
+  }
+
+  .animate-loading-bar {
+    animation: loading 1.8s ease infinite;
+  }
+}
+
+@layer utilities {
+  @keyframes blink {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+
+  .animate-blink {
+    animation: blink 3.8s step-end infinite;
+  }
+}
+
 /* Custom button classes */
 .btn-white-glow {
   @apply w-64 px-6 py-3 font-semibold rounded-xl text-center;

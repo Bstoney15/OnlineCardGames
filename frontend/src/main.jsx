@@ -4,7 +4,7 @@ import './index.css'
 import App from './App.jsx'
 import Login from './login/index.jsx'
 import Register from './register/register.jsx';
-import CreateAccount from './register/create_account.jsx';
+//import CreateAccount from './register/create_account.jsx';
 
 const router = createBrowserRouter([
   {
@@ -19,10 +19,11 @@ const router = createBrowserRouter([
     path: "/register",
     element: <Register />,
   },
+  /*
   {
     path: "/create-account",
     element: <CreateAccount />,
-  }, 
+  },*/ 
 ]);
 
 
