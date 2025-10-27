@@ -1,7 +1,8 @@
 import { useState } from "react";
-import "./createAccount.css"; // optional styling
+import "./createAccount.css";
 import Card from "/src/components/card/card.jsx";
 import { Link } from "react-router-dom";
+import { createUser, ApiError } from "/src/lib/apiClient";
 
 export default function Register() {
   const [username, setUsername] = useState("");
@@ -9,8 +10,9 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-
-  const handleSubmit = (e) => {
+  const [success, setSuccess] = useState("");
+  
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
@@ -19,10 +21,22 @@ export default function Register() {
     }
 
     setError("");
-    alert(`✅ Account created for ${username} (placeholder only)`);
-    setUsername("");
-    setPassword("");
-    setConfirmPassword("");
+    setSuccess("");
+
+    try {
+      const res = await createUser({ email, password });
+
+      setUsername("");
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+
+      // use backend response to show email
+      setSuccess(`Account created for ${res.email} with ${res.balance} credits!`);
+    } catch (err) {
+      if (err instanceof ApiError) setError(err.message);
+      else setError("An unexpected error occurred. Please try again.");
+    } 
   };
 
   return (
@@ -39,16 +53,15 @@ export default function Register() {
           required
         />
 
-        <label>Email</label>
+        <label>Email:</label>
         <input
           className="form-input"
-          type="text"
+          type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="Enter Email"
+          placeholder="Enter email"
           required
         />
-
 
         <label>Password:</label>
         <input
@@ -71,8 +84,11 @@ export default function Register() {
         />
 
         {error && <p className="error-text">{error}</p>}
+        {success && <p className="success-text">{success}</p>}
 
-        <button className="btn-white-glow" type="submit">Create Account</button>
+        <button className="btn-white-glow" type="submit">
+          Create Account
+        </button>
       </form>
 
       <Link to="/" className="btn-cyan-glow my-5">
