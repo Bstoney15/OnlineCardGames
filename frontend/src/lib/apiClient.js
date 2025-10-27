@@ -1,0 +1,37 @@
+export class ApiError extends Error {
+  constructor(message, status) {
+    super(message);
+    this.status = status;
+  }
+}
+
+const API_BASE = "http://localhost:8080";
+
+async function request(path, options = {}) {
+  const res = await fetch(`${API_BASE}${path}`, {
+    ...options,
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+  });
+
+  if (!res.ok) {
+    const msg = await res.text();
+    throw new ApiError(msg, res.status);
+  }
+
+  return res.json();
+}
+
+export const createUser = (data) =>
+  request("/register", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+
+export const loginUser = (data) =>
+  request("/login", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+
+export const getCurrentUser = () => request("/me");

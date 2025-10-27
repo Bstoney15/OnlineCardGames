@@ -3,9 +3,10 @@ package server
 import (
 	"log"
 	"net/http"
-	"cardgames/backend/libraries/sessionManager"
 
+	"cardgames/backend/libraries/sessionManager"
 	"cardgames/backend/models"
+
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -14,7 +15,7 @@ import (
 type Server struct {
 	DB     *gorm.DB
 	Router *http.ServeMux
-	SM 	   *sessionmanager.SessionManager
+	SM     *sessionmanager.SessionManager
 }
 
 // NewServer creates and returns a new Server instance.
@@ -34,7 +35,7 @@ func NewServer() *Server {
 	s := &Server{
 		DB:     db,
 		Router: http.NewServeMux(),
-		SM: 	sm,
+		SM:     sm,
 	}
 	s.setupRoutes()
 
@@ -42,7 +43,7 @@ func NewServer() *Server {
 	return s
 }
 
-func runMigrations(db *gorm.DB){
+func runMigrations(db *gorm.DB) {
 	err := db.AutoMigrate(&models.Account{})
 	if err != nil {
 		log.Fatalf("Failed to auto-migrate: %v", err)
@@ -54,3 +55,4 @@ func (s *Server) Start(addr string) {
 	log.Printf("Server starting on %s", addr)
 	log.Fatal(http.ListenAndServe(addr, corsMiddleware(s.Router)))
 }
+
