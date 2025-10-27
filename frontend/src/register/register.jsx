@@ -1,6 +1,5 @@
 import { useState } from "react";
 import "./createAccount.css";
-import Card from "/src/components/card/card.jsx";
 import { Link } from "react-router-dom";
 import { createUser, ApiError } from "/src/lib/apiClient";
 
@@ -32,7 +31,7 @@ export default function Register() {
       setConfirmPassword("");
 
       // use backend response to show email
-      setSuccess(`Account created for ${res.email} with ${res.balance} credits!`);
+      setSuccess(`Account created for ${res.data.email} with ${res.data.balance} credits!`);
     } catch (err) {
       if (err instanceof ApiError) setError(err.message);
       else setError("An unexpected error occurred. Please try again.");
