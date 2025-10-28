@@ -1,37 +1,39 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useState } from "react";
+import { loginUser } from '/src/lib/apiClient';
 
 function Login() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
-
-    // TODO: somehow verify username and password are valid here
-    // if invalid:
-    //    setError("Invlalid username or password");
-    //    return;
-    // if valid:
-    setError("");
-    alert(`Login for ${username} successful! (placeholder)`);
-    setUsername("");
-    setPassword("");
+    try {
+      const data = await loginUser({ email, password });
+      console.log(data)
+      if(data.success)
+      {
+        navigate("/home");
+      }
+    } catch (err) {
+      setError(err.message);
+    }
   }
 
   return (
       <div className='min-h-screen flex flex-col items-center justify-center'>
         <h1 className='my-2'>Login Page</h1>
         <form onSubmit={handleSubmit} className='form-background'>
-          <label>Username</label>
+          <label>Email</label>
           <input
           type="text"
           className="form-input"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="Enter username"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Enter email"
           required
           />
 

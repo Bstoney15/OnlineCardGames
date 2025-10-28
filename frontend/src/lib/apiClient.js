@@ -23,15 +23,17 @@ async function request(path, options = {}) {
 }
 
 export const createUser = (data) =>
-  request("/register", {
+  request("/api/register", {
     method: "POST",
     body: JSON.stringify(data),
   });
 
 export const loginUser = (data) =>
-  request("/login", {
+  request("/api/login", {
     method: "POST",
     body: JSON.stringify(data),
   });
 
-export const getCurrentUser = () => request("/me");
+export const getActivePlayers = () => request("/api/active-players");
+
+export const checkAuth = () => request("/api/auth");

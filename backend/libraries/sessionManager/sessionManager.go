@@ -1,6 +1,8 @@
 package sessionmanager
 
 import (
+	"crypto/rand"
+	"encoding/hex"
 	"sync"
 	"time"
 )
@@ -63,18 +65,30 @@ func (sm *SessionManager) deleteExpired() {
 	}
 }
 
+func generateRandomString(length int) (string, error) {
+	bytes := make([]byte, length)
+	if _, err := rand.Read(bytes); err != nil {
+		return "", err
+	}
+	return hex.EncodeToString(bytes), nil
+}
+
 func (sm *SessionManager) Create(userID uint) (sessionID string) {
-	randomSting := "test"
+	randomString, err := generateRandomString(32)
+	if err != nil {
+		// This is a panic because if we can't generate a random string, the system is in a bad state
+		panic(err)
+	}
 
 	sm.mu.Lock()         //gets full read wrtie lock
 	defer sm.mu.Unlock() // unlocks after the function returns
 
-	sm.sessions[randomSting] = sessionData{
+	sm.sessions[randomString] = sessionData{
 		UserID: userID,
 		Expiry: time.Now().Add(sessionLength * time.Second),
 	}
 
-	return randomSting
+	return randomString
 }
 
 func (sm *SessionManager) Get(sessionID string) (sessionData, bool) {
@@ -90,3 +104,10 @@ func (sm *SessionManager) Get(sessionID string) (sessionData, bool) {
 
 	return data, true
 }
+
+func (sm *SessionManager) ActiveSessions() int {
+	sm.mu.RLock()
+	defer sm.mu.RUnlock()
+	return len(sm.sessions)
+}
+

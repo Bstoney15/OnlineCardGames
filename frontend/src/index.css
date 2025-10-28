@@ -2,6 +2,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'Outrunner';
+  src: url('./assets/fonts/Outrunner.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'lazer84';
+  src: url('./assets/fonts/Lazer84.ttf') format('truetype'); 
+}
+
+@font-face {
+  font-family: 'rage-italic';
+  src: url('./assets/fonts/rage-italic.ttf') format('truetype');
+}
+
 /* Vice City Color Palette - Updated for Night Sky Gradient */
 :root {
   --vice-blue-light: #4361EE; /* A slightly richer, deeper blue for the top */
@@ -16,7 +31,7 @@
   --vice-glow-blue: #4361EE;   /* Lighter blue for the center of the glow */
 
   --vice-pink-rich: #F72585;
-  --vice-pink: #FF00FF; /* Hot Pink */
+  --vice-pink: #F27DFD; /* Hot Pink */
   --vice-cyan: #00FFFF; /* Cyan */
   --vice-yellow-gold: #FFD700; /* Sunset Gold */
   --white: #FFFFFF; /* White */
@@ -72,6 +87,14 @@ body::before {
 }
 
 /* reusable classses */
+
+/* Title on main page */
+.casino-title {
+  font-family: 'outrunner', sans-serif;
+  font-size: 20em;
+  color: var(--vice-pink);
+  text-shadow: 0 0 10px var(--vice-pink), 0 0 20px var(--vice-pink);
+}
 
 /* Custom button classes */
 .btn-white-glow {

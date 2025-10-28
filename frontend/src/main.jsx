@@ -4,6 +4,8 @@ import './index.css'
 import App from './App.jsx'
 import Login from './login/index.jsx'
 import Register from './register/register.jsx';
+import Home from './home/home.jsx'
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute.jsx';
 
 const router = createBrowserRouter([
   {
@@ -17,6 +19,15 @@ const router = createBrowserRouter([
   {
     path: "/register",
     element: <Register />,
+  },
+  {
+    element: <ProtectedRoute />,
+    children: [
+      {
+        path: "/home",
+        element: <Home />,
+      },
+    ],
   },
 ]);
 

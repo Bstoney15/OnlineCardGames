@@ -12,6 +12,8 @@ func createSession(w http.ResponseWriter, sessionID string) {
 		HttpOnly: true,
 		Path:     "/",
 		MaxAge:   3600, // 1 hour
+		SameSite: http.SameSiteNoneMode,
+		Secure:   true,
 	}
 	http.SetCookie(w, &cookie)
 }
