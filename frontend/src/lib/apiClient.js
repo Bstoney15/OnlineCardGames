@@ -5,7 +5,7 @@ export class ApiError extends Error {
   }
 }
 
-const API_BASE = "http://localhost:8080";
+const API_BASE = "//localhost:8080";
 
 async function request(path, options = {}) {
   const res = await fetch(`${API_BASE}${path}`, {
