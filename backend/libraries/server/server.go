@@ -16,6 +16,7 @@ type Server struct {
 	DB     *gorm.DB
 	Router *http.ServeMux
 	SM     *sessionmanager.SessionManager
+	
 }
 
 // NewServer creates and returns a new Server instance.
