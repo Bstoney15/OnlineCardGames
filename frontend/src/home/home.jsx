@@ -7,8 +7,9 @@ function Home () {
         <div className="min-h-screen flex flex-col items-center justify-center">
             <ActiveUsers />
             <Link to='/' className='btn-cyan-glow'>Go back home</Link>
+            <Link to='/stats' className='btn-cyan-glow'>View your stats</Link>
         </div>
     )
 }
 
-export default Home;    
+export default Home;   
