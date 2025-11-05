@@ -37,3 +37,5 @@ export const loginUser = (data) =>
 export const getActivePlayers = () => request("/api/active-players");
 
 export const checkAuth = () => request("/api/auth");
+
+export const getPlayerStats = () => request("/api/player-stats");
