@@ -10,6 +10,9 @@ function Home () {
             {/* new line to make it look better */}
             <p><br /></p>
             <Link to='/stats' className='btn-cyan-glow'>View your stats</Link>
+            {/* new line to make it look better */}
+            <p><br /></p>
+            <Link to='/leaderboard' className='btn-cyan-glow'>View leaderboard</Link>
         </div>
     )
 }

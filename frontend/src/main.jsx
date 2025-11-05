@@ -7,6 +7,7 @@ import Register from './register/register.jsx';
 import Home from './home/home.jsx'
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute.jsx';
 import PlayerStats from './stats/playerStats.jsx';
+import LeaderBoard from './stats/leaderboard.jsx';
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
       {
         path: "/stats",
         element: <PlayerStats />,
+      },
+      {
+        path: "/leaderboard",
+        element: <LeaderBoard />,
       }
     ],
   },

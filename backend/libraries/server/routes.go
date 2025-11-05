@@ -16,5 +16,6 @@ func (s *Server) setupRoutes() {
 	s.Router.HandleFunc("/api/get-blackjack-lobby", s.pingHandler)
 
 	s.Router.HandleFunc("/api/player-stats", s.playerStatsHandler)
+	s.Router.HandleFunc("/api/leaderboard-stats", s.leaderboardStatsHandler)
 
 }
