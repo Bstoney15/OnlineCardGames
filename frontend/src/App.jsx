@@ -23,7 +23,7 @@ function App() {
     <div className='min-h-screen flex flex-col items-center justify-center'>
 
       <div className='casino-title'>
-        <h2>Test title</h2>
+        <h2>Online Card Games</h2>
       </div>
 
       <div className='my-5'>
