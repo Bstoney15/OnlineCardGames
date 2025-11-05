@@ -81,11 +81,13 @@ func (s *Server) leaderboardStatsHandler (w http.ResponseWriter, r *http.Request
 	// TODO: return different leaderboards depending on the request, once other stats are available
 
 	// query for stats based on user id
-	var accounts models.Account
-	if err := s.DB.Order("Balance").Limit(5).Find(&accounts).Error; err != nil {
+	var acct_rows []models.Account
+	if err = s.DB.Order("Balance").Limit(5).Find(&acct_rows).Error; err != nil {
+		fmt.Print(acct_rows)
 		SendGenericResponse(w, false, http.StatusNotFound, "no accounts found")
 		return
 	}
+	fmt.Print(acct_rows)
 
-	SendGenericResponse(w, true, 200, accounts)
+	SendGenericResponse(w, true, 200, "success")
 }
