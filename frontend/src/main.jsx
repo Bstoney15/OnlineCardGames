@@ -4,7 +4,10 @@ import './index.css'
 import App from './App.jsx'
 import Login from './login/index.jsx'
 import Register from './register/register.jsx';
-//import CreateAccount from './register/create_account.jsx';
+import Home from './home/home.jsx'
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute.jsx';
+import PlayerStats from './stats/playerStats.jsx';
+import LeaderBoard from './stats/leaderboard.jsx';
 
 const router = createBrowserRouter([
   {
@@ -21,9 +24,22 @@ const router = createBrowserRouter([
   },
   /*
   {
-    path: "/create-account",
-    element: <CreateAccount />,
-  },*/ 
+    element: <ProtectedRoute />,
+    children: [
+      {
+        path: "/home",
+        element: <Home />,
+      },
+      {
+        path: "/stats",
+        element: <PlayerStats />,
+      },
+      {
+        path: "/leaderboard",
+        element: <LeaderBoard />,
+      }
+    ],
+  },
 ]);
 
 

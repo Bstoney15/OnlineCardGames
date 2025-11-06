@@ -1,5 +1,21 @@
 /* src/index.css */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
 @import "tailwindcss";
+
+@font-face {
+  font-family: 'Outrunner';
+  src: url('./assets/fonts/Outrunner.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'lazer84';
+  src: url('./assets/fonts/Lazer84.ttf') format('truetype'); 
+}
+
+@font-face {
+  font-family: 'rage-italic';
+  src: url('./assets/fonts/rage-italic.ttf') format('truetype');
+}
 
 /* Vice City Color Palette - Updated for Night Sky Gradient */
 :root {
@@ -15,7 +31,7 @@
   --vice-glow-blue: #4361EE;   /* Lighter blue for the center of the glow */
 
   --vice-pink-rich: #F72585;
-  --vice-pink: #FF00FF; /* Hot Pink */
+  --vice-pink: #F27DFD; /* Hot Pink */
   --vice-cyan: #00FFFF; /* Cyan */
   --vice-yellow-gold: #FFD700; /* Sunset Gold */
   --white: #FFFFFF; /* White */
@@ -34,8 +50,9 @@ body {
   );
 
   color: var(--white);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Montserrat', sans-serif;
   position: relative;
+  font-size: 1.1rem;
 }
 
 
@@ -101,9 +118,19 @@ body::before {
   }
 }
 
+/* reusable classses */
+
+/* Title on main page */
+.casino-title {
+  font-family: 'outrunner', sans-serif;
+  font-size: 20em;
+  color: var(--vice-pink);
+  text-shadow: 0 0 10px var(--vice-pink), 0 0 20px var(--vice-pink);
+}
+
 /* Custom button classes */
 .btn-white-glow {
-  @apply w-64 px-6 py-3 font-semibold rounded-xl text-center;
+  @apply px-6 py-3 font-semibold rounded-xl text-center;
   @apply transition-all duration-200;
   @apply bg-transparent border-2 border-[var(--white)] text-[var(--white)];
   @apply shadow-[0_0_10px_var(--white)] [text-shadow:0_0_5px_var(--white)];
@@ -112,7 +139,7 @@ body::before {
 }
 
 .btn-cyan-glow {
-  @apply w-64 px-6 py-3 font-semibold rounded-xl text-center;
+  @apply  px-6 py-3 font-semibold rounded-xl text-center;
   @apply transition-all duration-200;
   @apply bg-transparent border-2 border-[var(--vice-cyan)] text-[var(--vice-cyan)];
   @apply shadow-[0_0_10px_var(--vice-cyan)] [text-shadow:0_0_5px_var(--vice-cyan)];
@@ -121,10 +148,47 @@ body::before {
 }
 
 .btn-pink-glow {
-  @apply w-64 px-6 py-3 font-semibold rounded-xl text-center;
+  @apply px-6 py-3 font-semibold rounded-xl text-center;
   @apply transition-all duration-200;
   @apply bg-transparent border-2 border-[var(--vice-pink)] text-[var(--vice-pink)];
   @apply shadow-[0_0_10px_var(--vice-pink)] [text-shadow:0_0_5px_var(--vice-pink)];
   @apply hover:bg-[var(--vice-pink)] hover:text-[var(--vice-night)];
   @apply hover:shadow-[0_0_20px_var(--vice-pink)] hover:[text-shadow:none];
+}
+
+
+/* forms */
+
+.form-background {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 15px;
+  padding: 2rem 2.5rem;
+  width: 260px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 15px rgba(0, 255, 200, 0.3);
+  color: white;
+}
+
+.form-input {
+    background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid #66d9ef;
+  border-radius: 5px;
+  padding: 0.6rem;
+  color: #ffffff;
+  outline: none;
+  transition: 0.3s ease;
+}
+
+.form-input::placeholder {
+  color: #a9a9a9;
+  opacity: 0.8;
+}
+
+.form-input:focus {
+  border-color: #00e0ff;
+  box-shadow: 0 0 8px #00e0ff;
 }

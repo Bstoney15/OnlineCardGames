@@ -1,6 +1,8 @@
 package sessionmanager
 
 import (
+	"crypto/rand"
+	"encoding/hex"
 	"sync"
 	"time"
 )
@@ -11,7 +13,7 @@ const sessionLength = 300
 
 // could add more fields to this and store in db so user can see historical how they have done each session
 type sessionData struct {
-	UserID int
+	UserID uint
 	Expiry time.Time
 }
 
@@ -63,35 +65,33 @@ func (sm *SessionManager) deleteExpired() {
 	}
 }
 
-/*
-func (sm *SessionManager) generateSessionID() string {
-	bytes := make([]byte, 16)
-	_, err := rand.Read(bytes)
+func generateRandomString(length int) (string, error) {
+	bytes := make([]byte, length)
+	if _, err := rand.Read(bytes); err != nil {
+		return "", err
+	}
+	return hex.EncodeToString(bytes), nil
+}
+
+func (sm *SessionManager) Create(userID uint) (sessionID string) {
+	randomString, err := generateRandomString(32)
 	if err != nil {
+		// This is a panic because if we can't generate a random string, the system is in a bad state
 		panic(err)
 	}
-	return hex.EncodeToString(bytes)
-}
-*/
-//generates an active session
-
-func (sm *SessionManager) set(userID int) (sessionID string) {
-	randomSting := "test"
-	// randomSting := sm.generateSessionID()
-	// sets the random ssrting to the active session id
 
 	sm.mu.Lock()         //gets full read wrtie lock
 	defer sm.mu.Unlock() // unlocks after the function returns
 
-	sm.sessions[randomSting] = sessionData{
+	sm.sessions[randomString] = sessionData{
 		UserID: userID,
 		Expiry: time.Now().Add(sessionLength * time.Second),
 	}
 
-	return randomSting
+	return randomString
 }
 
-func (sm *SessionManager) get(sessionID string) (sessionData, bool) {
+func (sm *SessionManager) Get(sessionID string) (sessionData, bool) {
 	sm.mu.Lock()
 	defer sm.mu.Unlock()
 
@@ -105,8 +105,9 @@ func (sm *SessionManager) get(sessionID string) (sessionData, bool) {
 	return data, true
 }
 
-func (sm *SessionManager) Stop() {
-	close(sm.stop)
+func (sm *SessionManager) ActiveSessions() int {
+	sm.mu.RLock()
+	defer sm.mu.RUnlock()
+	return len(sm.sessions)
 }
 
-//stops the session
