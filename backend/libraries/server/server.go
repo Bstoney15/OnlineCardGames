@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 
+	gameinstancemanager "cardgames/backend/libraries/gameInstanceManager"
 	"cardgames/backend/libraries/sessionManager"
 	"cardgames/backend/models"
 
@@ -16,7 +17,7 @@ type Server struct {
 	DB     *gorm.DB
 	Router *http.ServeMux
 	SM     *sessionmanager.SessionManager
-	
+	GIM    *gameinstancemanager.GameInstanceManager
 }
 
 // NewServer creates and returns a new Server instance.
@@ -32,11 +33,16 @@ func NewServer() *Server {
 	// session manager set up
 	sm := sessionmanager.NewSessionManager()
 
+	// game instance manager set up
+	gim := gameinstancemanager.NewGameInstanceManager(db)
+	gim.Start() // Start the background cleanup goroutine
+
 	// set server config
 	s := &Server{
 		DB:     db,
 		Router: http.NewServeMux(),
 		SM:     sm,
+		GIM:    gim,
 	}
 	s.setupRoutes()
 
