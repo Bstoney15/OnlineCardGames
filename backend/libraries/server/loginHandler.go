@@ -8,6 +8,12 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+var sm = sessionManager.NewSessionManager()
+
+type LoginRequest struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
 
 // handler func that gets a request and response objects. Write to response object to return objects to requster.
 func (s *Server) loginHandler(w http.ResponseWriter, r *http.Request) {

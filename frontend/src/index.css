@@ -88,6 +88,38 @@ body::before {
 
 /* reusable classses */
 
+@layer utilities {
+  @keyframes loading {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(150%);
+    }
+  }
+
+  .animate-loading-bar {
+    animation: loading 1.8s ease infinite;
+  }
+}
+
+@layer utilities {
+  @keyframes blink {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+
+  .animate-blink {
+    animation: blink 3.8s step-end infinite;
+  }
+}
+
+/* reusable classses */
+
 /* Title on main page */
 .casino-title {
   font-family: 'outrunner', sans-serif;
