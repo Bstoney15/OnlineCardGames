@@ -13,6 +13,8 @@ func (s *Server) setupRoutes() {
 	s.Router.HandleFunc("GET /api/auth", s.authHandler)
 	s.Router.HandleFunc("GET /api/active-players", s.activePlayersHandler)
 
-	s.Router.HandleFunc("GET /api/get-blackjack-lobby", s.pingHandler)
+	s.Router.HandleFunc("GET /api/blackjack", s.pingHandler)
 
+	s.Router.HandleFunc("GET /api/player-stats", s.playerStatsHandler)
+	s.Router.HandleFunc("GET /api/leaderboard-stats", s.leaderboardStatsHandler)
 }
