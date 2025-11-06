@@ -2,6 +2,7 @@ package models
 
 import (
 	"time"
+	"gorm.io/gorm"
 )
 
 // Wager represents a betting wager made by an account.
