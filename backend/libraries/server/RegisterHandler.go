@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"cardgames/backend/models"
+
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -22,19 +23,19 @@ type RegisterResponse struct {
 // registerHandler creates a new user account
 func (s *Server) registerHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost { // can be set in the router and probably should be
-		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		SendGenericResponse(w, false, http.StatusMethodNotAllowed, "method not allowed")
 		return
 	}
 
 	var req RegisterRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, "invalid request", http.StatusBadRequest)
+		SendGenericResponse(w, false, http.StatusBadRequest, "invalid request")
 		return
 	}
 
 	hashed, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
-		http.Error(w, "error creating user", http.StatusInternalServerError)
+		SendGenericResponse(w, false, http.StatusInternalServerError, "error creating user")
 		return
 	}
 
@@ -45,7 +46,7 @@ func (s *Server) registerHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := s.DB.Create(&account).Error; err != nil {
-		http.Error(w, "email already exists", http.StatusConflict)
+		SendGenericResponse(w, false, http.StatusConflict, "email already exists")
 		return
 	}
 

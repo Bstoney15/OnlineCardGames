@@ -7,7 +7,7 @@ import (
 
 // createSession creates a new session and sets the session cookie.
 func createSession(w http.ResponseWriter, sessionID string) {
-	isProd := os.Getenv("ENV") == "production"
+	isProd := os.Getenv("PROD") == "true"
 
 	cookie := http.Cookie{
 		Name:     "sessionId",

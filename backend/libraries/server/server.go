@@ -23,7 +23,6 @@ type Server struct {
 // NewServer creates and returns a new Server instance.
 func NewServer() *Server {
 
-	// database set up
 	db, err := gorm.Open(sqlite.Open("cards.db"), &gorm.Config{})
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
