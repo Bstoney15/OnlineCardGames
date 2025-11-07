@@ -1,7 +1,7 @@
 //import { useState } from 'react';
 import { useState, useEffect, use } from 'react';
 import { Link } from 'react-router-dom';
-import WelcomeAnimation from './LoadingScreenAnimation';
+import { checkAuth } from '/src/lib/apiClient.js';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -20,8 +20,6 @@ function App() {
       // route to home
     }
 
-
-  
   }, []);
 
 
