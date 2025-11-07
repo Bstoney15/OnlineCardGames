@@ -12,7 +12,12 @@ func (s *Server) setupRoutes() {
 	// Routes that require auth go down here. 
 	s.Router.HandleFunc("/api/auth", s.authHandler)
 	s.Router.HandleFunc("/api/active-players", s.activePlayersHandler)
+	
+	s.Router.HandleFunc("/api/currency", s.getCurrencyHandler)
+	s.Router.HandleFunc("/api/currency/add", s.addCurrencyHandler)
 
 	s.Router.HandleFunc("/api/get-blackjack-lobby", s.pingHandler)
+
+
 
 }

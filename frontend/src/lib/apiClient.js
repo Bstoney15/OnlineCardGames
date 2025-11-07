@@ -37,3 +37,14 @@ export const loginUser = (data) =>
 export const getActivePlayers = () => request("/api/active-players");
 
 export const checkAuth = () => request("/api/auth");
+
+
+// Get current user's balance
+export const getCurrency = () => request("/api/currency");
+
+// Add currency amount to user's balance
+export const addCurrency = (amount) =>
+  request("/api/currency/add", {
+    method: "POST",
+    body: JSON.stringify({ amount }),
+  });
