@@ -30,6 +30,14 @@ export const loginUser = (data) =>
     method: "POST",
     body: JSON.stringify(data),
   });
+export const getCurrency = () => request("/api/currency");
+
+// Add currency amount to user's balance
+export const addCurrency = (amount) =>
+  request("/api/currency/add", {
+    method: "POST",
+    body: JSON.stringify({ amount }),
+  });
 
 export const getActivePlayers = () => request("/api/active-players");
 

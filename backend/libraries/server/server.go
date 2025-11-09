@@ -11,6 +11,7 @@ import (
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
+const DEV_MODE = true
 
 // Server holds dependencies for the application.
 type Server struct {

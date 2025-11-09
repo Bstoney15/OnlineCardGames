@@ -13,6 +13,9 @@ function Home () {
             {/* new line to make it look better */}
             <p><br /></p>
             <Link to='/leaderboard' className='btn-cyan-glow'>View leaderboard</Link>
+            {/* new line to make it look better */}
+            <p><br /></p>
+            <Link to='/store' className='btn-cyan-glow'>Go to Currency Store</Link>
         </div>
     )
 }
