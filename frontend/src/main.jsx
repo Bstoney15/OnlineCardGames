@@ -23,9 +23,11 @@ const router = createBrowserRouter([
     path: "/register",
     element: <Register />,
   },
-  {
-    element: <ProtectedRoute />,
-    children: [
+
+  //commented auth stuff out so i can test the home page
+  //{
+    //element: <ProtectedRoute />,
+    //children: [
       {
         path: "/home",
         element: <Home />,
@@ -43,8 +45,9 @@ const router = createBrowserRouter([
         element: <LeaderBoard />,
       }
     ],
-  },
-]);
+  //},
+//]
+);
 
 
 createRoot(document.getElementById('root')).render(

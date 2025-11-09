@@ -2,16 +2,18 @@
 import { useState, useEffect, use } from 'react';
 import { Link } from 'react-router-dom';
 import { checkAuth } from '/src/lib/apiClient.js';
+import WelcomeAnimation from './LoadingScreenAnimation';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // runs once when componenet is called. (mounted)
   useEffect(() => {
 
     const checkAuthentication = async () => {
       const auth = await checkAuth();
-      setIsAuthenticated(auth);
+      setIsAuthenticated(true); //need to change back to (auth) instead of (true)
     };
     
     checkAuthentication();
@@ -24,15 +26,18 @@ function App() {
 
 
   return (
+    <>
+    {!isLoading &&  <WelcomeAnimation onComplete={() => setIsLoading(true)} />}
     <div className='min-h-screen flex flex-col items-center justify-center'>
-
-
 
       <div className='my-5'>
         <Link to="/login" className='btn-cyan-glow mx-4'>Go to Login Page</Link>
         <Link to="/register" className='btn-pink-glow mx-4'>Go to Register Page</Link>
+        <Link to="/home" className='btn-cyan-glow mx-4'>Go to Home Page</Link>
+
       </div>
     </div>
+    </>
   );
 }
 
