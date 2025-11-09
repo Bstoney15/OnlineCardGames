@@ -11,7 +11,7 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    /*try {
+    try {
       const data = await loginUser({ email, password });
       console.log(data)
       if(data.success)
@@ -20,10 +20,7 @@ function Login() {
       }
     } catch (err) {
       setError(err.message);
-    }*/
-
-    // Temporary bypass until backend is done
-    navigate("/home");
+    }
   }
 
   return (
