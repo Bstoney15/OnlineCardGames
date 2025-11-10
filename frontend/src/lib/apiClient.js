@@ -5,7 +5,8 @@ export class ApiError extends Error {
   }
 }
 
-const API_BASE = "//localhost:8080";
+const PROD = import.meta.env.PROD;
+const API_BASE = PROD ? window.location.origin : "http://localhost:8080";
 
 async function request(path, options = {}) {
   const res = await fetch(`${API_BASE}${path}`, {
@@ -14,12 +15,8 @@ async function request(path, options = {}) {
     credentials: "include",
   });
 
-  if (!res.ok) {
-    const msg = await res.text();
-    throw new ApiError(msg, res.status);
-  }
-
-  return res.json();
+  const text = await res.text();
+  return text ? JSON.parse(text) : null;
 }
 
 export const createUser = (data) =>
@@ -32,6 +29,14 @@ export const loginUser = (data) =>
   request("/api/login", {
     method: "POST",
     body: JSON.stringify(data),
+  });
+export const getCurrency = () => request("/api/currency");
+
+// Add currency amount to user's balance
+export const addCurrency = (amount) =>
+  request("/api/currency/add", {
+    method: "POST",
+    body: JSON.stringify({ amount }),
   });
 
 export const getActivePlayers = () => request("/api/active-players");

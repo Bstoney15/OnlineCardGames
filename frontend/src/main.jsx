@@ -8,6 +8,7 @@ import Home from './home/home.jsx'
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute.jsx';
 import PlayerStats from './stats/playerStats.jsx';
 import LeaderBoard from './stats/leaderboard.jsx';
+import Store from './store/store.jsx';
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
       {
         path: "/stats",
         element: <PlayerStats />,
+      },
+      {
+        patjh: "/store",
+        element: <Store />,
       },
       {
         path: "/leaderboard",
