@@ -62,10 +62,10 @@ function PlayerStats() {
                         <p><strong>Losses:</strong> {stats.losses ?? 0}</p>
                     </div>
                     <div>
-                        <p><strong>Games Played:</strong> {stats.gamesPlayed ?? 0}</p>
+                        <p><strong>Wagers Placed:</strong> {stats.wagersPlaced ?? 0}</p>
                     </div>
                     <div>
-                        <p><strong>Win Rate:</strong> {stats.winRate ? `${stats.winRate}%` : '0%'}</p>
+                        <p><strong>Win Rate:</strong> {stats.winRate ? `${Number(stats.winRate).toFixed(2)}%` : '0.00%'}</p>
                     </div>
                     <div>
                         <p><strong>Balance:</strong> ${stats.balance ?? 0}</p>

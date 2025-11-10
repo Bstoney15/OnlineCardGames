@@ -2,8 +2,8 @@ package server
 
 import (
 	"cardgames/backend/models"
-	"net/http"
 	"fmt"
+	"net/http"
 )
 
 // handler to get players stats and return them for player stats page
@@ -41,20 +41,23 @@ func (s *Server) playerStatsHandler(w http.ResponseWriter, r *http.Request) {
 		SendGenericResponse(w, false, http.StatusNotFound, "user not found")
 		return
 	}
+	var winRate float32 = (float32(account.WagersWon) / float32(account.WagersPlaced)) * 100
+
 	//calculate stats (put others later instead of just balance)
 	stats := map[string]interface{}{
-		"balance": account.Balance,
-		// "wins": ...,
-		// "losses": ...,
-		// "winRate": ...,
-		// "amountWon": ...,
+		"balance":      account.Balance,
+		"wins":         account.WagersWon,
+		"losses":       account.WagersLost,
+		"winRate":      winRate,
+		"amountWon":    account.AmountWon,
+		"wagersPlaced": account.WagersPlaced,
 	}
 
 	SendGenericResponse(w, true, 200, stats)
 }
 
 // handler to get players stats and return them for player stats page
-func (s *Server) leaderboardStatsHandler (w http.ResponseWriter, r *http.Request) {
+func (s *Server) leaderboardStatsHandler(w http.ResponseWriter, r *http.Request) {
 	// get session cookie (same as authHandler)
 	cookie, err := r.Cookie("sessionId")
 	if err != nil {

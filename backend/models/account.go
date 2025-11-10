@@ -13,4 +13,5 @@ type Account struct {
 	WagersWon    int    // Number of wagers won
 	WagersLost   int    // Number of wagers lost
 	AmountWon    int    // Total amount won in cents
+	WagersPlaced int    // total games played
 }
