@@ -23,7 +23,7 @@ export default function Register() {
     setSuccess("");
 
     try {
-      const res = await createUser({ email, password });
+      const res = await createUser({ email, password, username });
 
       setUsername("");
       setEmail("");
