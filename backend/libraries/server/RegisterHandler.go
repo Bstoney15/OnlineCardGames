@@ -13,6 +13,7 @@ import (
 type RegisterRequest struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
+	Username string `json:"username"`
 }
 
 type RegisterResponse struct {
@@ -43,6 +44,7 @@ func (s *Server) registerHandler(w http.ResponseWriter, r *http.Request) {
 		Email:        req.Email,
 		PasswordHash: string(hashed),
 		Balance:      100,
+		Username:     req.Username,
 	}
 
 	if err := s.DB.Create(&account).Error; err != nil {
