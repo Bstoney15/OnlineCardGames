@@ -50,7 +50,7 @@ function PlayerStats() {
     return (
         <div className='min-h-screen flex flex-col items-center justify-center'>
             <div className={`${box_css} max-w-xs max-h-3xs`}>
-                <h2 className={`${p_css}`}><span className="text-[var(--vice-pink-rich)] font-bold">{stats.username}'s</span> Stats</h2>
+                <h2 className={`${p_css}`}><span className="text-[var(--vice-pink-rich)] font-bold">{stats.username}</span>'s Stats</h2>
             </div>
                 
             
