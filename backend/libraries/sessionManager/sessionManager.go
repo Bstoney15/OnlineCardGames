@@ -13,8 +13,9 @@ const sessionLength = 300
 
 // could add more fields to this and store in db so user can see historical how they have done each session
 type sessionData struct {
-	UserID uint
-	Expiry time.Time
+	UserID    uint
+	SessionID string
+	Expiry    time.Time
 }
 
 func (sd sessionData) IsExpired() bool {
@@ -23,7 +24,8 @@ func (sd sessionData) IsExpired() bool {
 
 type SessionManager struct {
 	mu       sync.RWMutex // mutex so we dont get any race conditions. Need to call mw.rLock() or mu.rwLock() and their corresponding unlock functions to use
-	sessions map[string]sessionData
+	sessions map[string]sessionData // maps session ID to session data
+	idToSession map[uint]sessionData
 
 	stop   chan struct{}
 	ticker *time.Ticker
@@ -31,9 +33,10 @@ type SessionManager struct {
 
 func NewSessionManager() *SessionManager {
 	sm := &SessionManager{
-		sessions: make(map[string]sessionData),
-		stop:     make(chan struct{}),
-		ticker:   time.NewTicker(cleanupInterval * time.Second),
+		sessions:   make(map[string]sessionData),
+		idToSession: make(map[uint]sessionData),
+		stop:       make(chan struct{}),
+		ticker:    time.NewTicker(cleanupInterval * time.Second),
 	}
 
 	go sm.cleanUpSessions()
@@ -80,13 +83,16 @@ func (sm *SessionManager) Create(userID uint) (sessionID string) {
 		panic(err)
 	}
 
-	sm.mu.Lock()         //gets full read wrtie lock
+	sm.mu.Lock()         //gets full read write lock
 	defer sm.mu.Unlock() // unlocks after the function returns
 
 	sm.sessions[randomString] = sessionData{
-		UserID: userID,
-		Expiry: time.Now().Add(sessionLength * time.Second),
+		UserID:    userID,
+		SessionID: randomString,
+		Expiry:    time.Now().Add(sessionLength * time.Second),
 	}
+
+	sm.idToSession[uint(userID)] = sm.sessions[randomString]
 
 	return randomString
 }
@@ -109,5 +115,13 @@ func (sm *SessionManager) ActiveSessions() int {
 	sm.mu.RLock()
 	defer sm.mu.RUnlock()
 	return len(sm.sessions)
+}
+
+func (sm *SessionManager) CheckIfActiveSession(userID uint) (sessionData, bool) {
+	sm.mu.RLock()
+	defer sm.mu.RUnlock()
+	
+	session, ok := sm.idToSession[userID]
+	return session, ok
 }
 

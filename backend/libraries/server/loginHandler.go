@@ -33,7 +33,14 @@ func (s *Server) loginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	createSession(w, s.SM.Create(account.ID))
+	session, active := s.SM.CheckIfActiveSession(account.ID)
+	if !active {
+		sessionCookie := createCookie(s.SM.Create(account.ID))
+		http.SetCookie(w, sessionCookie)
+	} else {
+		sessionCookie := createCookie(session.SessionID)
+		http.SetCookie(w, sessionCookie)
+	}
 
 	SendGenericResponse(w, true, http.StatusOK, nil)
 }

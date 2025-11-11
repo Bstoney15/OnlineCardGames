@@ -6,7 +6,7 @@ import (
 )
 
 // createSession creates a new session and sets the session cookie.
-func createSession(w http.ResponseWriter, sessionID string) {
+func createCookie(sessionID string) *http.Cookie {
 	isProd := os.Getenv("PROD") == "true"
 
 	cookie := http.Cookie{
@@ -27,5 +27,23 @@ func createSession(w http.ResponseWriter, sessionID string) {
 		cookie.Secure = true
 	}
 
-	http.SetCookie(w, &cookie)
+	return &cookie
+}
+
+func (s *Server) checkCookie(r *http.Request) (uint, bool) {
+	cookie, err := r.Cookie("sessionId")
+	if err != nil {
+		if err == http.ErrNoCookie {
+			return 0, false
+		}
+		return 0, false
+	}
+
+	sessionID := cookie.Value
+	session, ok := s.SM.Get(sessionID)
+	if !ok || session.IsExpired() {
+		return 0, false
+	}
+
+	return session.UserID, true
 }

@@ -18,7 +18,6 @@ func (s *Server) authHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	sessionID := cookie.Value
-
 	// We can get the session from the session manager
 	session, ok := s.SM.Get(sessionID)
 	if !ok || session.IsExpired() {

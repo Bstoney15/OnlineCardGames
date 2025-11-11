@@ -55,6 +55,8 @@ func runMigrations(db *gorm.DB) {
 	if err != nil {
 		log.Fatalf("Failed to auto-migrate: %v", err)
 	}
+
+
 }
 
 // Start runs the HTTP server on a given address.
