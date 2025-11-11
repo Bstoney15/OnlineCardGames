@@ -4,9 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-
 	"cardgames/backend/models"
-
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -57,7 +55,8 @@ func (s *Server) registerHandler(w http.ResponseWriter, r *http.Request) {
 		Balance: account.Balance,
 	}
 
-	createSession(w, s.SM.Create(account.ID))
+	cookie := createCookie(s.SM.Create(account.ID))
+	http.SetCookie(w, cookie)
 
 	SendGenericResponse(w, true, http.StatusCreated, res)
 }

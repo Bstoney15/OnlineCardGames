@@ -119,18 +119,21 @@ func (gim *GameInstanceManager) GetPrivateGame(id string) *blackjack.BlackJackIn
 }
 
 // FindAvailablePublicGame finds a public game with available slots or creates a new one
-func (gim *GameInstanceManager) FindAvailablePublicGame() (*blackjack.BlackJackInstance, string) {
+func (gim *GameInstanceManager) FindAvailablePublicGame() (string, error) {
 	gim.mu.RLock()
 	// Try to find an available game
 	for id, game := range gim.PublicGames {
 		if len(game.Players) < blackjack.MaxPlayersPerInstance {
 			gim.mu.RUnlock()
-			return game, id
+			return id, nil
 		}
 	}
 	gim.mu.RUnlock()
 
 	// No available game found, create a new one
-	id, _ := gim.CreatePublicGame()
-	return gim.PublicGames[id], id
+	id, err := gim.CreatePublicGame()
+	if err != nil {
+		return "", err
+	}
+	return id, nil
 }

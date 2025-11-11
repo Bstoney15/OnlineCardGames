@@ -1,5 +1,5 @@
 //import { useState } from 'react';
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { checkAuth } from '/src/lib/apiClient.js';
 
@@ -15,17 +15,17 @@ function App() {
     };
     
     checkAuthentication();
-
-    if (!isAuthenticated) {
-      // route to home
-    }
-
   }, []);
 
+
+  if (isAuthenticated) {
+     return <Navigate to="/home" />;
+  }
 
   return (
     <div className='min-h-screen flex flex-col items-center justify-center'>
 
+      
 
 
       <div className='my-5'>
