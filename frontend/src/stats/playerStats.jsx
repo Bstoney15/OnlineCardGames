@@ -44,35 +44,41 @@ function PlayerStats() {
         );
     }
 
+    const box_css = "round-box w-full"
+    const p_css = "pl-4"
+
     return (
         <div className='min-h-screen flex flex-col items-center justify-center'>
+            <div className={`${box_css} max-w-xs max-h-3xs`}>
+                <h2 className={`${p_css}`}><span className="text-[var(--vice-pink-rich)] font-bold">{stats.username}</span>'s Stats</h2>
+            </div>
+                
             
-                <h2>Your Stats</h2>
-            
-            {/*
-            placeholder output for now, not sure if this is what stats
-            object from database will be like
-            */}
             {stats && (
-                <div className='mt-8 space-y-4'>
-                    <div>
-                        <p><strong>Wins:</strong> {stats.wins ?? 0}</p>
+                <div className='mt-8 space-y-4 w-full max-w-3xs'>
+                    <div className={box_css}>
+                        <p className={p_css}><strong>Wins:</strong> {stats.wins ?? 0}</p>
                     </div>
-                    <div>
-                        <p><strong>Losses:</strong> {stats.losses ?? 0}</p>
+                    <div className={box_css}>
+                        <p className={p_css}><strong>Losses:</strong> {stats.losses ?? 0}</p>
                     </div>
-                    <div>
-                        <p><strong>Wagers Placed:</strong> {stats.wagersPlaced ?? 0}</p>
+                    <div className={box_css}>
+                        <p className={p_css}><strong>Wagers Placed:</strong> {stats.wagersPlaced ?? 0}</p>
                     </div>
-                    <div>
-                        <p><strong>Win Rate:</strong> {stats.winRate ? `${Number(stats.winRate).toFixed(2)}%` : '0.00%'}</p>
+                    <div className={box_css}>
+                        <p className={p_css}><strong>Win Rate:</strong> {stats.winRate ? `${Number(stats.winRate).toFixed(2)}%` : '0.00%'}</p>
                     </div>
-                    <div>
-                        <p><strong>Balance:</strong> ${stats.balance ?? 0}</p>
+                    <div className={box_css}>
+                        <p className={p_css}><strong>Balance:</strong> ${stats.balance ?? 0}</p>
                     </div>
-                    <div>
-                        <p><strong>Amount Won:</strong> ${stats.amountWon ?? 0}</p>
+                    <div className={box_css}>
+                        <p className={p_css}><strong>Amount Won:</strong> ${stats.amountWon ?? 0}</p>
                     </div>
+                </div>
+            )}
+            {!stats && (
+                <div className="">
+                    <p>No stats found...</p>
                 </div>
             )}
         </div>

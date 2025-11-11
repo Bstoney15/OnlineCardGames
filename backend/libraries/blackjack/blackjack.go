@@ -26,7 +26,6 @@ const (
 
 // Action represents the type of action a player can take.
 type Action string
-
 const (
 	BetAction    Action = "bet"
 	HitAction    Action = "hit"
@@ -49,7 +48,7 @@ const (
 
 // IncomingUpdate is a message from a player to the game instance.
 type IncomingUpdate struct {
-	PlayerID string
+	PlayerID uint
 	Action   Action
 	Bet      int // Optional, only used for BetAction
 }
@@ -60,13 +59,13 @@ type OutgoingUpdate struct {
 	YourHand       []carddeck.Card
 	DealerHand     []carddeck.Card
 	Players        []PlayerInfo // Info about all players
-	ActivePlayerID string
+	ActivePlayerID uint
 	GameResult     string // e.g., "Player busts", "Dealer wins"
 }
 
 // PlayerInfo contains public information about a player.
 type PlayerInfo struct {
-	ID     string
+	ID     uint
 	Hand   []carddeck.Card
 	Bet    int
 	Status PlayerStatus
@@ -81,7 +80,7 @@ var allowedActions = map[GamePhase][]Action{
 
 // Player represents a player in the blackjack game.
 type Player struct {
-	ID       string
+	ID       uint
 	Account  *models.Account
 	Hand     []carddeck.Card
 	Bet      int
@@ -128,7 +127,13 @@ func NewBlackJackInstance(db *gorm.DB) *BlackJackInstance {
 }
 
 // AddPlayer adds a player to the blackjack instance
-func (b *BlackJackInstance) AddPlayer(playerID string) *Player {
+func (b *BlackJackInstance) AddPlayer(playerID uint) *Player {
+
+	if len(b.Players) >= MaxPlayersPerInstance {
+		// Table full
+		return nil
+	}
+
 	// Load account from database
 	var account models.Account
 	err := b.DB.Where("id = ?", playerID).First(&account).Error
@@ -310,7 +315,7 @@ func (b *BlackJackInstance) processUpdate(update IncomingUpdate) bool {
 	return needsTimerReset
 }
 
-func (b *BlackJackInstance) findPlayerByID(playerID string) *Player {
+func (b *BlackJackInstance) findPlayerByID(playerID uint) *Player {
 	for _, p := range b.Players {
 		if p.ID == playerID {
 			return p
@@ -325,7 +330,7 @@ func (b *BlackJackInstance) broadcastUpdate() {
 		playersInfo = append(playersInfo, p.ToPlayerInfo())
 	}
 
-	activePlayerID := ""
+	activePlayerID := uint(0)
 	if b.gamePhase == PlayerTurn && b.currentTurnIndex < len(b.Players) {
 		activePlayerID = b.Players[b.currentTurnIndex].ID
 	}

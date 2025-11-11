@@ -5,6 +5,7 @@ import App from './App.jsx'
 import Login from './login/index.jsx'
 import Register from './register/register.jsx';
 import Home from './home/home.jsx'
+import Blackjack from './blackjack/blackjack.jsx';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute.jsx';
 import PlayerStats from './stats/playerStats.jsx';
 import LeaderBoard from './stats/leaderboard.jsx';
@@ -23,9 +24,11 @@ const router = createBrowserRouter([
     path: "/register",
     element: <Register />,
   },
-  {
-    element: <ProtectedRoute />,
-    children: [
+
+  //commented auth stuff out so i can test the home page
+  //{
+    //element: <ProtectedRoute />,
+    //children: [
       {
         path: "/home",
         element: <Home />,
@@ -35,16 +38,21 @@ const router = createBrowserRouter([
         element: <PlayerStats />,
       },
       {
-        patjh: "/store",
+        path: "/store",
         element: <Store />,
       },
       {
         path: "/leaderboard",
         element: <LeaderBoard />,
+      },
+      {
+        path: "/blackjack/:id",
+        element: <Blackjack />,
       }
     ],
-  },
-]);
+  //},
+//]
+);
 
 
 createRoot(document.getElementById('root')).render(

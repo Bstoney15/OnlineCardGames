@@ -40,7 +40,7 @@ func NewGameInstanceManager(db *gorm.DB) *GameInstanceManager {
 	return gim
 }
 
-func (gim *GameInstanceManager) ClearEmptyGames() {
+func (gim *GameInstanceManager) clearEmptyGames() {
 	gim.mu.Lock()
 	defer gim.mu.Unlock()
 	for id, game := range gim.PublicGames {
@@ -61,7 +61,7 @@ func (gim *GameInstanceManager) Start() {
 		for {
 			select {
 			case <-ticker.C:
-				gim.ClearEmptyGames()
+				gim.clearEmptyGames()
 			case <-gim.stop:
 				ticker.Stop()
 				return
@@ -105,32 +105,53 @@ func (gim *GameInstanceManager) CreatePrivateGame() (string, error) {
 }
 
 // GetPublicGame retrieves a public game by ID
-func (gim *GameInstanceManager) GetPublicGame(id string) *blackjack.BlackJackInstance {
+func (gim *GameInstanceManager) getPublicGame(id string) (*blackjack.BlackJackInstance, bool) {
 	gim.mu.RLock()
 	defer gim.mu.RUnlock()
-	return gim.PublicGames[id]
+	game, ok := gim.PublicGames[id]
+	return game, ok
 }
 
 // GetPrivateGame retrieves a private game by ID
-func (gim *GameInstanceManager) GetPrivateGame(id string) *blackjack.BlackJackInstance {
+func (gim *GameInstanceManager) getPrivateGame(id string) (*blackjack.BlackJackInstance, bool) {
 	gim.mu.RLock()
 	defer gim.mu.RUnlock()
-	return gim.PrivateGames[id]
+	game, ok := gim.PrivateGames[id]
+	return game, ok
 }
 
+func (gim *GameInstanceManager) GetGame(id string) (*blackjack.BlackJackInstance) {
+
+	game, ok := gim.getPrivateGame(id)
+	if ok {
+		return game
+	}
+
+	game, ok = gim.getPublicGame(id)
+	if ok {
+		return game
+	}
+
+	return nil
+}
+
+
 // FindAvailablePublicGame finds a public game with available slots or creates a new one
-func (gim *GameInstanceManager) FindAvailablePublicGame() (*blackjack.BlackJackInstance, string) {
+func (gim *GameInstanceManager) FindAvailablePublicGame() (string, error) {
 	gim.mu.RLock()
 	// Try to find an available game
 	for id, game := range gim.PublicGames {
 		if len(game.Players) < blackjack.MaxPlayersPerInstance {
 			gim.mu.RUnlock()
-			return game, id
+			return id, nil
 		}
 	}
 	gim.mu.RUnlock()
 
 	// No available game found, create a new one
-	id, _ := gim.CreatePublicGame()
-	return gim.PublicGames[id], id
+	id, err := gim.CreatePublicGame()
+	if err != nil {
+		return "", err
+	}
+	return id, nil
 }

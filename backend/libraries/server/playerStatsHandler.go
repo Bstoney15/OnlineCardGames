@@ -56,6 +56,7 @@ func (s *Server) playerStatsHandler(w http.ResponseWriter, r *http.Request) {
 		"winRate":      winRate,
 		"amountWon":    account.AmountWon,
 		"wagersPlaced": account.WagersPlaced,
+		"username":     account.Username,
 	}
 
 	SendGenericResponse(w, true, 200, stats)
