@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { checkAuth } from '/src/lib/apiClient.js';
+import { Navigate } from 'react-router-dom';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -11,7 +12,7 @@ function App() {
 
     const checkAuthentication = async () => {
       const auth = await checkAuth();
-      setIsAuthenticated(auth);
+      setIsAuthenticated(auth.success);
     };
     
     checkAuthentication();

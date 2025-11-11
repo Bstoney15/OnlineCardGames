@@ -9,13 +9,10 @@ function ProtectedRoute() {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
 
   useEffect(() => {
+
     const verifyUser = async () => {
-      try {
-        await checkAuth();
-        setIsAuthenticated(true);
-      } catch (error) {
-        setIsAuthenticated(false);
-      }
+      const Auth = await checkAuth();
+      setIsAuthenticated(Auth.success);
     };
 
     verifyUser();
@@ -25,7 +22,7 @@ function ProtectedRoute() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center">
         <LoadingSpinner/>
-      </div> // Or a spinner component
+      </div>
     )
   }
 

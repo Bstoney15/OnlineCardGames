@@ -18,4 +18,4 @@ function Blackjack() {
   );
 }
 
-export default blackjack;
+export default Blackjack;
