@@ -41,7 +41,12 @@ func (s *Server) playerStatsHandler(w http.ResponseWriter, r *http.Request) {
 		SendGenericResponse(w, false, http.StatusNotFound, "user not found")
 		return
 	}
-	var winRate float32 = (float32(account.WagersWon) / float32(account.WagersPlaced)) * 100
+	var winRate float32
+	if account.WagersPlaced > 0 {
+		winRate = (float32(account.WagersWon) / float32(account.WagersPlaced)) * 100
+	} else {
+		winRate = 0
+	}
 
 	//calculate stats (put others later instead of just balance)
 	stats := map[string]interface{}{

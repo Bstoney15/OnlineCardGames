@@ -37,7 +37,7 @@ function PlayerStats() {
     if (error) {
         return (
             <div className='min-h-screen flex flex-col items-center justify-center'>
-                <div className='casino-title'>
+                <div className=''>
                     <h5>Error: {error}</h5>
                 </div>
             </div>
