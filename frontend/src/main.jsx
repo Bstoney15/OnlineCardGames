@@ -36,7 +36,7 @@ const router = createBrowserRouter([
         element: <PlayerStats />,
       },
       {
-        patjh: "/store",
+        path: "/store",
         element: <Store />,
       },
       {
