@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import UserTicker from "./userticker";
+import NavBar from "../components/navbar/navbar.jsx";
 
-function Home({ users }) {
+function Home() {
   const [selectedGame, setSelectedGame] = useState(null);
 
   const games = [
@@ -13,26 +14,8 @@ function Home({ users }) {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-start relative pt-50 space-y-6">
-      {/* Ticker fixed at the top */}
-      <div className="fixed top-0 left-0 w-full z-50">
-        <UserTicker users={users} />
-      </div>
-
-      {/* Navigation buttons */}
-      <div className="flex flex-col items-center w-full max-w-md space-y-4">
-        <Link to="/" className="btn-cyan-glow w-full text-center">
-          Go Title
-        </Link>
-        <Link to="/stats" className="btn-cyan-glow w-full text-center">
-          View your stats
-        </Link>
-        <Link to="/leaderboard" className="btn-cyan-glow w-full text-center">
-          View leaderboard
-        </Link>
-        <Link to="/store" className="btn-cyan-glow w-full text-center">
-          Go to Currency Store
-        </Link>
-      </div>
+      <UserTicker />
+      <NavBar />
 
       <div className="flex flex-row justify-center w-full max-w-3xl space-x-4">
         {games.map((game, idx) => (
@@ -51,6 +34,22 @@ function Home({ users }) {
             just showcases the game*/}
           </div>
         ))}
+      </div>
+
+      {/* Navigation buttons */}
+      <div className="flex flex-col items-center w-full max-w-md space-y-4">
+        <Link to="/" className="btn-cyan-glow w-full text-center">
+          Go Title
+        </Link>
+        <Link to="/stats" className="btn-cyan-glow w-full text-center">
+          View your stats
+        </Link>
+        <Link to="/leaderboard" className="btn-cyan-glow w-full text-center">
+          View leaderboard
+        </Link>
+        <Link to="/store" className="btn-cyan-glow w-full text-center">
+          Go to Currency Store
+        </Link>
       </div>
 
       {/* when you click on a game it shows a little screen kinda like netflix does and allows user
@@ -76,7 +75,6 @@ function Home({ users }) {
 
             <div className="flex flex-col w-full space-y-4">
               <button className="btn-cyan-glow w-full">Join Lobby</button>
-              <button className="btn-cyan-glow w-full">Start Solo Game</button>
               <button className="btn-cyan-glow w-full">Create Private Game</button>
             </div>
           </div>

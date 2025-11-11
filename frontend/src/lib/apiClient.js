@@ -46,3 +46,14 @@ export const checkAuth = () => request("/api/auth");
 export const getPlayerStats = () => request("/api/player-stats");
 
 export const getLeaderBoard = () => request("/api/leaderboard-stats");
+
+export const getUserInformation = () => request("/api/user-info"); // need to make api connor
+
+// Join or create a game lobby
+// game: "blackjack", "uno", "poker", etc.
+// visibility: "public" or "private"
+export const joinLobby = (game, visibility) =>
+  request("/api/lobby", {
+    method: "POST",
+    body: JSON.stringify({ game, visibility }),
+  });
