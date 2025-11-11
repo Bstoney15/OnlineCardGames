@@ -1,0 +1,63 @@
+.ticker-container {
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.2);
+  color: white;
+  font-family: monospace;
+  padding: 0.5rem 0;
+}
+
+.ticker-content {
+  display: inline-block;
+  white-space: nowrap;
+  animation: ticker-scroll 25s linear infinite;
+}
+
+.ticker-container:hover .ticker-content,
+.ticker-container.reverse:hover .ticker-content {
+  animation-play-state: paused;
+}
+
+.ticker-item:hover {
+  transform: scale(1.2);
+  transition: transform 0.2s ease;
+}
+
+.ticker-item {
+  display: inline-block;
+  margin-right: 3rem;
+}
+
+.username {
+  font-weight: bold;
+  color: #00ffff;
+}
+
+.score {
+  color: #ffcc00;
+}
+
+.ticker-container.reverse .ticker-content {
+  animation: ticker-scroll-reverse 25s linear infinite;
+}
+
+/* keyframe animation */
+@keyframes ticker-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes ticker-scroll-reverse {
+  0% {
+    transform: translateX(-50%); /* start offset so dns appear seamlessly */
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
