@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { checkAuth } from '/src/lib/apiClient.js';
 import { Navigate } from 'react-router-dom';
-import WelcomeAnimation from './LoadingScreenAnimation';
+import WelcomeAnimation from '/src/components/loadingScreen/LoadingScreenAnimation.jsx';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
