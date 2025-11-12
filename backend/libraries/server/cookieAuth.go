@@ -22,8 +22,8 @@ func createCookie(sessionID string) *http.Cookie {
 		cookie.SameSite = http.SameSiteStrictMode
 		cookie.Secure = true
 	} else {
-		// Development: cross-site cookie for localhost:5173 -> localhost:8080
-		cookie.SameSite = http.SameSiteNoneMode
+		// Development: Lax mode works for localhost without requiring HTTPS
+		cookie.SameSite = http.SameSiteLaxMode
 		cookie.Secure = false // Allow HTTP in development
 	}
 

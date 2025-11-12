@@ -106,10 +106,7 @@ func (sm *SessionManager) Get(sessionID string) (sessionData, bool) {
 		return sessionData{}, false
 	}
 
-	// Update the expiry time and write it back to the map
 	data.Expiry = time.Now().Add(sessionLength * time.Second)
-	sm.sessions[sessionID] = data
-	sm.idToSession[data.UserID] = data
 
 	return data, true
 }
