@@ -45,7 +45,26 @@ export const checkAuth = () => request("/api/auth");
 
 export const getPlayerStats = () => request("/api/player-stats");
 
-export const getLeaderBoard = () => request("/api/leaderboard-stats");
+export const getLeaderBoardBalance = () => 
+  request("/api/leaderboard-stats", {
+    headers : {"Field": "Balance" },
+  });
+export const getLeaderBoardWagersWon = () => 
+  request("/api/leaderboard-stats", {
+    headers : {"Field": "WagersWon" },
+  });
+export const getLeaderBoardWagersLost = () => 
+  request("/api/leaderboard-stats", {
+    headers : {"Field": "WagersLost" },
+  });
+export const getLeaderBoardAmountWon = () => 
+  request("/api/leaderboard-stats", {
+    headers : {"Field": "AmountWon" },
+  });
+export const getLeaderBoardWagersPlaced = () => 
+  request("/api/leaderboard-stats", {
+    headers : {"Field": "WagersPlaced" },
+  });
 
 export const getUserInformation = () => request("/api/user-info"); // need to make api connor
 

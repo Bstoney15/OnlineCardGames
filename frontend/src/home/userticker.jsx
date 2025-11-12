@@ -1,4 +1,4 @@
-import { getLeaderBoard } from '../lib/apiClient';
+import { getLeaderBoardBalance } from '../lib/apiClient';
 import './ticker.css'
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -6,12 +6,14 @@ import { useNavigate } from "react-router-dom";
 
 function UserTicker() {
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
       const fetchStats = async () => {
           try {
               setLoading(true);
-              const response = await getLeaderBoard();
+              const response = await getLeaderBoardBalance();
               // Backend returns: { success: true, status: 200, time: "...", data: {...} }
               setUsers(response.data);
               setError(null);
@@ -29,7 +31,10 @@ function UserTicker() {
   }, []);
 
   const navigate = useNavigate();
-  const safeUsers = users.length > 0 ? users : [{ username: "This could be you! Play today", balance: "$"+1000000 }];
+  const safeUsers = [{ 
+    username: users.act4_username + ", " + users.act3_username + ", "  + users.act2_username + ", "  + users.act1_username + ", "  + users.act0_username, 
+    balance: "$" + users.act4_balance+ ", $" + users.act3_balance+ ", $" + users.act2_balance+ ", $" + users.act1_balance+ ", $" + users.act0_balance
+  }];
   // repeat enough times to fill screen width
   const repeatedUsers = [];
   const minItems = 20;
