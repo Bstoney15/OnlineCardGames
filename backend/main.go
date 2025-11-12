@@ -7,7 +7,7 @@ import (
 func main() {
 	// NewServer sets up the database and router
 	s := server.NewServer()
-
+	// Test
 	// Start the server
 	s.Start(":8080")
 }
