@@ -1,23 +1,41 @@
-import { Link } from 'react-router-dom';
-import ActiveUsers from '/src/components/activeUsers/activeUsers';
+import { Link } from "react-router-dom";
+import ActiveUsers from "/src/components/activeUsers/activeUsers";
+import NavBar from "/src/components/NavBar/NavBar";
+import FriendsBar from "/src/components/FriendsBar/FriendsBar";
 
-// will need to auth user for this page. Need to redirect to '/' if user isnt logged in.
-function Home () {
-    return (
-        <div className="min-h-screen flex flex-col items-center justify-center">
-            <ActiveUsers />
-            <Link to='/' className='btn-cyan-glow'>Go Title</Link>
-            {/* new line to make it look better */}
-            <p><br /></p>
-            <Link to='/stats' className='btn-cyan-glow'>View your stats</Link>
-            {/* new line to make it look better */}
-            <p><br /></p>
-            <Link to='/leaderboard' className='btn-cyan-glow'>View leaderboard</Link>
-            {/* new line to make it look better */}
-            <p><br /></p>
-            <Link to='/store' className='btn-cyan-glow'>Go to Currency Store</Link>
-        </div>
-    )
+function Home() {
+  return (
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-purple-950 to-black text-white">
+      {/* Top Navigation */}
+      <NavBar />
+
+      {/* Main content area */}
+      <div className="flex flex-1">
+        {/* Friends Sidebar */}
+        <FriendsBar />
+
+        {/* Center content */}
+        <main className="flex flex-col flex-1 items-center justify-center gap-4">
+          <ActiveUsers />
+          <Link to="/" className="btn-cyan-glow">
+            Go Title
+          </Link>
+
+          <Link to="/stats" className="btn-cyan-glow">
+            View your stats
+          </Link>
+
+          <Link to="/leaderboard" className="btn-cyan-glow">
+            View leaderboard
+          </Link>
+
+          <Link to="/store" className="btn-cyan-glow">
+            Go to Currency Store
+          </Link>
+        </main>
+      </div>
+    </div>
+  );
 }
 
-export default Home;   
+export default Home;

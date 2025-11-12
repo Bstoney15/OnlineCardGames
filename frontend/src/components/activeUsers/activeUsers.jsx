@@ -22,11 +22,7 @@ function ActiveUsers() {
     return () => clearInterval(interval);
   }, []);
 
-  return (
-    <div className="active-users-container">
-      <p>Active Users: {activeUsers}</p>
-    </div>
-  );
+  
 }
 
 export default ActiveUsers;

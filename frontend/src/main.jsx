@@ -23,7 +23,7 @@ const router = createBrowserRouter([
     path: "/register",
     element: <Register />,
   },
-  {
+  /*{
     element: <ProtectedRoute />,
     children: [
       {
@@ -43,6 +43,18 @@ const router = createBrowserRouter([
         element: <LeaderBoard />,
       }
     ],
+  },*/
+  {
+    path: "/home",
+    element: <Home />,
+  },
+  { 
+    path: "/stats",
+    element: <PlayerStats />,
+  },
+  { 
+    path: "/store",
+    element: <Store />,
   },
 ]);
 

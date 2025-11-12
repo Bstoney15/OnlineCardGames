@@ -10,8 +10,8 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-
-    try {
+    navigate("/home");
+    /*try {
       const data = await loginUser({ email, password });
       console.log(data)
       if(data.success)
@@ -20,7 +20,7 @@ function Login() {
       }
     } catch (err) {
       setError(err.message);
-    }
+    }*/
   }
 
   return (
