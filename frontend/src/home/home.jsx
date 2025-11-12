@@ -13,7 +13,7 @@ function Home() {
   ]; //when we make more games available just update descriptiona and change to true
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-start relative pt-50 space-y-6">
+    <div className="min-h-screen flex flex-col items-center justify-start relative pt-40 space-y-6">
       <UserTicker />
       <NavBar />
 
