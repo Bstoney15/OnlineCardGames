@@ -20,10 +20,6 @@ func sendUnauthorized(w http.ResponseWriter) {
 // getUserIDFromRequest determines the user ID associated with a request.
 // When DEV_MODE is true, this function always returns user ID 1 to bypass authentication.
 func (s *Server) getUserIDFromRequest(r *http.Request) (uint, bool) {
-	if DEV_MODE {
-		return 1, true
-	}
-
 	cookie, err := r.Cookie("sessionId")
 	if err != nil {
 		return 0, false

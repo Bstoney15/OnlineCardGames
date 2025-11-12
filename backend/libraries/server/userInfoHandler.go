@@ -9,7 +9,6 @@ import (
 // userInfoHandler handles requests for user information.
 func (s *Server) userInfoHandler(w http.ResponseWriter, r *http.Request) {
 	id, ok := s.getUserIDFromRequest(r)
-
 	if !ok {
 		sendUnauthorized(w)
 		return
