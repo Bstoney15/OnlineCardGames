@@ -27,6 +27,8 @@ function NavBar() {
         <div className="navbar"> 
             <h1>Active Players</h1>
             <p>{activePlayers}</p>
+            <h1>User Info</h1>
+            <p>Username: {userInfo}</p>
         </div>
     )
 }
