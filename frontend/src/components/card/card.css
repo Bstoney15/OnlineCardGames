@@ -1,5 +1,5 @@
 [class^="card"] {
-        --cardScale: 0.4;
+        --cardScale: 0.3;
         --spriteColumns: 15;
         --spriteRows: 4;
         --spriteImageWidth: 4000px;
@@ -7,14 +7,14 @@
         --cardWidth: calc(var(--spriteImageWidth) / var(--spriteColumns));
         --cardHeight: calc(var(--spriteImageHeight) / var(--spriteRows));
 
-        background-image: url(src/assets/cards.jpg);
+        background-image: url('/src/assets/cards.jpg');
         width: calc(var(--cardScale) * var(--cardWidth));
         height: calc(var(--cardScale) * var(--cardHeight));
         background-size: calc(var(--spriteColumns) * 100%)
           calc(var(--spriteRows) * 100%);
-        border-radius: 7px;
+        border-radius: 5px;
         box-shadow: 2px 1px 1px rgb(0 0 0 / 50%);
-        margin: 3px;
+        margin: 2px;
         border: 1px solid #555;
       }
       .card--0-0 {

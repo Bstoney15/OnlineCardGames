@@ -27,5 +27,5 @@ func (s *Server) authHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// If the session is valid, send a success response
-	SendGenericResponse(w, true, http.StatusOK, true)
+	SendGenericResponse(w, true, http.StatusOK, session.UserID)
 }

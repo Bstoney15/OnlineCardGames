@@ -1,0 +1,252 @@
+.blackjack-table-container {
+  position: relative;
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.blackjack-table {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.table-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.hands-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.bets-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.dealer-area {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.player-hand-position {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateX(-50%);
+}
+
+/* Position player hands in a semi-circle - higher at edges, lower in middle */
+.player-hand-position:nth-child(1) {
+  bottom: 60%;
+  left: 88%;
+}
+
+.player-hand-position:nth-child(2) {
+  bottom: 35%;
+  left: 80%;
+}
+
+.player-hand-position:nth-child(3) {
+  bottom: 15%;
+  left: 67%;
+}
+
+.player-hand-position:nth-child(4) {
+  bottom: 11%;
+  left: 50%;
+}
+
+.player-hand-position:nth-child(5) {
+  bottom: 15%;
+  left: 33%;
+}
+
+.player-hand-position:nth-child(6) {
+  bottom: 35%;
+  left: 20%;
+}
+
+.player-hand-position:nth-child(7) {
+  bottom: 60%;
+  left: 12%;
+}
+
+.player-bet-position {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateX(-50%);
+}
+
+/* Position player bets - slightly below and closer to center than hands */
+.player-bet-position:nth-child(1) {
+  bottom: 53%;
+  left: 79.2%;
+}
+
+.player-bet-position:nth-child(2) {
+  bottom: 39.2%;
+  left: 71.2%;
+}
+
+.player-bet-position:nth-child(3) {
+  bottom: 30.3%;
+  left: 61.2%;
+}
+
+.player-bet-position:nth-child(4) {
+  bottom: 27.2%;
+  left: 50.1%;
+}
+
+.player-bet-position:nth-child(5) {
+  bottom: 30.3%;
+  left: 38.9%;
+}
+
+.player-bet-position:nth-child(6) {
+  bottom: 39.2%;
+  left: 28.9%;
+}
+
+.player-bet-position:nth-child(7) {
+  bottom: 53%;
+  left: 20.9%;
+}
+
+.bet-chip {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  border: 3px solid white;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+}
+
+.status-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.player-status-position {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateX(-50%);
+}
+
+/* Position player status - above the hands */
+.player-status-position:nth-child(1) {
+  bottom: 68%;
+  left: 88%;
+}
+
+.player-status-position:nth-child(2) {
+  bottom: 43%;
+  left: 80%;
+}
+
+.player-status-position:nth-child(3) {
+  bottom: 23%;
+  left: 67%;
+}
+
+.player-status-position:nth-child(4) {
+  bottom: 19%;
+  left: 50%;
+}
+
+.player-status-position:nth-child(5) {
+  bottom: 23%;
+  left: 33%;
+}
+
+.player-status-position:nth-child(6) {
+  bottom: 43%;
+  left: 20%;
+}
+
+.player-status-position:nth-child(7) {
+  bottom: 68%;
+  left: 12%;
+}
+
+.status-badge {
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 13px;
+  text-transform: uppercase;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.6);
+  animation: statusPop 0.4s ease-out;
+  border: 2px solid;
+}
+
+.status-won,
+.status-blackjack {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border-color: #34d399;
+}
+
+.status-lost,
+.status-busted {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  border-color: #f87171;
+}
+
+.status-push {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  color: white;
+  border-color: #fcd34d;
+}
+
+.status-blackjack {
+  font-size: 12px;
+  padding: 6px 10px;
+}
+
+@keyframes statusPop {
+  0% {
+    transform: scale(0) rotate(-10deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.15) rotate(5deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}

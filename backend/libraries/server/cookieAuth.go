@@ -24,7 +24,7 @@ func createCookie(sessionID string) *http.Cookie {
 	} else {
 		// Development: cross-site cookie for localhost:5173 -> localhost:8080
 		cookie.SameSite = http.SameSiteNoneMode
-		cookie.Secure = true
+		cookie.Secure = false // Allow HTTP in development
 	}
 
 	return &cookie

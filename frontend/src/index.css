@@ -48,6 +48,10 @@ body {
     var(--vice-glow-purple) 15%, /* Fading to deep purple */
     var(--vice-night) 85%      /* Fading to the dark 'night' color at the edges */
   );
+  background-attachment: fixed; /* Keeps background fixed when scrolling */
+  background-size: cover; /* Ensures background covers the entire viewport */
+  background-repeat: no-repeat; /* Prevents background from repeating */
+  min-height: 100vh; /* Ensures body takes at least full viewport height */
 
   color: var(--white);
   font-family: 'Montserrat', sans-serif;
