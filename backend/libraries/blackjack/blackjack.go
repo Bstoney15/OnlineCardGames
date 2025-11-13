@@ -3,20 +3,16 @@ package blackjack
 import (
 	carddeck "cardgames/backend/libraries/cardDeck"
 	"cardgames/backend/models"
+	"log"
 	"strconv"
 	"time"
 
 	"gorm.io/gorm"
 )
 
-// GamePhase represents the current phase of the game.
-type GamePhase string
-
-const (
-	Betting    GamePhase = "betting"
-	PlayerTurn GamePhase = "player_turn"
-	DealerTurn GamePhase = "dealer_turn"
-)
+//------------------------------------------------------------------
+// Constants and Types
+//------------------------------------------------------------------
 
 const (
 	BettingTimeLimit      = 5 // seconds
@@ -24,9 +20,16 @@ const (
 	MaxPlayersPerInstance = 7 // Standard blackjack table size
 )
 
+// GamePhase represents the current phase of the game.
+type GamePhase string
+const (
+	Betting    GamePhase = "betting"
+	PlayerTurn GamePhase = "player_turn"
+	DealerTurn GamePhase = "dealer_turn"
+)
+
 // Action represents the type of action a player can take.
 type Action string
-
 const (
 	BetAction    Action = "bet"
 	HitAction    Action = "hit"
@@ -38,13 +41,11 @@ const (
 
 // IncomingUpdate is a message from a player to the game instance.
 type PlayerStatus string
-
 const (
 	PlayerStatusPlaying   PlayerStatus = "playing"
 	PlayerStatusBusted    PlayerStatus = "busted"
 	PlayerStatusStand     PlayerStatus = "stand"
-	PlayerStatusJoined    PlayerStatus = "joined"
-	PlayerStatusLeft      PlayerStatus = "left"
+	PlayerStatusStandby   PlayerStatus = "standby" //user is active in lobby but not participating in current round
 	PlayerStatusWon       PlayerStatus = "won"
 	PlayerStatusLost      PlayerStatus = "lost"
 	PlayerStatusPush      PlayerStatus = "push"
@@ -74,6 +75,7 @@ type PlayerInfo struct {
 	Hand   []carddeck.Card
 	Bet    int
 	Status PlayerStatus
+	Balance int
 }
 
 // Map defining allowed actions for each game phase.
@@ -85,22 +87,24 @@ var allowedActions = map[GamePhase][]Action{
 
 // Player represents a player in the blackjack game.
 type Player struct {
-	ID       uint
-	Account  *models.Account
-	Hand     []carddeck.Card
-	Bet      int
-	Status   PlayerStatus // e.g., "playing", "busted", "stand"
-	Incoming chan IncomingUpdate
-	Outgoing chan OutgoingUpdate
+	ID        uint
+	Account   *models.Account
+	Hand      []carddeck.Card
+	Bet       int
+	Status    PlayerStatus // e.g., "playing", "busted", "stand"
+	Incoming  chan IncomingUpdate
+	Outgoing  chan OutgoingUpdate
+	Connected bool // indicates if the player is currently connected
 }
 
 // ToPlayerInfo returns a PlayerInfo struct with public information.
 func (p *Player) ToPlayerInfo() PlayerInfo {
 	return PlayerInfo{
-		ID:     p.ID,
-		Hand:   p.Hand,
-		Bet:    p.Bet,
-		Status: p.Status,
+		ID:      p.ID,
+		Hand:    p.Hand,
+		Bet:     p.Bet,
+		Status:  p.Status,
+		Balance: p.Account.Balance,
 	}
 }
 
@@ -133,6 +137,7 @@ func NewBlackJackInstance(db *gorm.DB) *BlackJackInstance {
 
 // AddPlayer adds a player to the blackjack instance
 func (b *BlackJackInstance) AddPlayer(playerID uint) *Player {
+	// TODO: need to add a check if the player is already in the game and disconnected. If so add implementation to reconnect them to the current player account.
 
 	if len(b.Players) >= MaxPlayersPerInstance {
 		// Table full
@@ -148,11 +153,12 @@ func (b *BlackJackInstance) AddPlayer(playerID uint) *Player {
 	}
 
 	p := &Player{
-		ID:       playerID,
-		Account:  &account,
-		Status:   PlayerStatusJoined,
-		Incoming: make(chan IncomingUpdate),
-		Outgoing: make(chan OutgoingUpdate, 10), // Buffered channel to prevent blocking
+		ID:        playerID,
+		Account:   &account,
+		Status:    PlayerStatusStandby,
+		Incoming:  make(chan IncomingUpdate),
+		Outgoing:  make(chan OutgoingUpdate, 10), // Buffered channel to prevent blocking
+		Connected: true,                          //assumes this is called in the beggining of the websocket connection
 	}
 	b.Players = append(b.Players, p)
 
@@ -164,6 +170,11 @@ func (b *BlackJackInstance) AddPlayer(playerID uint) *Player {
 	}()
 
 	return p
+}
+
+func (b *BlackJackInstance) removePlayer(playerID uint) {
+	p := b.findPlayerByID(playerID)
+	p.Connected = false // rest of logic will be handled in resetRound. makes sure user can still win the round if they disconnected mid round
 }
 
 // GameLoop is the main loop for the game instance.
@@ -313,13 +324,12 @@ func (b *BlackJackInstance) processUpdate(update IncomingUpdate) bool {
 			b.broadcastUpdate()
 		}
 	case LeaveAction:
-		p := b.findPlayerByID(update.PlayerID)
-		if p != nil {
-			p.Status = PlayerStatusLeft
-			b.broadcastUpdate()
-		}
+		b.removePlayer(update.PlayerID)
+		b.broadcastUpdate()
 	case SplitAction:
 		// TODO: Implement split logic
+	case DoubleAction:
+		// TODO: Implement double logic this one should be much easier than split thank god
 	}
 
 	return needsTimerReset
@@ -345,14 +355,30 @@ func (b *BlackJackInstance) broadcastUpdate() {
 		activePlayerID = b.Players[b.currentTurnIndex].ID
 	}
 
+	// edit dealer hand visibility based on phase
+	broadcastDealerHand := b.DealerHand
+	if b.gamePhase != DealerTurn {
+		if len(b.DealerHand) > 0 {
+			broadcastDealerHand = make([]carddeck.Card, len(b.DealerHand))
+			broadcastDealerHand[0] = b.DealerHand[0]
+			broadcastDealerHand[1] = carddeck.Card{Suit: "0", Value: "0"} // face down card
+		}
+		log.Println("Broadcasting dealer hand with hidden cards, ", broadcastDealerHand)
+	}
+	log.Println("Final broadcasting dealer hand: ", broadcastDealerHand)
+	log.Println("------------------------------------------")
+	log.Println("------------------------------------------")
+	log.Println("------------------------------------------")
+
+
 	for _, p := range b.Players {
 		update := OutgoingUpdate{
 			Phase:          b.gamePhase,
 			YourHand:       p.Hand,
-			DealerHand:     b.DealerHand,
+			DealerHand:     broadcastDealerHand,
 			Players:        playersInfo,
 			ActivePlayerID: activePlayerID,
-			// GameResult will be implemented later
+			// GameResult will be implemented later -- will it? 
 		}
 
 		// Non-blocking send - if channel is full, skip this player
@@ -360,8 +386,7 @@ func (b *BlackJackInstance) broadcastUpdate() {
 		case p.Outgoing <- update:
 			// Successfully sent
 		default:
-			// Channel full or blocked - player might be disconnected
-			// Log but don't block the game
+			b.removePlayer(p.ID)
 		}
 	}
 }
@@ -389,7 +414,7 @@ func (b *BlackJackInstance) moveToNextPlayer() bool {
 func (b *BlackJackInstance) dealInitialCards() {
 	// Deal 2 cards to each player who placed a bet
 	for _, p := range b.Players {
-		if p.Bet > 0 && p.Status != PlayerStatusLeft {
+		if p.Bet > 0 {
 			p.Hand = append(p.Hand, b.Deck.Draw())
 			p.Hand = append(p.Hand, b.Deck.Draw())
 			p.Status = PlayerStatusPlaying
@@ -483,10 +508,11 @@ func (b *BlackJackInstance) resetRound() {
 	// Remove players who left and reset remaining players
 	activePlayers := make([]*Player, 0)
 	for _, p := range b.Players {
-		if p.Status == PlayerStatusLeft {
+		if !p.Connected {
 			// Close channels and remove player
 			close(p.Incoming)
 			close(p.Outgoing)
+			// Player will be garbage collected automatically
 			continue
 		}
 
@@ -494,7 +520,7 @@ func (b *BlackJackInstance) resetRound() {
 		p.Hand = []carddeck.Card{}
 		p.Bet = 0
 		// Keep players in joined status so they can choose to bet or spectate
-		p.Status = PlayerStatusJoined
+		p.Status = PlayerStatusStandby
 		activePlayers = append(activePlayers, p)
 	}
 	b.Players = activePlayers
@@ -506,8 +532,6 @@ func (b *BlackJackInstance) resetRound() {
 		b.Deck.Shuffle()
 	}
 }
-
-// GamePhase represents the current phase of the game.
 
 func (b *BlackJackInstance) calculateHandValue(hand []carddeck.Card) int {
 	value := 0
