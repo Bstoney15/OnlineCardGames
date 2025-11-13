@@ -7,6 +7,7 @@ import (
 func (s *Server) authHandler(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("sessionId")
 	if err != nil {
+
 		if err == http.ErrNoCookie {
 			// If the cookie is not set, return an unauthorized status
 			SendGenericResponse(w, false, http.StatusUnauthorized, false)
@@ -27,5 +28,5 @@ func (s *Server) authHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// If the session is valid, send a success response
-	SendGenericResponse(w, true, http.StatusOK, true)
+	SendGenericResponse(w, true, http.StatusOK, session.UserID)
 }

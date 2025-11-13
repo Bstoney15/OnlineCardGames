@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { checkAuth } from "/src/lib/apiClient";

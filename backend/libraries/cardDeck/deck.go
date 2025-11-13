@@ -21,7 +21,7 @@ func New() Deck {
 
 // NewDeck creates a deck with the specified number of standard 52-card decks.
 func NewDeck(numDecks int) Deck {
-	suits := []string{"Hearts", "Diamonds", "Clubs", "Spades"}
+	suits := []string{"H", "D", "C", "S"}
 	values := []string{"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"}
 
 	deck := make(Deck, 0, len(suits)*len(values)*numDecks)

@@ -23,8 +23,8 @@ func (sd sessionData) IsExpired() bool {
 }
 
 type SessionManager struct {
-	mu       sync.RWMutex // mutex so we dont get any race conditions. Need to call mw.rLock() or mu.rwLock() and their corresponding unlock functions to use
-	sessions map[string]sessionData // maps session ID to session data
+	mu          sync.RWMutex           // mutex so we dont get any race conditions. Need to call mw.rLock() or mu.rwLock() and their corresponding unlock functions to use
+	sessions    map[string]sessionData // maps session ID to session data
 	idToSession map[uint]sessionData
 
 	stop   chan struct{}
@@ -33,10 +33,10 @@ type SessionManager struct {
 
 func NewSessionManager() *SessionManager {
 	sm := &SessionManager{
-		sessions:   make(map[string]sessionData),
+		sessions:    make(map[string]sessionData),
 		idToSession: make(map[uint]sessionData),
-		stop:       make(chan struct{}),
-		ticker:    time.NewTicker(cleanupInterval * time.Second),
+		stop:        make(chan struct{}),
+		ticker:      time.NewTicker(cleanupInterval * time.Second),
 	}
 
 	go sm.cleanUpSessions()
@@ -120,8 +120,7 @@ func (sm *SessionManager) ActiveSessions() int {
 func (sm *SessionManager) CheckIfActiveSession(userID uint) (sessionData, bool) {
 	sm.mu.RLock()
 	defer sm.mu.RUnlock()
-	
+
 	session, ok := sm.idToSession[userID]
 	return session, ok
 }
-

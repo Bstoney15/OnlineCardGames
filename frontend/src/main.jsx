@@ -26,9 +26,9 @@ const router = createBrowserRouter([
   },
 
   //commented auth stuff out so i can test the home page
-  //{
-    //element: <ProtectedRoute />,
-    //children: [
+  {
+    element: <ProtectedRoute />,
+    children: [
       {
         path: "/home",
         element: <Home />,
@@ -50,8 +50,8 @@ const router = createBrowserRouter([
         element: <Blackjack />,
       }
     ],
-  //},
-//]
+  },
+]
 );
 
 

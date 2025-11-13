@@ -1,16 +1,44 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import UserTicker from "./userticker";
 import NavBar from "../components/navbar/navbar.jsx";
+import { joinLobby as joinLobbyAPI } from "../lib/apiClient.js";
 
 function Home() {
   const [selectedGame, setSelectedGame] = useState(null);
+  const [isJoining, setIsJoining] = useState(false);
+  const navigate = useNavigate();
 
   const games = [
     { name: "Blackjack", available: true, description: "Try to get your cards as close to 21 as possible without going over and beat the dealer!" },
     { name: "Uno", available: false, description: "Coming soon" },
     { name: "Poker", available: false, description: "Coming soon" },
   ]; //when we make more games available just update descriptiona and change to true
+
+  const joinLobby = async (visibility) => {
+    setIsJoining(true);
+    try {
+      const response = await joinLobbyAPI(
+        selectedGame.name.toLowerCase(),
+        visibility
+      );
+
+      console.log(response); 
+
+      if (response.success && response.data.gameId) {
+        const gameId = response.data.gameId;
+        navigate(`/blackjack/${gameId}`);
+      } else {
+        console.error("Failed to join lobby:", response);
+        alert("Failed to join lobby. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error joining lobby:", error);
+      alert("Error joining lobby. Please try again.");
+    } finally {
+      setIsJoining(false);
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-start relative pt-40 space-y-6">
@@ -74,8 +102,20 @@ function Home() {
             for each game shown */}
 
             <div className="flex flex-col w-full space-y-4">
-              <button className="btn-cyan-glow w-full">Join Lobby</button>
-              <button className="btn-cyan-glow w-full">Create Private Game</button>
+              <button 
+                className="btn-cyan-glow w-full"
+                onClick={() => joinLobby('public')}
+                disabled={isJoining}
+              >
+                {isJoining ? 'Joining...' : 'Join Lobby'}
+              </button>
+              <button 
+                className="btn-cyan-glow w-full"
+                onClick={() => joinLobby('private')}
+                disabled={isJoining}
+              >
+                {isJoining ? 'Creating...' : 'Create Private Game'}
+              </button>
             </div>
           </div>
         </div>
