@@ -11,32 +11,14 @@ function NavBar() {
         // fetch any user data needed
 
         async function fetchData() {
-            try {
-                const activePlayers = await getActivePlayers()
-                setActivePlayers(activePlayers.data)
-            } catch (error) {
-                console.error("Failed to fetch active players:", error);
-            }
+            const activePlayers = await getActivePlayers()
+            setActivePlayers(activePlayers.data)
 
-            try {
-                const userInfo = await getUserInformation()
-                if (userInfo?.success && userInfo?.data) {
-                    setUsername(userInfo.data.Username || userInfo.data.username)
-                    
-                    // If user info succeeds, get balance
-                    try {
-                        const currencyInfo = await getCurrency()
-                        if (currencyInfo?.success && currencyInfo?.data) {
-                            setBalance(currencyInfo.data.balance)
-                        }
-                    } catch (balanceError) {
-                        console.error("Failed to fetch balance:", balanceError);
-                    }
-                }
-            } catch (error) {
-                // User not logged in - set to null
-                setUsername(null)
-                setBalance(null)
+            const userInfo = await getUserInformation()
+            console.log("User Info:", userInfo);
+            if (userInfo?.success && userInfo?.data) {
+                setUsername(userInfo.data.Username)
+                setBalance(userInfo.data.Balance)
             }
         }
 
@@ -45,7 +27,6 @@ function NavBar() {
     }, []);
 
 
-    // make this look pretty
     return (
         <nav className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-md border-b border-white/10 shadow-[0_0_20px_rgba(0,255,255,0.3)]">
             <div className="flex justify-between items-center px-6 py-3 max-w-7xl mx-auto">
