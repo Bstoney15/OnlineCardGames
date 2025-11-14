@@ -15,4 +15,4 @@ echo "Starting backend..."
 echo "Starting frontend..."
 cd "${SCRIPT_DIR}/frontend"
 npm install
-npm run dev
+npm run dev -- --host

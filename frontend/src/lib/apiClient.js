@@ -5,11 +5,11 @@ export class ApiError extends Error {
   }
 }
 
-const PROD = import.meta.env.PROD;
-const API_BASE = PROD ? window.location.origin : "http://localhost:8080";
+// In development, Vite proxy will forward /api requests to localhost:8080
+// In production, use the same origin (your deployed backend)
 
 async function request(path, options = {}) {
-  const res = await fetch(`${API_BASE}${path}`, {
+  const res = await fetch(`${path}`, {
     ...options,
     headers: { "Content-Type": "application/json" },
     credentials: "include",
