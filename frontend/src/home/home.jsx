@@ -41,8 +41,9 @@ function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-start relative pt-50 space-y-6">
-      <UserTicker />
+    <div className="min-h-screen flex flex-col items-center justify-start relative pt-40 space-y-6">
+      <NavBar />
+      <UserTicker /> 
 
       <div className="flex flex-row justify-center w-full max-w-3xl space-x-4">
         {games.map((game, idx) => (
