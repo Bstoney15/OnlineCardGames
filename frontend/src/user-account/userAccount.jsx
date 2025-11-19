@@ -1,42 +1,36 @@
 import { useState, useEffect } from "react";
-import { getPlayerStats } from "../lib/apiClient";
+import { getPlayerStats, getUserFriends } from "../lib/apiClient";
 import LoadingSpinner from "../components/LoadingSpinner/LoadingSpinner";
+import './account.css'
+
 
 function UserAccount() {
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [friends, setFriends] = useState(null);
 
     useEffect(() => {
         // create fetchstats funciton inside passed useeffect function
-        const fetchStats = async () => {
+        const fetchData = async () => {
             try {
                 setLoading(true);
-                const response = await getPlayerStats(); // api call to backend to get stats
-                setStats(response.data);
+                const [statsResponse, friendsResponse] = await Promise.all([
+                    getPlayerStats(),
+                    getUserFriends(),
+                ]); // api call to backend to get stats
+                setStats(statsResponse.data);
+                setFriends(friendsResponse.data);
                 setError(null);
             } catch (err) {
-                console.log("Error fetching User Stats", err);
-                setError("Failed to load User Stats. Please try again.");
+                console.log("Error fetching User Info", err);
+                setError("Failed to load User Info. Please try again.");
             } finally {
                 setLoading(false);
             }
         };
-        const fetchFriends = async () => {
-            // try {
-            //     setLoading(true);
-            //     const response = await getPlayerStats(); // api call to backend to get stats
-            //     setStats(response.data);
-            //     setError(null);
-            // } catch (err) {
-            //     console.log("Error fetching User Stats", err);
-            //     setError("Failed to load User Stats. Please try again.");
-            // } finally {
-            //     setLoading(false);
-            // }
-        };
-        // call created function, still inside useEffect
-        fetchStats();
+        
+        fetchData();
     }, []);
     // if loading, display the loading spinner
     if (loading) {
@@ -56,6 +50,7 @@ function UserAccount() {
     }
 
     const stats_box_css = "round-box w-full"
+    const friends_box_css = "friend-box w-full"
     const p_css = "pl-4"
 
     return (
@@ -72,10 +67,34 @@ function UserAccount() {
 
     </div>
         {/* overall div holding stats, friends, items (subject to change) */}
-        <div className="flex items-center space-x-8 ml-8 mr-8">
-            {/* placeholder for friends */}
-            <div className="flex-1">
-                <p>hello... friends list placeholder</p>
+        <div className="flex items-start space-x-8 ml-8 mr-8">
+            {/* friends div */}
+            <div className="flex-1 flex flex-col items-start justify-start">
+                <div className='space-y-4 w-full'>
+                    {friends && friends.length > 0 ? (
+                        <>
+                            <div>
+                                <strong><u>Friends:</u></strong>
+                            </div>
+                            {friends.map((friend) => (
+                                <div key={friend.id} className={friends_box_css}>
+                                    <p className={p_css}>{friend.username}</p>
+                                </div>
+                                ))}
+                        </>
+                        
+                        ) : (
+                            <div className='space-y-4 w-full'>
+                                <div>
+                                    <strong><u>Friends:</u></strong>
+                                </div>
+                                <div className={friends_box_css}>
+                                    <p className={p_css}>No friends yet</p>
+                                </div>
+                            </div>
+                        )
+                    }
+                </div>
             </div>
             {/* stats div */}
             <div className='flex-1 flex-col items-center justify-center '>

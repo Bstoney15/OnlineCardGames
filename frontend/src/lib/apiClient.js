@@ -49,6 +49,8 @@ export const getLeaderBoard = () => request("/api/leaderboard-stats");
 
 export const getUserInformation = () => request("/api/user-info"); // need to make api connor
 
+export const getUserFriends = () => request("/api/user-friends")
+
 // Join or create a game lobby
 // game: "blackjack", "uno", "poker", etc.
 // visibility: "public" or "private"
