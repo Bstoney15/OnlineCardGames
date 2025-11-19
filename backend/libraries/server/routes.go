@@ -20,7 +20,7 @@ func (s *Server) setupRoutes() {
 	s.Router.HandleFunc("/api/currency/add", s.addCurrencyHandler)
 
 	s.Router.HandleFunc("GET /api/player-stats", s.playerStatsHandler)
-	s.Router.HandleFunc("GET /api/leaderboard-stats", s.leaderboardStatsHandler)
+	s.Router.HandleFunc("POST /api/leaderboard-stats", s.leaderboardStatsHandler)
 	
 	s.Router.HandleFunc("GET /api/user-info", s.userInfoHandler)
 }

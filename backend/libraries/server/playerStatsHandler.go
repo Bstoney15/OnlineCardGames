@@ -4,6 +4,7 @@ import (
 	"cardgames/backend/models"
 	"net/http"
 	"fmt"
+	"encoding/json"
 )
 
 // handler to get players stats and return them for player stats page
@@ -62,6 +63,11 @@ func (s *Server) playerStatsHandler(w http.ResponseWriter, r *http.Request) {
 	SendGenericResponse(w, true, 200, stats)
 }
 
+
+type StatsRequest struct {
+	Field      string `json:"field"`
+}
+
 // handler to get players stats and return them for player stats page
 func (s *Server) leaderboardStatsHandler(w http.ResponseWriter, r *http.Request) {
 	// get session cookie (same as authHandler)
@@ -88,21 +94,20 @@ func (s *Server) leaderboardStatsHandler(w http.ResponseWriter, r *http.Request)
 	}
 
 	// TODO: return different leaderboards depending on the request, once other stats are available
+	var req StatsRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		SendGenericResponse(w, false, http.StatusBadRequest, "invalid request")
+		return
+	}
 
 	// query for stats based on user id
-	var field string = r.Header.Get("Field")
+	var field string = req.Field
 	fmt.Print("String: ")
 	fmt.Print(field)
-	fmt.Print("\n")
-	fmt.Print("Request Header: ")
-	fmt.Print(r.Header)
 	fmt.Print("\n")
 	if(field==""){
 		field = "Balance"
 	}
-	fmt.Print("String: ")
-	fmt.Print(field)
-	fmt.Print("\n")
 	var acct_rows []models.Account
 
 	{
@@ -149,9 +154,6 @@ func (s *Server) leaderboardStatsHandler(w http.ResponseWriter, r *http.Request)
 			"act4_username":     acct_rows[4].Username,
 		}
 
-		fmt.Print("Ret:")
-		fmt.Print(  stats )
-		fmt.Print("\n")
 		fmt.Print("----------------------------------\n")
 
 		SendGenericResponse(w, true, 200, stats)

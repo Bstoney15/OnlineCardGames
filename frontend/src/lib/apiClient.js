@@ -47,23 +47,28 @@ export const getPlayerStats = () => request("/api/player-stats");
 
 export const getLeaderBoardBalance = () => 
   request("/api/leaderboard-stats", {
-    headers : {"Field": "Balance" },
+    method: "POST",
+    body: JSON.stringify({ field : "Balance"}),
   });
 export const getLeaderBoardWagersWon = () => 
   request("/api/leaderboard-stats", {
-    headers : {"Field": "WagersWon" },
+    method: "POST",
+    body: JSON.stringify({ field : "Wagers_Won"}),
   });
 export const getLeaderBoardWagersLost = () => 
   request("/api/leaderboard-stats", {
-    headers : {"Field": "WagersLost" },
+    method: "POST",
+    body: JSON.stringify({ field : "Wagers_Lost"}),
   });
 export const getLeaderBoardAmountWon = () => 
   request("/api/leaderboard-stats", {
-    headers : {"Field": "AmountWon" },
+    method: "POST",
+    body: JSON.stringify({ field : "Amount_Won"}),
   });
 export const getLeaderBoardWagersPlaced = () => 
   request("/api/leaderboard-stats", {
-    headers : {"Field": "WagersPlaced" },
+    method: "POST",
+    body: JSON.stringify({ field : "Wagers_Placed"}),
   });
 
 export const getUserInformation = () => request("/api/user-info"); // need to make api connor

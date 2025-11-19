@@ -31,10 +31,13 @@ function UserTicker() {
   }, []);
 
   const navigate = useNavigate();
-  const safeUsers = [{ 
-    username: users.act4_username + ", " + users.act3_username + ", "  + users.act2_username + ", "  + users.act1_username + ", "  + users.act0_username, 
-    balance: "$" + users.act4_balance+ ", $" + users.act3_balance+ ", $" + users.act2_balance+ ", $" + users.act1_balance+ ", $" + users.act0_balance
-  }];
+  let safeUsers = [{ username: "This could be you", balance: "$10000" }];
+  if (users){
+    safeUsers = [{ 
+      username: users.act0_username, 
+      balance: "$" + users.act0_balance
+    }];
+  }
   // repeat enough times to fill screen width
   const repeatedUsers = [];
   const minItems = 20;
