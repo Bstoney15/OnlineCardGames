@@ -25,4 +25,7 @@ func (s *Server) setupRoutes() {
 	s.Router.HandleFunc("GET /api/user-info", s.userInfoHandler)
 
 	s.Router.HandleFunc("GET /api/user-friends", s.getFriendsHandler)
+
+	s.Router.HandleFunc("GET /api/getOwned", s.getOwnedHandler)
+	s.Router.HandleFunc("GET /api/getEquipped", s.getEquippedHandler)
 }

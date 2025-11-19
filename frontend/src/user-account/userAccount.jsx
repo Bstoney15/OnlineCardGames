@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getPlayerStats, getUserFriends } from "../lib/apiClient";
+import { getPlayerStats, getUserFriends, getEquipped, getOwned } from "../lib/apiClient";
 import LoadingSpinner from "../components/LoadingSpinner/LoadingSpinner";
 import './account.css'
 
@@ -9,18 +9,24 @@ function UserAccount() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [friends, setFriends] = useState(null);
+    const [owned, setOwned] = useState(null);
+    const [equipped, setEquipped] = useState(null);
 
     useEffect(() => {
         // create fetchstats funciton inside passed useeffect function
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const [statsResponse, friendsResponse] = await Promise.all([
+                const [statsResponse, friendsResponse, equippedResponse, ownedResponse] = await Promise.all([
                     getPlayerStats(),
                     getUserFriends(),
+                    getEquipped(),
+                    getOwned(),
                 ]); // api call to backend to get stats
                 setStats(statsResponse.data);
                 setFriends(friendsResponse.data);
+                setOwned(ownedResponse.data);
+                setEquipped(equippedResponse.data);
                 setError(null);
             } catch (err) {
                 console.log("Error fetching User Info", err);
@@ -134,6 +140,10 @@ function UserAccount() {
             {/* placeholder for friends */}
             <div className="flex-1">
                 <p>placeholder for items ??</p>
+                <p>${owned.items ?? 0}</p>
+                <p>${owned.colors  ?? 0}</p>
+                <p>${equipped.item ?? 0}</p>
+                <p>${equipped.color  ?? 0}</p>
                 </div>
         </div>
         </>
