@@ -73,6 +73,12 @@ export const getLeaderBoardWagersPlaced = () =>
 
 export const getUserInformation = () => request("/api/user-info"); // need to make api connor
 
+export const getUserFriends = () => request("/api/user-friends")
+
+export const getOwned = () => request("/api/getOwned")
+
+export const getEquipped = () => request("/api/getEquipped")
+
 // Join or create a game lobby
 // game: "blackjack", "uno", "poker", etc.
 // visibility: "public" or "private"

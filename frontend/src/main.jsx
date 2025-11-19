@@ -8,6 +8,7 @@ import Home from './home/home.jsx'
 import Blackjack from './blackjack/blackjack.jsx';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute.jsx';
 import PlayerStats from './stats/playerStats.jsx';
+import UserAccount from './user-account/userAccount.jsx';
 import LeaderBoard from './stats/leaderboard.jsx';
 import Store from './store/store.jsx';
 
@@ -34,8 +35,8 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/stats",
-        element: <PlayerStats />,
+        path: "/user-account",
+        element: <UserAccount />,
       },
       {
         path: "/store",

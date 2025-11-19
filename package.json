@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "promise": "^8.3.0"
+  }
+}
