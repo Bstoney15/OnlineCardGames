@@ -6,6 +6,7 @@ import Login from './login/index.jsx'
 import Register from './register/register.jsx';
 import Home from './home/home.jsx'
 import Blackjack from './blackjack/blackjack.jsx';
+import Baccarat from './baccarat/baccarat.jsx';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute.jsx';
 import PlayerStats from './stats/playerStats.jsx';
 import LeaderBoard from './stats/leaderboard.jsx';
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
       {
         path: "/blackjack/:id",
         element: <Blackjack />,
+      },
+      {
+        path: "/baccarat/:id",
+        element: <Baccarat />,
       }
     ],
   },

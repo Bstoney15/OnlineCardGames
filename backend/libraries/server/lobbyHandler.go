@@ -52,6 +52,33 @@ func (s *Server) lobbyHandler(w http.ResponseWriter, r *http.Request) {
 				return
 		}
 
+		case "baccarat":
+
+			switch req.Visibility {
+			case "public":
+
+				id, err := s.GIM.FindAvailablePublicBaccaratGame()
+				if err != nil {
+					SendGenericResponse(w, false, http.StatusInternalServerError, "could not create or find game")
+					return
+				}
+				SendGenericResponse(w, true, http.StatusOK, map[string]string{"gameId": id})
+				return
+			case "private":
+
+				id, err := s.GIM.CreatePrivateBaccaratGame()
+				if err != nil {
+					SendGenericResponse(w, false, http.StatusInternalServerError, "could not create game")
+					return
+				}
+				SendGenericResponse(w, true, http.StatusOK, map[string]string{"gameId": id})
+				return
+
+			default:
+				SendGenericResponse(w, false, http.StatusBadRequest, "invalid visibility")
+				return
+		}
+
 		default:
 			SendGenericResponse(w, false, http.StatusBadRequest, "unsupported game")
 			return

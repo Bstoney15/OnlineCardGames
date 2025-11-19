@@ -11,6 +11,7 @@ function Home() {
 
   const games = [
     { name: "Blackjack", available: true, description: "Try to get your cards as close to 21 as possible without going over and beat the dealer!" },
+    { name: "Baccarat", available: true, description: "Bet on Player, Banker, or Tie. The hand closest to 9 wins in this elegant casino classic!" },
     { name: "Uno", available: false, description: "Coming soon" },
     { name: "Poker", available: false, description: "Coming soon" },
   ]; //when we make more games available just update descriptiona and change to true
@@ -27,7 +28,8 @@ function Home() {
 
       if (response.success && response.data.gameId) {
         const gameId = response.data.gameId;
-        navigate(`/blackjack/${gameId}`);
+        const gameName = selectedGame.name.toLowerCase();
+        navigate(`/${gameName}/${gameId}`);
       } else {
         console.error("Failed to join lobby:", response);
         alert("Failed to join lobby. Please try again.");
