@@ -5,12 +5,13 @@ import (
 	"net/http"
 
 	gameinstancemanager "cardgames/backend/libraries/gameInstanceManager"
-	"cardgames/backend/libraries/sessionManager"
+	sessionmanager "cardgames/backend/libraries/sessionManager"
 	"cardgames/backend/models"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
+
 const DEV_MODE = true
 
 // Server holds dependencies for the application.
@@ -51,11 +52,13 @@ func NewServer() *Server {
 }
 
 func runMigrations(db *gorm.DB) {
-	err := db.AutoMigrate(&models.Account{})
+	err := db.AutoMigrate(
+		&models.Account{},
+		&models.Friend{},
+	)
 	if err != nil {
 		log.Fatalf("Failed to auto-migrate: %v", err)
 	}
-
 
 }
 
@@ -64,4 +67,3 @@ func (s *Server) Start(addr string) {
 	log.Printf("Server starting on %s", addr)
 	log.Fatal(http.ListenAndServe(addr, corsMiddleware(s.Router)))
 }
-
