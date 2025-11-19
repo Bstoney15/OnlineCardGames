@@ -3,7 +3,6 @@ package blackjack
 import (
 	carddeck "cardgames/backend/libraries/cardDeck"
 	"cardgames/backend/models"
-	"log"
 	"strconv"
 	"time"
 
@@ -81,17 +80,29 @@ type PlayerInfo struct {
 // Map defining allowed actions for each game phase.
 var allowedActions = map[GamePhase][]Action{
 	Betting:    {BetAction, LeaveAction},
-	PlayerTurn: {HitAction, StandAction, DoubleAction, LeaveAction},
+	PlayerTurn: {HitAction, StandAction, DoubleAction, LeaveAction, SplitAction},
 	DealerTurn: {},
 }
+
+//------------------------------------------------------------------
+// Structs
+//------------------------------------------------------------------
+
+//Hand instance, represents a single game. If a user splits they will have multiple hands
+
+// type Hand struct {
+// 	Cards []carddeck.Card
+// 	Status PlayerStatus
+// }
 
 // Player represents a player in the blackjack game.
 type Player struct {
 	ID        uint
 	Account   *models.Account
+	Wager     *models.Wager
 	Hand      []carddeck.Card
+	Status    PlayerStatus
 	Bet       int
-	Status    PlayerStatus // e.g., "playing", "busted", "stand"
 	Incoming  chan IncomingUpdate
 	Outgoing  chan OutgoingUpdate
 	Connected bool // indicates if the player is currently connected
@@ -103,7 +114,6 @@ func (p *Player) ToPlayerInfo() PlayerInfo {
 		ID:      p.ID,
 		Hand:    p.Hand,
 		Bet:     p.Bet,
-		Status:  p.Status,
 		Balance: p.Account.Balance,
 	}
 }
@@ -159,6 +169,7 @@ func (b *BlackJackInstance) AddPlayer(playerID uint) *Player {
 		Incoming:  make(chan IncomingUpdate),
 		Outgoing:  make(chan OutgoingUpdate, 10), // Buffered channel to prevent blocking
 		Connected: true,                          //assumes this is called in the beggining of the websocket connection
+		Wager:    &models.Wager{AccountID: playerID},             // Initialize a new wager for the player
 	}
 	b.Players = append(b.Players, p)
 
@@ -177,6 +188,31 @@ func (b *BlackJackInstance) removePlayer(playerID uint) {
 	p.Connected = false // rest of logic will be handled in resetRound. makes sure user can still win the round if they disconnected mid round
 }
 
+func (b *BlackJackInstance) lockBets() {
+	// lock in player bets
+	for _, p := range b.Players {
+		if p.Bet > 0 {
+
+			p.Wager = &models.Wager{
+				AccountID:   p.ID,
+				WagerAmount: p.Bet,
+			}
+
+			p.Account.Balance -= p.Bet
+			b.DB.Save(p.Account)
+		}
+	}
+}
+func (b *BlackJackInstance) checkForBlackjack() {
+	// Check for player blackjacks
+	for _, p := range b.Players {
+		if p.Bet > 0 && len(p.Hand) == 2 && b.calculateHandValue(p.Hand) == 21 {
+			p.Status = PlayerStatusBlackjack
+		}
+	}
+}
+
+
 // GameLoop is the main loop for the game instance.
 func (b *BlackJackInstance) GameLoop() {
 	timer := time.NewTimer(time.Duration(BettingTimeLimit) * time.Second)
@@ -188,16 +224,11 @@ func (b *BlackJackInstance) GameLoop() {
 			case Betting: // betting phase ending
 				b.gamePhase = PlayerTurn
 
-				// lock in player bets
-				for _, p := range b.Players {
-					if p.Bet > 0 {
-						p.Account.Balance -= p.Bet
-						b.DB.Save(p.Account)
-					}
-				}
+				b.lockBets()
 
 				// Deal initial cards
 				b.dealInitialCards()
+				b.checkForBlackjack()
 
 				// Check for dealer blackjack
 				if b.calculateHandValue(b.DealerHand) == 21 {
@@ -227,7 +258,6 @@ func (b *BlackJackInstance) GameLoop() {
 				} else {
 					b.gamePhase = DealerTurn
 					b.broadcastUpdate()
-					timer = time.NewTimer(time.Duration(ActionTimeLimit) * time.Second)
 				}
 			case DealerTurn:
 				b.playDealerHand()
@@ -363,13 +393,7 @@ func (b *BlackJackInstance) broadcastUpdate() {
 			broadcastDealerHand[0] = b.DealerHand[0]
 			broadcastDealerHand[1] = carddeck.Card{Suit: "0", Value: "0"} // face down card
 		}
-		log.Println("Broadcasting dealer hand with hidden cards, ", broadcastDealerHand)
 	}
-	log.Println("Final broadcasting dealer hand: ", broadcastDealerHand)
-	log.Println("------------------------------------------")
-	log.Println("------------------------------------------")
-	log.Println("------------------------------------------")
-
 
 	for _, p := range b.Players {
 		update := OutgoingUpdate{
@@ -378,16 +402,17 @@ func (b *BlackJackInstance) broadcastUpdate() {
 			DealerHand:     broadcastDealerHand,
 			Players:        playersInfo,
 			ActivePlayerID: activePlayerID,
-			// GameResult will be implemented later -- will it? 
 		}
 
+		p.Outgoing <- update
+
 		// Non-blocking send - if channel is full, skip this player
-		select {
-		case p.Outgoing <- update:
+		// select {
+		// case p.Outgoing <- update:
 			// Successfully sent
-		default:
-			b.removePlayer(p.ID)
-		}
+		// default:
+			// b.removePlayer(p.ID)
+		// }
 	}
 }
 
@@ -399,7 +424,7 @@ func (b *BlackJackInstance) FirstBroadcastUpdate() {
 // Returns true if there's another player, false if all players are done.
 func (b *BlackJackInstance) moveToNextPlayer() bool {
 	b.currentTurnIndex++
-	// Skip players who are already busted or standing
+	// Skip players who are already busted or standing or have blackjack
 	for b.currentTurnIndex < len(b.Players) {
 		p := b.Players[b.currentTurnIndex]
 		if p.Status == PlayerStatusPlaying {
@@ -427,12 +452,13 @@ func (b *BlackJackInstance) dealInitialCards() {
 
 // playDealerHand plays out the dealer's hand according to standard rules.
 func (b *BlackJackInstance) playDealerHand() {
-	// Dealer draws until reaching 17 or higher
+	time.Sleep(500 * time.Millisecond)
+
 	for b.calculateHandValue(b.DealerHand) < 17 {
 		card := b.Deck.Draw()
 		b.DealerHand = append(b.DealerHand, card)
 		b.broadcastUpdate()
-		time.Sleep(1 * time.Second) // Pause for dramatic effect
+		time.Sleep(1 * time.Second)
 	}
 }
 
@@ -451,6 +477,9 @@ func (b *BlackJackInstance) settleAllBets() {
 		// Player busted - already lost bet
 		if p.Status == PlayerStatusBusted {
 			p.Status = PlayerStatusLost
+			p.Wager.WagerWon = false
+			p.Wager.AmountWon = 0
+			b.DB.Save(p.Wager)
 			continue
 		}
 
@@ -460,9 +489,16 @@ func (b *BlackJackInstance) settleAllBets() {
 
 		// Both have blackjack - push
 		if isPlayerBlackjack && isDealerBlackjack {
+			// player account update
 			p.Status = PlayerStatusPush
 			p.Account.Balance += p.Bet
 			b.DB.Save(p.Account)
+
+			// wager update
+			p.Wager.WagerWon = true
+			p.Wager.AmountWon = p.Bet
+			b.DB.Save(p.Wager)
+
 			continue
 		}
 
@@ -471,14 +507,27 @@ func (b *BlackJackInstance) settleAllBets() {
 			p.Status = PlayerStatusBlackjack
 			p.Account.Balance += p.Bet + (p.Bet * 3 / 2)
 			b.DB.Save(p.Account)
+
+			// wager update
+			p.Wager.WagerWon = true
+			p.Wager.AmountWon = p.Bet + (p.Bet * 3 / 2)
+			b.DB.Save(p.Wager)
+
 			continue
 		}
 
 		// Dealer busted - player wins
 		if dealerBusted {
+			// player account update
 			p.Status = PlayerStatusWon
 			p.Account.Balance += p.Bet * 2
 			b.DB.Save(p.Account)
+
+			// wager update
+			p.Wager.WagerWon = true
+			p.Wager.AmountWon = p.Bet * 2
+			b.DB.Save(p.Wager)
+
 			continue
 		}
 
@@ -487,17 +536,28 @@ func (b *BlackJackInstance) settleAllBets() {
 			// Player wins
 			p.Status = PlayerStatusWon
 			p.Account.Balance += p.Bet * 2
+
+			// wager update
+			p.Wager.WagerWon = true
+			p.Wager.AmountWon = p.Bet * 2
 		} else if playerValue == dealerValue {
 			// Push - return bet
 			p.Status = PlayerStatusPush
 			p.Account.Balance += p.Bet
+
+			// wager update
+			p.Wager.WagerWon = true
+			p.Wager.AmountWon = p.Bet
 		} else {
 			// Player loses
 			p.Status = PlayerStatusLost
+			p.Wager.WagerWon = false
+			p.Wager.AmountWon = 0
 		}
 		// Player loses - bet already deducted
 
 		b.DB.Save(p.Account)
+		b.DB.Save(p.Wager)
 	}
 }
 
@@ -518,7 +578,7 @@ func (b *BlackJackInstance) resetRound() {
 
 		// Reset player for next round
 		p.Hand = []carddeck.Card{}
-		p.Bet = 0
+		p.Bet = 0	
 		// Keep players in joined status so they can choose to bet or spectate
 		p.Status = PlayerStatusStandby
 		activePlayers = append(activePlayers, p)
