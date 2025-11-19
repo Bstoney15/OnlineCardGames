@@ -57,3 +57,30 @@ export const joinLobby = (game, visibility) =>
     method: "POST",
     body: JSON.stringify({ game, visibility }),
   });
+// Friends API
+export const sendFriendRequest = (friendUsername) =>
+  request('/api/friends/request', {
+    method: 'POST',
+    body: JSON.stringify({ friendUsername }),
+  });
+
+export const acceptFriendRequest = (friendshipId) =>
+  request(`/api/friends/accept/${friendshipId}`, {
+    method: 'POST',
+  });
+
+export const declineFriendRequest = (friendshipId) =>
+  request(`/api/friends/decline/${friendshipId}`, {
+    method: 'DELETE',
+  });
+
+export const removeFriend = (friendshipId) =>
+  request(`/api/friends/remove/${friendshipId}`, {
+    method: 'DELETE',
+  });
+
+export const getFriends = () => request('/api/friends');
+
+export const getFriendRequests = () => request('/api/friends/requests');
+
+export const getSentRequests = () => request('/api/friends/sent');

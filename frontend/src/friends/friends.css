@@ -1,0 +1,262 @@
+.friends-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 100px 20px 40px;
+}
+
+.message {
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.message.success {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+  border: 1px solid #22c55e;
+}
+
+.message.error {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  border: 1px solid #ef4444;
+}
+
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  flex-wrap: wrap;
+}
+
+.tab {
+  padding: 12px 24px;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-bottom: 3px solid transparent;
+  position: relative;
+  bottom: -2px;
+}
+
+.tab:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.tab.active {
+  color: #06b6d4;
+  border-bottom-color: #06b6d4;
+}
+
+.tab-content {
+  background: rgba(30, 41, 59, 0.6);
+  border-radius: 12px;
+  padding: 30px;
+  min-height: 400px;
+}
+
+.friends-list,
+.requests-list {
+  display: grid;
+  gap: 15px;
+}
+
+.friend-card,
+.request-card {
+  background: rgba(51, 65, 85, 0.8);
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.friend-card:hover,
+.request-card:hover {
+  border-color: #06b6d4;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
+}
+
+.friend-info,
+.request-info {
+  flex: 1;
+}
+
+.friend-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 8px;
+}
+
+.friend-info h3,
+.request-info h3 {
+  color: white;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.request-info p {
+  color: rgba(255, 255, 255, 0.6);
+  margin: 5px 0 0 0;
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.status-badge.online {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+  border: 1px solid #22c55e;
+}
+
+.status-badge.offline {
+  background: rgba(107, 114, 128, 0.2);
+  color: #9ca3af;
+  border: 1px solid #6b7280;
+}
+
+.current-game {
+  color: #fbbf24;
+  font-size: 0.9rem;
+  margin-top: 5px;
+  font-weight: 500;
+}
+
+.friend-actions,
+.request-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.btn-join-game {
+  padding: 8px 20px;
+  font-size: 0.9rem;
+}
+
+.btn-remove,
+.btn-decline {
+  padding: 8px 20px;
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  border: 1px solid #ef4444;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-remove:hover,
+.btn-decline:hover {
+  background: #ef4444;
+  color: white;
+  transform: scale(1.05);
+}
+
+.btn-accept {
+  padding: 8px 20px;
+  font-size: 0.9rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.empty-state p {
+  font-size: 1.1rem;
+}
+
+.add-friend-form {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.add-friend-form h2 {
+  color: white;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.add-friend-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.friend-input {
+  padding: 15px;
+  background: rgba(51, 65, 85, 0.8);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: white;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.friend-input:focus {
+  outline: none;
+  border-color: #06b6d4;
+  background: rgba(51, 65, 85, 1);
+}
+
+.friend-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.btn-send-request {
+  padding: 15px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.btn-send-request:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .friend-card,
+  .request-card {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .friend-actions,
+  .request-actions {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .friend-actions button,
+  .request-actions button {
+    flex: 1;
+  }
+
+  .tabs {
+    justify-content: center;
+  }
+
+  .tab {
+    font-size: 0.9rem;
+    padding: 10px 16px;
+  }
+}

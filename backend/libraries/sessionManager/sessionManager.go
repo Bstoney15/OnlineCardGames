@@ -124,3 +124,14 @@ func (sm *SessionManager) CheckIfActiveSession(userID uint) (sessionData, bool) 
 	session, ok := sm.idToSession[userID]
 	return session, ok
 }
+
+func (sm *SessionManager) IsUserActive(userID uint) bool {
+	sm.mu.RLock()
+	defer sm.mu.RUnlock()
+
+	session, ok := sm.idToSession[userID]
+	if !ok {
+		return false
+	}
+	return !session.IsExpired()
+}

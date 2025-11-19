@@ -24,4 +24,13 @@ func (s *Server) setupRoutes() {
 	s.Router.HandleFunc("GET /api/leaderboard-stats", s.leaderboardStatsHandler)
 	
 	s.Router.HandleFunc("GET /api/user-info", s.userInfoHandler)
+
+	// Friends routes
+	s.Router.HandleFunc("POST /api/friends/request", s.sendFriendRequestHandler)
+	s.Router.HandleFunc("POST /api/friends/accept/{id}", s.acceptFriendRequestHandler)
+	s.Router.HandleFunc("DELETE /api/friends/decline/{id}", s.declineFriendRequestHandler)
+	s.Router.HandleFunc("DELETE /api/friends/remove/{id}", s.removeFriendHandler)
+	s.Router.HandleFunc("GET /api/friends", s.getFriendsHandler)
+	s.Router.HandleFunc("GET /api/friends/requests", s.getFriendRequestsHandler)
+	s.Router.HandleFunc("GET /api/friends/sent", s.getSentRequestsHandler)
 }

@@ -51,12 +51,10 @@ func NewServer() *Server {
 }
 
 func runMigrations(db *gorm.DB) {
-	err := db.AutoMigrate(&models.Account{})
+	err := db.AutoMigrate(&models.Account{}, &models.Friend{})
 	if err != nil {
 		log.Fatalf("Failed to auto-migrate: %v", err)
 	}
-
-
 }
 
 // Start runs the HTTP server on a given address.

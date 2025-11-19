@@ -71,6 +71,9 @@ function Home() {
         <Link to="/" className="btn-cyan-glow w-full text-center">
           Go Title
         </Link>
+        <Link to="/friends" className="btn-cyan-glow w-full text-center">
+          Friends
+        </Link>
         <Link to="/stats" className="btn-cyan-glow w-full text-center">
           View your stats
         </Link>
