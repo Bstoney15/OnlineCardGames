@@ -1,7 +1,6 @@
 package gameinstancemanager
 
 import (
-	"cardgames/backend/libraries/baccarat"
 	"cardgames/backend/libraries/blackjack"
 	"math/rand"
 	"sync"
@@ -26,8 +25,6 @@ type GameInstanceManager struct {
 	mu                 sync.RWMutex
 	PublicGames        map[string]*blackjack.BlackJackInstance
 	PrivateGames       map[string]*blackjack.BlackJackInstance
-	PublicBaccaratGames  map[string]*baccarat.BaccaratInstance
-	PrivateBaccaratGames map[string]*baccarat.BaccaratInstance
 	DB                 *gorm.DB
 	stop               chan struct{}
 }
@@ -36,8 +33,6 @@ func NewGameInstanceManager(db *gorm.DB) *GameInstanceManager {
 	gim := &GameInstanceManager{
 		PublicGames:          make(map[string]*blackjack.BlackJackInstance),
 		PrivateGames:         make(map[string]*blackjack.BlackJackInstance),
-		PublicBaccaratGames:  make(map[string]*baccarat.BaccaratInstance),
-		PrivateBaccaratGames: make(map[string]*baccarat.BaccaratInstance),
 		DB:                   db,
 		stop:                 make(chan struct{}),
 	}
@@ -56,16 +51,6 @@ func (gim *GameInstanceManager) clearEmptyGames() {
 	for id, game := range gim.PrivateGames {
 		if len(game.Players) == 0 {
 			delete(gim.PrivateGames, id)
-		}
-	}
-	for id, game := range gim.PublicBaccaratGames {
-		if len(game.Players) == 0 {
-			delete(gim.PublicBaccaratGames, id)
-		}
-	}
-	for id, game := range gim.PrivateBaccaratGames {
-		if len(game.Players) == 0 {
-			delete(gim.PrivateBaccaratGames, id)
 		}
 	}
 }
@@ -165,84 +150,6 @@ func (gim *GameInstanceManager) FindAvailablePublicGame() (string, error) {
 
 	// No available game found, create a new one
 	id, err := gim.CreatePublicGame()
-	if err != nil {
-		return "", err
-	}
-	return id, nil
-}
-
-// Baccarat game methods
-func (gim *GameInstanceManager) CreatePublicBaccaratGame() (string, error) {
-	gim.mu.Lock()
-	defer gim.mu.Unlock()
-	var id string
-	for {
-		id = generateID(5)
-		if _, ok := gim.PublicBaccaratGames[id]; !ok {
-			break
-		}
-	}
-	newGame := baccarat.NewBaccaratInstance(gim.DB)
-	gim.PublicBaccaratGames[id] = newGame
-	return id, nil
-}
-
-func (gim *GameInstanceManager) CreatePrivateBaccaratGame() (string, error) {
-	gim.mu.Lock()
-	defer gim.mu.Unlock()
-	var id string
-	for {
-		id = generateID(5)
-		if _, ok := gim.PrivateBaccaratGames[id]; !ok {
-			break
-		}
-	}
-	newGame := baccarat.NewBaccaratInstance(gim.DB)
-	gim.PrivateBaccaratGames[id] = newGame
-	return id, nil
-}
-
-func (gim *GameInstanceManager) getPublicBaccaratGame(id string) (*baccarat.BaccaratInstance, bool) {
-	gim.mu.RLock()
-	defer gim.mu.RUnlock()
-	game, ok := gim.PublicBaccaratGames[id]
-	return game, ok
-}
-
-func (gim *GameInstanceManager) getPrivateBaccaratGame(id string) (*baccarat.BaccaratInstance, bool) {
-	gim.mu.RLock()
-	defer gim.mu.RUnlock()
-	game, ok := gim.PrivateBaccaratGames[id]
-	return game, ok
-}
-
-func (gim *GameInstanceManager) GetBaccaratGame(id string) *baccarat.BaccaratInstance {
-	game, ok := gim.getPrivateBaccaratGame(id)
-	if ok {
-		return game
-	}
-
-	game, ok = gim.getPublicBaccaratGame(id)
-	if ok {
-		return game
-	}
-
-	return nil
-}
-
-func (gim *GameInstanceManager) FindAvailablePublicBaccaratGame() (string, error) {
-	gim.mu.RLock()
-	// Try to find an available game
-	for id, game := range gim.PublicBaccaratGames {
-		if len(game.Players) < baccarat.MaxPlayersPerInstance {
-			gim.mu.RUnlock()
-			return id, nil
-		}
-	}
-	gim.mu.RUnlock()
-
-	// No available game found, create a new one
-	id, err := gim.CreatePublicBaccaratGame()
 	if err != nil {
 		return "", err
 	}

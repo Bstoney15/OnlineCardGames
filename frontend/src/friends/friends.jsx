@@ -41,6 +41,7 @@ function Friends() {
       }
     } catch (error) {
       console.error("Failed to load friends:", error);
+      setMessage({ text: "Failed to load friends. Please refresh.", type: "error" });
     }
   };
 
@@ -141,7 +142,7 @@ function Friends() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div className="min-h-screen">
       <NavBar />
       
       <div className="friends-container">

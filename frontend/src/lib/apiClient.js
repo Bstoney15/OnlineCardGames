@@ -16,6 +16,13 @@ async function request(path, options = {}) {
   });
 
   const text = await res.text();
+  
+  // Check if response is HTML (error page)
+  if (text.startsWith('<!DOCTYPE') || text.startsWith('<html')) {
+    console.error('Received HTML response instead of JSON:', text);
+    throw new ApiError('Server returned an error page', res.status);
+  }
+  
   return text ? JSON.parse(text) : null;
 }
 

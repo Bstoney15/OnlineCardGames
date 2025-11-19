@@ -15,7 +15,6 @@ func (s *Server) setupRoutes() {
 
 	s.Router.HandleFunc("POST /api/lobby", s.lobbyHandler)
 	s.Router.HandleFunc("GET /api/ws/BlackJack/{gameID}", s.blackJackWSHandler)
-	s.Router.HandleFunc("GET /api/ws/Baccarat/{gameID}", s.baccaratWSHandler)
 
 	s.Router.HandleFunc("/api/currency", s.getCurrencyHandler)
 	s.Router.HandleFunc("/api/currency/add", s.addCurrencyHandler)
