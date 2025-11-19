@@ -3,7 +3,6 @@ package server
 import (
 	"cardgames/backend/models"
 	"net/http"
-	"fmt"
 	"encoding/json"
 )
 
@@ -102,9 +101,6 @@ func (s *Server) leaderboardStatsHandler(w http.ResponseWriter, r *http.Request)
 
 	// query for stats based on user id
 	var field string = req.Field
-	fmt.Print("String: ")
-	fmt.Print(field)
-	fmt.Print("\n")
 	if(field==""){
 		field = "Balance"
 	}
@@ -153,8 +149,6 @@ func (s *Server) leaderboardStatsHandler(w http.ResponseWriter, r *http.Request)
 			"act4_wagersPlaced": acct_rows[4].WagersPlaced,
 			"act4_username":     acct_rows[4].Username,
 		}
-
-		fmt.Print("----------------------------------\n")
 
 		SendGenericResponse(w, true, 200, stats)
 	}
