@@ -1,7 +1,6 @@
 package models
 
 import (
-	"time"
 	"gorm.io/gorm"
 )
 
@@ -9,13 +8,8 @@ import (
 type Wager struct {
 	gorm.Model
 
-	ID        uint       `gorm:"primaryKey"`
-	CreatedAt *time.Time `gorm:"default:null"`
-	UpdatedAt *time.Time `gorm:"default:null"`
-	DeletedAt *time.Time `gorm:"default:null;index"`
+	AccountID   uint `gorm:"not null"` // Foreign key to Account
 	WagerAmount int  `gorm:"not null"` // Amount in cents (to avoid floating point issues)
 	WagerWon    bool `gorm:"default:false"` // Whether the wager was won
-	AccountID   uint `gorm:"not null"` // Foreign key to Account
-	// Optional: Reference to the Account model
-	Account Account `gorm:"foreignKey:AccountID"`
+	AmountWon  int  `gorm:"default:0"`   // Amount won
 }
