@@ -12,7 +12,7 @@
 .ticker-content {
   display: inline-block;
   white-space: nowrap;
-  animation: ticker-scroll 25s linear infinite;
+  animation: ticker-scroll 35s linear infinite;
 }
 
 .ticker-container:hover .ticker-content,
@@ -40,7 +40,7 @@
 }
 
 .ticker-container.reverse .ticker-content {
-  animation: ticker-scroll-reverse 25s linear infinite;
+  animation: ticker-scroll-reverse 35s linear infinite;
 }
 
 /* keyframe animation */

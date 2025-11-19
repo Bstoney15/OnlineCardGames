@@ -14,7 +14,9 @@ class BlackjackWebSocket {
   connect() {
     // Determine WebSocket URL based on environment
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    const host = import.meta.env.PROD ? window.location.host : "localhost:8080";
+    // In development, use the current host (Vite dev server will proxy WebSocket)
+    // In production, use the actual host
+    const host = window.location.host;
     const wsUrl = `${protocol}//${host}/api/ws/BlackJack/${this.gameID}`;
 
     console.log("Connecting to WebSocket:", wsUrl);

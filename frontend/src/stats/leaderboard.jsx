@@ -1,8 +1,13 @@
 import { useState, useEffect } from "react";
-import { getLeaderBoard } from "../lib/apiClient";
+import { getLeaderBoardBalance, getLeaderBoardWagersWon, getLeaderBoardWagersLost, getLeaderBoardAmountWon, getLeaderBoardWagersPlaced } from "../lib/apiClient";
 import LoadingSpinner from "../components/LoadingSpinner/LoadingSpinner.jsx";
 
-function LeaderBoard() {const [stats, setStats] = useState(null);
+function LeaderBoard() {
+    const [balanceStats, setBalanceStats] = useState(null);
+    const [wagersWonStats, setWagersWonStats] = useState(null);
+    const [wagersLostStats, setWagersLostStats] = useState(null);
+    const [amountWonStats, setAmountWonStats] = useState(null);
+    const [wagersPlacedStats, setWagersPlacedStats] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -10,9 +15,32 @@ function LeaderBoard() {const [stats, setStats] = useState(null);
         const fetchStats = async () => {
             try {
                 setLoading(true);
-                const response = await getLeaderBoard();
                 // Backend returns: { success: true, status: 200, time: "...", data: {...} }
-                setStats(response.data);
+                const responseBalance = await getLeaderBoardBalance();
+                if (responseBalance.status == 404){
+                    throw new Error("fuck my backa life")
+                }
+                setBalanceStats(responseBalance.data);
+                const responseWagersWon = await getLeaderBoardWagersWon();
+                if (responseWagersWon.status == 404){
+                    throw new Error("fuck my backa life")
+                }
+                setWagersWonStats(responseWagersWon.data);
+                const responseWagersLost = await getLeaderBoardWagersLost();
+                if (responseWagersLost.status == 404){
+                    throw new Error("fuck my backa life")
+                }
+                setWagersLostStats(responseWagersLost.data);
+                const responseAmountWon = await getLeaderBoardAmountWon();
+                if (responseAmountWon.status == 404){
+                    throw new Error("fuck my backa life")
+                }
+                setAmountWonStats(responseAmountWon.data);
+                const responseWagersPlaced = await getLeaderBoardWagersPlaced();
+                if (responseWagersPlaced.status == 404){
+                    throw new Error("fuck my backa life")
+                }
+                setWagersPlacedStats(responseWagersPlaced.data);
                 setError(null);
             } catch (err) {
                 console.error("Failed to fetch Leader Board:", err);
@@ -41,22 +69,235 @@ function LeaderBoard() {const [stats, setStats] = useState(null);
         );
     }
 
+    const box_css = "round-box w-full"
+    const p_css = "pl-4"
+
     return (
         <div className='min-h-screen flex flex-col items-center justify-center'>
             
-                <h2>Leader Board</h2>
-            
-            {/*
-            placeholder output for now, not sure if this is what stats
-            object from database will be like
-            */}
-            {stats && (
-                <div className='mt-8 space-y-4'>
-                    <div>
-                        <p>Fill in with output</p>
-                    </div>
+            <h1>Leader Board</h1>
+
+            <div class="grid grid-cols-3 gap-4">
+                <div>
+                    <h2>Highest Balances</h2>
+                    
+                    {balanceStats && (
+                        <div className='mt-8 space-y-4 w-full max-w-l'>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{balanceStats.act0_username}</span>'s Balance: <br></br>  
+                                    {balanceStats.act0_balance ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{balanceStats.act1_username}</span>'s Balance: <br></br> 
+                                    {balanceStats.act1_balance ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{balanceStats.act2_username}</span>'s Balance: <br></br> 
+                                    {balanceStats.act2_balance ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{balanceStats.act3_username}</span>'s Balance: <br></br> 
+                                    {balanceStats.act3_balance ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{balanceStats.act4_username}</span>'s Balance: <br></br> 
+                                    {balanceStats.act4_balance ?? 0}
+                                </p>
+                            </div>
+                        </div>
+                    )}
+                    {!balanceStats && (
+                        <div className="">
+                            <p>No balance stats found...</p>
+                        </div>
+                    )}
                 </div>
-            )}
+
+                <div>
+                    <h2>Most Wagers Won</h2>
+                    
+                    {wagersWonStats && (
+                        <div className='mt-8 space-y-4 w-full max-w-l'>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{wagersWonStats.act0_username}</span>'s Wagers Won: <br></br> 
+                                    {wagersWonStats.act0_wins ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{wagersWonStats.act1_username}</span>'s Wagers Won: <br></br> 
+                                    {wagersWonStats.act1_wins ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{wagersWonStats.act2_username}</span>'s Wagers Won: <br></br> 
+                                    {wagersWonStats.act2_wins ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{wagersWonStats.act3_username}</span>'s Wagers Won: <br></br> 
+                                    {wagersWonStats.act3_wins ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{wagersWonStats.act4_username}</span>'s Wagers Won: <br></br> 
+                                    {wagersWonStats.act4_wins ?? 0}
+                                </p>
+                            </div>
+                        </div>
+                    )}
+                    {!wagersWonStats && (
+                        <div className="">
+                            <p>No wagers stats found...</p>
+                        </div>
+                    )}
+                </div>
+
+                <div>
+                    <h2>Most wagers lost</h2>
+                    
+                    {wagersLostStats && (
+                        <div className='mt-8 space-y-4 w-full max-w-l'>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{wagersLostStats.act0_username}</span>'s Wagers Lost: <br></br> 
+                                    {wagersLostStats.act0_losses ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{wagersLostStats.act1_username}</span>'s Wagers Lost: <br></br> 
+                                    {wagersLostStats.act1_losses ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{wagersLostStats.act2_username}</span>'s Wagers Lost: <br></br> 
+                                    {wagersLostStats.act2_losses ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{wagersLostStats.act3_username}</span>'s Wagers Lost: <br></br> 
+                                    {wagersLostStats.act3_losses ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{wagersLostStats.act4_username}</span>'s Wagers Lost: <br></br> 
+                                    {wagersLostStats.act4_losses ?? 0}
+                                </p>
+                            </div>
+                        </div>
+                    )}
+                    {!wagersLostStats && (
+                        <div className="">
+                            <p>No wager stats found...</p>
+                        </div>
+                    )}
+                </div>
+
+                <div>
+                    <h2>Highest Amount Won</h2>
+                    
+                    {amountWonStats && (
+                        <div className='mt-8 space-y-4 w-full max-w-l'>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{amountWonStats.act0_username}</span>'s Amount Won: <br></br> 
+                                    {amountWonStats.act0_amountWon ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{amountWonStats.act1_username}</span>'s Amount Won: <br></br> 
+                                    {amountWonStats.act1_amountWon ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{amountWonStats.act2_username}</span>'s Amount Won: <br></br> 
+                                    {amountWonStats.act2_amountWon ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{amountWonStats.act3_username}</span>'s Amount Won: <br></br> 
+                                    {amountWonStats.act3_amountWon ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{amountWonStats.act4_username}</span>'s Amount Won: <br></br> 
+                                    {amountWonStats.act4_amountWon ?? 0}
+                                </p>
+                            </div>
+                        </div>
+                    )}
+                    {!amountWonStats && (
+                        <div className="">
+                            <p>No amount won stats found...</p>
+                        </div>
+                    )}
+                </div>
+
+                <div>
+                    <h2>Highest Wagers Placed</h2>
+                    
+                    {wagersPlacedStats && (
+                        <div className='mt-8 space-y-4 w-full max-w-l'>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{wagersPlacedStats.act0_username}</span>'s Wagers Placed: <br></br> 
+                                    {wagersPlacedStats.act0_wagersPlaced ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{wagersPlacedStats.act1_username}</span>'s Wagers Placed: <br></br> 
+                                    {wagersPlacedStats.act1_wagersPlaced ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{wagersPlacedStats.act2_username}</span>'s Wagers Placed: <br></br> 
+                                    {wagersPlacedStats.act2_wagersPlaced ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{wagersPlacedStats.act3_username}</span>'s Wagers Placed: <br></br> 
+                                    {wagersPlacedStats.act3_wagersPlaced ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{wagersPlacedStats.act4_username}</span>'s Wagers Placed: <br></br> 
+                                    {wagersPlacedStats.act4_wagersPlaced ?? 0}
+                                </p>
+                            </div>
+                        </div>
+                    )}
+                    {!wagersPlacedStats && (
+                        <div className="">
+                            <p>No wager stats found...</p>
+                        </div>
+                    )}
+                </div>
+            </div>
         </div>
     );
 }
