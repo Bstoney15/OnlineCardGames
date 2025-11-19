@@ -49,6 +49,8 @@ export default function Register() {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           placeholder="Enter username"
+          minLength={1}
+          maxLength={21}
           required
         />
 
