@@ -77,224 +77,226 @@ function LeaderBoard() {
             
             <h1>Leader Board</h1>
 
-            <div>
-                <h2>Highest Balances</h2>
-                
-                {balanceStats && (
-                    <div className='mt-8 space-y-4 w-full max-w-3xs'>
-                        <div className={box_css}>
-                            <p className={p_css}>
-                                <span className="text-[var(--vice-pink-rich)] font-bold">{balanceStats.act0_username}</span>'s Balance: 
-                                {balanceStats.act0_balance ?? 0}
-                            </p>
+            <div class="grid grid-cols-3 gap-4">
+                <div>
+                    <h2>Highest Balances</h2>
+                    
+                    {balanceStats && (
+                        <div className='mt-8 space-y-4 w-full max-w-l'>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{balanceStats.act0_username}</span>'s Balance: <br></br>  
+                                    {balanceStats.act0_balance ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{balanceStats.act1_username}</span>'s Balance: <br></br> 
+                                    {balanceStats.act1_balance ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{balanceStats.act2_username}</span>'s Balance: <br></br> 
+                                    {balanceStats.act2_balance ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{balanceStats.act3_username}</span>'s Balance: <br></br> 
+                                    {balanceStats.act3_balance ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{balanceStats.act4_username}</span>'s Balance: <br></br> 
+                                    {balanceStats.act4_balance ?? 0}
+                                </p>
+                            </div>
                         </div>
-                        <div className={box_css}>
-                            <p className={p_css}>
-                                <span className="text-[var(--vice-pink-rich)] font-bold">{balanceStats.act1_username}</span>'s Balance: 
-                                {balanceStats.act1_balance ?? 0}
-                            </p>
+                    )}
+                    {!balanceStats && (
+                        <div className="">
+                            <p>No balance stats found...</p>
                         </div>
-                        <div className={box_css}>
-                            <p className={p_css}>
-                                <span className="text-[var(--vice-pink-rich)] font-bold">{balanceStats.act2_username}</span>'s Balance: 
-                                {balanceStats.act2_balance ?? 0}
-                            </p>
-                        </div>
-                        <div className={box_css}>
-                            <p className={p_css}>
-                                <span className="text-[var(--vice-pink-rich)] font-bold">{balanceStats.act3_username}</span>'s Balance: 
-                                {balanceStats.act3_balance ?? 0}
-                            </p>
-                        </div>
-                        <div className={box_css}>
-                            <p className={p_css}>
-                                <span className="text-[var(--vice-pink-rich)] font-bold">{balanceStats.act4_username}</span>'s Balance: 
-                                {balanceStats.act4_balance ?? 0}
-                            </p>
-                        </div>
-                    </div>
-                )}
-                {!balanceStats && (
-                    <div className="">
-                        <p>No balance stats found...</p>
-                    </div>
-                )}
-            </div>
+                    )}
+                </div>
 
-            <div>
-                <h2>Most Wagers Won</h2>
-                
-                {wagersWonStats && (
-                    <div className='mt-8 space-y-4 w-full max-w-3xs'>
-                        <div className={box_css}>
-                            <p className={p_css}>
-                                <span className="text-[var(--vice-pink-rich)] font-bold">{wagersWonStats.act0_username}</span>'s Balance: 
-                                {wagersWonStats.act0_balance ?? 0}
-                            </p>
+                <div>
+                    <h2>Most Wagers Won</h2>
+                    
+                    {wagersWonStats && (
+                        <div className='mt-8 space-y-4 w-full max-w-l'>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{wagersWonStats.act0_username}</span>'s Wagers Won: <br></br> 
+                                    {wagersWonStats.act0_wins ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{wagersWonStats.act1_username}</span>'s Wagers Won: <br></br> 
+                                    {wagersWonStats.act1_wins ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{wagersWonStats.act2_username}</span>'s Wagers Won: <br></br> 
+                                    {wagersWonStats.act2_wins ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{wagersWonStats.act3_username}</span>'s Wagers Won: <br></br> 
+                                    {wagersWonStats.act3_wins ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{wagersWonStats.act4_username}</span>'s Wagers Won: <br></br> 
+                                    {wagersWonStats.act4_wins ?? 0}
+                                </p>
+                            </div>
                         </div>
-                        <div className={box_css}>
-                            <p className={p_css}>
-                                <span className="text-[var(--vice-pink-rich)] font-bold">{wagersWonStats.act1_username}</span>'s Balance: 
-                                {wagersWonStats.act1_balance ?? 0}
-                            </p>
+                    )}
+                    {!wagersWonStats && (
+                        <div className="">
+                            <p>No wagers stats found...</p>
                         </div>
-                        <div className={box_css}>
-                            <p className={p_css}>
-                                <span className="text-[var(--vice-pink-rich)] font-bold">{wagersWonStats.act2_username}</span>'s Balance: 
-                                {wagersWonStats.act2_balance ?? 0}
-                            </p>
-                        </div>
-                        <div className={box_css}>
-                            <p className={p_css}>
-                                <span className="text-[var(--vice-pink-rich)] font-bold">{wagersWonStats.act3_username}</span>'s Balance: 
-                                {wagersWonStats.act3_balance ?? 0}
-                            </p>
-                        </div>
-                        <div className={box_css}>
-                            <p className={p_css}>
-                                <span className="text-[var(--vice-pink-rich)] font-bold">{wagersWonStats.act4_username}</span>'s Balance: 
-                                {wagersWonStats.act4_balance ?? 0}
-                            </p>
-                        </div>
-                    </div>
-                )}
-                {!wagersWonStats && (
-                    <div className="">
-                        <p>No wagers stats found...</p>
-                    </div>
-                )}
-            </div>
+                    )}
+                </div>
 
-            <div>
-                <h2>Most wagers lost</h2>
-                
-                {wagersLostStats && (
-                    <div className='mt-8 space-y-4 w-full max-w-3xs'>
-                        <div className={box_css}>
-                            <p className={p_css}>
-                                <span className="text-[var(--vice-pink-rich)] font-bold">{wagersLostStats.act0_username}</span>'s Balance: 
-                                {wagersLostStats.act0_balance ?? 0}
-                            </p>
+                <div>
+                    <h2>Most wagers lost</h2>
+                    
+                    {wagersLostStats && (
+                        <div className='mt-8 space-y-4 w-full max-w-l'>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{wagersLostStats.act0_username}</span>'s Wagers Lost: <br></br> 
+                                    {wagersLostStats.act0_losses ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{wagersLostStats.act1_username}</span>'s Wagers Lost: <br></br> 
+                                    {wagersLostStats.act1_losses ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{wagersLostStats.act2_username}</span>'s Wagers Lost: <br></br> 
+                                    {wagersLostStats.act2_losses ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{wagersLostStats.act3_username}</span>'s Wagers Lost: <br></br> 
+                                    {wagersLostStats.act3_losses ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{wagersLostStats.act4_username}</span>'s Wagers Lost: <br></br> 
+                                    {wagersLostStats.act4_losses ?? 0}
+                                </p>
+                            </div>
                         </div>
-                        <div className={box_css}>
-                            <p className={p_css}>
-                                <span className="text-[var(--vice-pink-rich)] font-bold">{wagersLostStats.act1_username}</span>'s Balance: 
-                                {wagersLostStats.act1_balance ?? 0}
-                            </p>
+                    )}
+                    {!wagersLostStats && (
+                        <div className="">
+                            <p>No wager stats found...</p>
                         </div>
-                        <div className={box_css}>
-                            <p className={p_css}>
-                                <span className="text-[var(--vice-pink-rich)] font-bold">{wagersLostStats.act2_username}</span>'s Balance: 
-                                {wagersLostStats.act2_balance ?? 0}
-                            </p>
-                        </div>
-                        <div className={box_css}>
-                            <p className={p_css}>
-                                <span className="text-[var(--vice-pink-rich)] font-bold">{wagersLostStats.act3_username}</span>'s Balance: 
-                                {wagersLostStats.act3_balance ?? 0}
-                            </p>
-                        </div>
-                        <div className={box_css}>
-                            <p className={p_css}>
-                                <span className="text-[var(--vice-pink-rich)] font-bold">{wagersLostStats.act4_username}</span>'s Balance: 
-                                {wagersLostStats.act4_balance ?? 0}
-                            </p>
-                        </div>
-                    </div>
-                )}
-                {!wagersLostStats && (
-                    <div className="">
-                        <p>No wager stats found...</p>
-                    </div>
-                )}
-            </div>
+                    )}
+                </div>
 
-            <div>
-                <h2>Highest Amount Won</h2>
-                
-                {amountWonStats && (
-                    <div className='mt-8 space-y-4 w-full max-w-3xs'>
-                        <div className={box_css}>
-                            <p className={p_css}>
-                                <span className="text-[var(--vice-pink-rich)] font-bold">{amountWonStats.act0_username}</span>'s Balance: 
-                                {amountWonStats.act0_balance ?? 0}
-                            </p>
+                <div>
+                    <h2>Highest Amount Won</h2>
+                    
+                    {amountWonStats && (
+                        <div className='mt-8 space-y-4 w-full max-w-l'>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{amountWonStats.act0_username}</span>'s Amount Won: <br></br> 
+                                    {amountWonStats.act0_amountWon ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{amountWonStats.act1_username}</span>'s Amount Won: <br></br> 
+                                    {amountWonStats.act1_amountWon ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{amountWonStats.act2_username}</span>'s Amount Won: <br></br> 
+                                    {amountWonStats.act2_amountWon ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{amountWonStats.act3_username}</span>'s Amount Won: <br></br> 
+                                    {amountWonStats.act3_amountWon ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{amountWonStats.act4_username}</span>'s Amount Won: <br></br> 
+                                    {amountWonStats.act4_amountWon ?? 0}
+                                </p>
+                            </div>
                         </div>
-                        <div className={box_css}>
-                            <p className={p_css}>
-                                <span className="text-[var(--vice-pink-rich)] font-bold">{amountWonStats.act1_username}</span>'s Balance: 
-                                {amountWonStats.act1_balance ?? 0}
-                            </p>
+                    )}
+                    {!amountWonStats && (
+                        <div className="">
+                            <p>No amount won stats found...</p>
                         </div>
-                        <div className={box_css}>
-                            <p className={p_css}>
-                                <span className="text-[var(--vice-pink-rich)] font-bold">{amountWonStats.act2_username}</span>'s Balance: 
-                                {amountWonStats.act2_balance ?? 0}
-                            </p>
-                        </div>
-                        <div className={box_css}>
-                            <p className={p_css}>
-                                <span className="text-[var(--vice-pink-rich)] font-bold">{amountWonStats.act3_username}</span>'s Balance: 
-                                {amountWonStats.act3_balance ?? 0}
-                            </p>
-                        </div>
-                        <div className={box_css}>
-                            <p className={p_css}>
-                                <span className="text-[var(--vice-pink-rich)] font-bold">{amountWonStats.act4_username}</span>'s Balance: 
-                                {amountWonStats.act4_balance ?? 0}
-                            </p>
-                        </div>
-                    </div>
-                )}
-                {!amountWonStats && (
-                    <div className="">
-                        <p>No amount won stats found...</p>
-                    </div>
-                )}
-            </div>
+                    )}
+                </div>
 
-            <div>
-                <h2>Highest Wagers Placed</h2>
-                
-                {wagersPlacedStats && (
-                    <div className='mt-8 space-y-4 w-full max-w-3xs'>
-                        <div className={box_css}>
-                            <p className={p_css}>
-                                <span className="text-[var(--vice-pink-rich)] font-bold">{wagersPlacedStats.act0_username}</span>'s Balance: 
-                                {wagersPlacedStats.act0_balance ?? 0}
-                            </p>
+                <div>
+                    <h2>Highest Wagers Placed</h2>
+                    
+                    {wagersPlacedStats && (
+                        <div className='mt-8 space-y-4 w-full max-w-l'>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{wagersPlacedStats.act0_username}</span>'s Wagers Placed: <br></br> 
+                                    {wagersPlacedStats.act0_wagersPlaced ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{wagersPlacedStats.act1_username}</span>'s Wagers Placed: <br></br> 
+                                    {wagersPlacedStats.act1_wagersPlaced ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{wagersPlacedStats.act2_username}</span>'s Wagers Placed: <br></br> 
+                                    {wagersPlacedStats.act2_wagersPlaced ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{wagersPlacedStats.act3_username}</span>'s Wagers Placed: <br></br> 
+                                    {wagersPlacedStats.act3_wagersPlaced ?? 0}
+                                </p>
+                            </div>
+                            <div className={box_css}>
+                                <p className={p_css}>
+                                    <span className="text-[var(--vice-pink-rich)] font-bold">{wagersPlacedStats.act4_username}</span>'s Wagers Placed: <br></br> 
+                                    {wagersPlacedStats.act4_wagersPlaced ?? 0}
+                                </p>
+                            </div>
                         </div>
-                        <div className={box_css}>
-                            <p className={p_css}>
-                                <span className="text-[var(--vice-pink-rich)] font-bold">{wagersPlacedStats.act1_username}</span>'s Balance: 
-                                {wagersPlacedStats.act1_balance ?? 0}
-                            </p>
+                    )}
+                    {!wagersPlacedStats && (
+                        <div className="">
+                            <p>No wager stats found...</p>
                         </div>
-                        <div className={box_css}>
-                            <p className={p_css}>
-                                <span className="text-[var(--vice-pink-rich)] font-bold">{wagersPlacedStats.act2_username}</span>'s Balance: 
-                                {wagersPlacedStats.act2_balance ?? 0}
-                            </p>
-                        </div>
-                        <div className={box_css}>
-                            <p className={p_css}>
-                                <span className="text-[var(--vice-pink-rich)] font-bold">{wagersPlacedStats.act3_username}</span>'s Balance: 
-                                {wagersPlacedStats.act3_balance ?? 0}
-                            </p>
-                        </div>
-                        <div className={box_css}>
-                            <p className={p_css}>
-                                <span className="text-[var(--vice-pink-rich)] font-bold">{wagersPlacedStats.act4_username}</span>'s Balance: 
-                                {wagersPlacedStats.act4_balance ?? 0}
-                            </p>
-                        </div>
-                    </div>
-                )}
-                {!wagersPlacedStats && (
-                    <div className="">
-                        <p>No wager stats found...</p>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
         </div>
     );
