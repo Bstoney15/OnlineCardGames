@@ -29,14 +29,15 @@ func (s *Server) blackJackWSHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	player := game.AddPlayer(userID)
+	if player == nil {
+		http.Error(w, "Unable to join game", http.StatusForbidden)
+		log.Println("Unable to join game")	
+		return
+	}
+
 	wsLogic := func(ws *websocket.Conn) {
 		defer ws.Close()
-
-		player := game.AddPlayer(userID)
-		if player == nil {
-			http.Error(w, "Unable to join game", http.StatusForbidden)
-			return
-		}
 
 		cookie, _ := r.Cookie("sessionId")
 

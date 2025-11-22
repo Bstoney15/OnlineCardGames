@@ -15,12 +15,17 @@ function ProtectedRoute() {
     };
 
     verifyUser();
+
+    // Ping auth endpoint every 60 seconds to keep session alive and check status
+    const intervalId = setInterval(verifyUser, 60000);
+
+    return () => clearInterval(intervalId);
   }, []);
 
   if (isAuthenticated === null) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center">
-        <LoadingSpinner/>
+        <LoadingSpinner />
       </div>
     )
   }

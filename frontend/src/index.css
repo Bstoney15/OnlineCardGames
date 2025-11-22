@@ -9,7 +9,7 @@
 
 @font-face {
   font-family: 'lazer84';
-  src: url('./assets/fonts/Lazer84.ttf') format('truetype'); 
+  src: url('./assets/fonts/Lazer84.ttf') format('truetype');
 }
 
 @font-face {
@@ -19,39 +19,58 @@
 
 /* Vice City Color Palette - Updated for Night Sky Gradient */
 :root {
-  --vice-blue-light: #4361EE; /* A slightly richer, deeper blue for the top */
-  --vice-blue-mid: #2A36C2;  /* An intermediate, dark blue/purple */
-  --vice-blue-dark: #0B022D; /* Very dark, rich purple-blue for the base */
-  --vice-purple-deep: #7209B7; /* Deep rich purple for the mid-to-upper transition */
+  --vice-blue-light: #4361EE;
+  /* A slightly richer, deeper blue for the top */
+  --vice-blue-mid: #2A36C2;
+  /* An intermediate, dark blue/purple */
+  --vice-blue-dark: #0B022D;
+  /* Very dark, rich purple-blue for the base */
+  --vice-purple-deep: #7209B7;
+  /* Deep rich purple for the mid-to-upper transition */
 
-  --vice-night: #0B022D; /* Very dark, rich purple-blue */
+  --vice-night: #0B022D;
+  /* Very dark, rich purple-blue */
 
   /* These are the "glow" colors radiating from the center */
-  --vice-glow-purple: #7209B7; /* Deep rich purple */
-  --vice-glow-blue: #4361EE;   /* Lighter blue for the center of the glow */
+  --vice-glow-purple: #7209B7;
+  /* Deep rich purple */
+  --vice-glow-blue: #4361EE;
+  /* Lighter blue for the center of the glow */
 
   --vice-pink-rich: #F72585;
-  --vice-pink: #F27DFD; /* Hot Pink */
-  --vice-cyan: #00FFFF; /* Cyan */
-  --vice-yellow-gold: #FFD700; /* Sunset Gold */
-  --white: #FFFFFF; /* White */
-  --dark-grey: #333333; /* Dark Grey */
+  --vice-pink: #F27DFD;
+  /* Hot Pink */
+  --vice-cyan: #00FFFF;
+  /* Cyan */
+  --vice-yellow-gold: #FFD700;
+  /* Sunset Gold */
+  --white: #FFFFFF;
+  /* White */
+  --dark-grey: #333333;
+  /* Dark Grey */
 }
 
 
 body {
 
   /* Updated Background Gradient */
-  background: radial-gradient(
-    ellipse at 100% 100%,     /* Position the glow at the bottom-center */
-    var(--vice-glow-blue) 0%,  /* The bright blue center of the glow */
-    var(--vice-glow-purple) 15%, /* Fading to deep purple */
-    var(--vice-night) 85%      /* Fading to the dark 'night' color at the edges */
-  );
-  background-attachment: fixed; /* Keeps background fixed when scrolling */
-  background-size: cover; /* Ensures background covers the entire viewport */
-  background-repeat: no-repeat; /* Prevents background from repeating */
-  min-height: 100vh; /* Ensures body takes at least full viewport height */
+  background: radial-gradient(ellipse at 100% 100%,
+      /* Position the glow at the bottom-center */
+      var(--vice-glow-blue) 0%,
+      /* The bright blue center of the glow */
+      var(--vice-glow-purple) 15%,
+      /* Fading to deep purple */
+      var(--vice-night) 85%
+      /* Fading to the dark 'night' color at the edges */
+    );
+  background-attachment: fixed;
+  /* Keeps background fixed when scrolling */
+  background-size: cover;
+  /* Ensures background covers the entire viewport */
+  background-repeat: no-repeat;
+  /* Prevents background from repeating */
+  min-height: 100vh;
+  /* Ensures body takes at least full viewport height */
 
   color: var(--white);
   font-family: 'Montserrat', sans-serif;
@@ -65,7 +84,8 @@ body::before {
   position: absolute;
   top: 0;
   left: 0;
-  width: 2px;  /* The invisible 1px dot we use as an anchor */
+  width: 2px;
+  /* The invisible 1px dot we use as an anchor */
   height: 2px;
   background: transparent;
 
@@ -73,7 +93,7 @@ body::before {
     Using 'vw' (viewport width) and 'vh' (viewport height) 
     makes them spread out across the whole screen.
   */
-  box-shadow: 
+  box-shadow:
     60vw 10vh var(--white),
     10vw 20vh var(--white),
     80vw 30vh var(--white),
@@ -97,6 +117,7 @@ body::before {
     0% {
       transform: translateX(-100%);
     }
+
     100% {
       transform: translateX(150%);
     }
@@ -109,9 +130,12 @@ body::before {
 
 @layer utilities {
   @keyframes blink {
-    0%, 100% {
+
+    0%,
+    100% {
       opacity: 1;
     }
+
     50% {
       opacity: 0;
     }
@@ -143,7 +167,7 @@ body::before {
 }
 
 .btn-cyan-glow {
-  @apply  px-6 py-3 font-semibold rounded-xl text-center;
+  @apply px-6 py-3 font-semibold rounded-xl text-center;
   @apply transition-all duration-200;
   @apply bg-transparent border-2 border-[var(--vice-cyan)] text-[var(--vice-cyan)];
   @apply shadow-[0_0_10px_var(--vice-cyan)] [text-shadow:0_0_5px_var(--vice-cyan)];
@@ -178,7 +202,7 @@ body::before {
 }
 
 .form-input {
-    background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.1);
   border: 1px solid #66d9ef;
   border-radius: 5px;
   padding: 0.6rem;
@@ -203,10 +227,101 @@ body::before {
   border-radius: 10px;
   /* backdrop-filter: blur(10px); */
   box-shadow: 0px 0px 3px 3px var(--vice-night);
-  background: linear-gradient(25deg, var(--vice-night) 20%, rgba(0,0,0,0) 100%);
+  background: linear-gradient(25deg, var(--vice-night) 20%, rgba(0, 0, 0, 0) 100%);
   transition: transform 0.2s ease;
 }
 
 .round-box:hover {
   transform: scale(1.05);
+}
+
+.glow-box {
+  --glow-color: var(--vice-pink);
+  /* Default color */
+  @apply p-4 rounded-xl border-2 border-[var(--glow-color)] bg-black/50 backdrop-blur-sm;
+  @apply shadow-[0_0_15px_var(--glow-color)] transition-all duration-300;
+}
+
+.glow-box:hover {
+  @apply shadow-[0_0_25px_var(--glow-color)] border-[var(--glow-color)];
+}
+
+.glow-pink {
+  --glow-color: var(--vice-pink);
+}
+
+.glow-cyan {
+  --glow-color: var(--vice-cyan);
+}
+
+.glow-white {
+  --glow-color: var(--white);
+}
+
+.glow-button {
+  --glow-color: var(--white);
+  /* Default */
+  @apply px-6 py-3 font-semibold rounded-xl text-center flex items-center justify-center;
+  @apply transition-all duration-200;
+  @apply bg-transparent border-2 border-[var(--glow-color)] text-[var(--glow-color)];
+  @apply shadow-[0_0_10px_var(--glow-color)] [text-shadow:0_0_5px_var(--glow-color)];
+}
+
+.glow-button:hover:not(:disabled) {
+  @apply bg-[var(--glow-color)] text-[var(--vice-night)];
+  @apply shadow-[0_0_20px_var(--glow-color)] [text-shadow:none];
+}
+
+.glow-button:disabled {
+  @apply opacity-50 cursor-not-allowed shadow-none border-gray-500 text-gray-400;
+}
+
+.glow-red {
+  --glow-color: #ef4444;
+}
+
+/* Poker Chips */
+.poker-chip {
+  @apply relative w-12 h-12 rounded-full flex items-center justify-center font-bold transition-all duration-200;
+  @apply border-2 bg-black/40 backdrop-blur-sm;
+  border-color: var(--chip-color);
+  color: var(--chip-color);
+  box-shadow: 0 0 10px var(--chip-color), inset 0 0 5px var(--chip-color);
+  text-shadow: 0 0 5px var(--chip-color);
+}
+
+.poker-chip:hover {
+  @apply scale-110;
+  background: var(--chip-color);
+  color: var(--vice-night);
+  box-shadow: 0 0 20px var(--chip-color), inset 0 0 10px var(--chip-color);
+  text-shadow: none;
+}
+
+.poker-chip:active {
+  @apply scale-95;
+}
+
+.chip-1000 {
+  --chip-color: var(--vice-purple-deep);
+}
+
+.chip-500 {
+  --chip-color: var(--vice-blue-mid);
+}
+
+.chip-100 {
+  --chip-color: var(--vice-blue-light);
+}
+
+.chip-50 {
+  --chip-color: var(--vice-cyan);
+}
+
+.chip-25 {
+  --chip-color: var(--vice-pink);
+}
+
+.chip-default {
+  --chip-color: var(--vice-pink-rich);
 }

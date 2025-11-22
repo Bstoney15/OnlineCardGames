@@ -3,3 +3,4 @@
 # dont currently have one but for future use. 
 .env 
 
+*.db

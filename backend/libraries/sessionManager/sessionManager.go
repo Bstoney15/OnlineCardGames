@@ -107,6 +107,7 @@ func (sm *SessionManager) Get(sessionID string) (sessionData, bool) {
 	}
 
 	data.Expiry = time.Now().Add(sessionLength * time.Second)
+	sm.sessions[sessionID] = data
 
 	return data, true
 }

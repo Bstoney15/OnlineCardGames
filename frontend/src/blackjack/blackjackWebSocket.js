@@ -32,7 +32,6 @@ class BlackjackWebSocket {
     this.ws.onmessage = (event) => {
       try {
         const message = JSON.parse(event.data);
-        console.log("Received message:", message.GameResult);
         this.onMessage?.(message);
       } catch (error) {
         console.error("Error parsing message:", error);

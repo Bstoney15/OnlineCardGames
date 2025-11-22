@@ -3,6 +3,7 @@ package blackjack
 import (
 	carddeck "cardgames/backend/libraries/cardDeck"
 	"cardgames/backend/models"
+	"log"
 	"strconv"
 	"time"
 
@@ -258,6 +259,7 @@ func (b *BlackJackInstance) GameLoop() {
 				} else {
 					b.gamePhase = DealerTurn
 					b.broadcastUpdate()
+					timer = time.NewTimer(1 * time.Millisecond)
 				}
 			case DealerTurn:
 				b.playDealerHand()
@@ -265,7 +267,7 @@ func (b *BlackJackInstance) GameLoop() {
 				b.settleAllBets()
 				b.broadcastUpdate()
 
-				time.Sleep(5 * time.Second) // Pause before next round
+				time.Sleep(2 * time.Second) // Pause before next round
 
 				b.resetRound()
 				b.gamePhase = Betting
@@ -404,15 +406,13 @@ func (b *BlackJackInstance) broadcastUpdate() {
 			ActivePlayerID: activePlayerID,
 		}
 
-		p.Outgoing <- update
-
 		// Non-blocking send - if channel is full, skip this player
-		// select {
-		// case p.Outgoing <- update:
+		select {
+		case p.Outgoing <- update:
 			// Successfully sent
-		// default:
-			// b.removePlayer(p.ID)
-		// }
+		default:
+			log.Println("Failed to send update to player", p.ID)
+		}
 	}
 }
 
@@ -578,7 +578,7 @@ func (b *BlackJackInstance) resetRound() {
 
 		// Reset player for next round
 		p.Hand = []carddeck.Card{}
-		p.Bet = 0	
+		p.Bet = 0
 		// Keep players in joined status so they can choose to bet or spectate
 		p.Status = PlayerStatusStandby
 		activePlayers = append(activePlayers, p)
