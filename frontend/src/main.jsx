@@ -11,11 +11,12 @@ import PlayerStats from './stats/playerStats.jsx';
 import UserAccount from './user-account/userAccount.jsx';
 import LeaderBoard from './stats/leaderboard.jsx';
 import Store from './store/store.jsx';
+import LayoutWithNav from './components/LayoutWithNav.jsx';
 
 const router = createBrowserRouter([
   {
-    path: "/", // The "home" page
-    element: <App />, // The component to show
+    path: "/",
+    element: <App />, 
   },
   {
     path: "/login",
@@ -26,36 +27,29 @@ const router = createBrowserRouter([
     element: <Register />,
   },
 
-  //commented auth stuff out so i can test the home page
   {
     element: <ProtectedRoute />,
     children: [
       {
-        path: "/home",
-        element: <Home />,
+        element: <LayoutWithNav />, 
+        children: [
+          { path: "/home", element: <Home /> },
+          { path: "/user-account", element: <UserAccount /> },
+          { path: "/store", element: <Store /> },
+          { path: "/leaderboard", element: <LeaderBoard /> },
+          { path: "/stats", element: <PlayerStats /> },
+        ]
       },
-      {
-        path: "/user-account",
-        element: <UserAccount />,
-      },
-      {
-        path: "/store",
-        element: <Store />,
-      },
-      {
-        path: "/leaderboard",
-        element: <LeaderBoard />,
-      },
+
+      // pages with NO NavBar
       {
         path: "/blackjack/:id",
-        element: <Blackjack />,
+        element: <Blackjack />
       }
     ],
   },
-]
-);
-
+]);
 
 createRoot(document.getElementById('root')).render(
-    <RouterProvider router={router} />
+  <RouterProvider router={router} />
 )
