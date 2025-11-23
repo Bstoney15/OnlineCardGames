@@ -12,31 +12,39 @@ export default function Register() {
   const [success, setSuccess] = useState("");
   
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (password !== confirmPassword) {
-      setError("Passwords do not match!");
+  if (password !== confirmPassword) {
+    setError("Passwords do not match!");
+    return;
+  }
+
+  setError("");
+  setSuccess("");
+
+  try {
+    const res = await createUser({ email, password, username });
+
+    // Handle backend failure (e.g., UNIQUE constraint on email)
+    if (!res || res.success === false) {
+      // If backend sends a message in `error`, show it; otherwise generic text
+      setError(res?.error || "Failed to create account. Try a different email.");
       return;
     }
 
-    setError("");
-    setSuccess("");
+    // Clear form on success
+    setUsername("");
+    setEmail("");
+    setPassword("");
+    setConfirmPassword("");
 
-    try {
-      const res = await createUser({ email, password, username });
-
-      setUsername("");
-      setEmail("");
-      setPassword("");
-      setConfirmPassword("");
-
-      // use backend response to show email
-      setSuccess(`Account created for ${res.data.email} with ${res.data.balance} credits!`);
-    } catch (err) {
-      if (err instanceof ApiError) setError(err.message);
-      else setError("An unexpected error occurred. Please try again.");
-    } 
-  };
+    // use backend response to show email
+    setSuccess(`Account created for ${res.data.email} with ${res.data.balance} credits!`);
+  } catch (err) {
+    if (err instanceof ApiError) setError(err.message);
+    else setError("An unexpected error occurred. Please try again.");
+  }
+};
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">

@@ -80,17 +80,18 @@ export const getUserInformation = () => request("/api/user-info");
 
 export const getUserFriends = () => request("/api/user-friends");
 
-// Henry's cosmetics endpoints – keep the paths your team already used
-export const getOwned = () => request("/api/getOwned");
+// Henry's backend uses exact these routes:
+export const getOwned = () => request("/api/get-owned");
+export const getEquipped = () => request("/api/get-equipped");
 
-export const getEquipped = () => request("/api/getEquipped");
-
+// Buy item or color
 export const buyStoreItem = (kind, index) =>
   request("/api/store/buy", {
     method: "POST",
     body: JSON.stringify({ kind, index }),
   });
 
+// Lootbox
 export const openLootbox = () =>
   request("/api/store/lootbox", {
     method: "POST",
