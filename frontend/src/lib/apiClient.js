@@ -91,6 +91,8 @@ export const buyStoreItem = (kind, index) =>
     body: JSON.stringify({ kind, index }),
   });
 
+export const getItems = () => request("/api/items");
+
 // Lootbox
 export const openLootbox = () =>
   request("/api/store/lootbox", {
