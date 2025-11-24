@@ -1,52 +1,66 @@
 import { getLeaderBoardBalance } from '../lib/apiClient';
-import './ticker.css'
+import './ticker.css';
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-
 function UserTicker() {
   const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-      const fetchStats = async () => {
-          try {
-              setLoading(true);
-              const response = await getLeaderBoardBalance();
-              // Backend returns: { success: true, status: 200, time: "...", data: {...} }
-              setUsers(response.data);
-              setError(null);
-          } catch (err) {
-              console.error("Failed to fetch player stats:", err);
-              setError("Failed to load stats. Please try again.");
-          } finally {
-              setLoading(false);
-          }
-      };
+    const fetchStats = async () => {
+      try {
+        const response = await getLeaderBoardBalance();
+        console.log("User Info: ", response);
 
-      fetchStats();
-      const interval = setInterval(fetchStats, 5000);
-      return () => clearInterval(interval);
+        const data = response?.data; // fix here
+        if (!data || typeof data !== "object") {
+          console.error("Invalid accounts data:", data);
+          setUsers([]);
+          return;
+        }
+
+        const usersArray = Object.keys(data)
+          .filter(key => key.endsWith("_username"))
+          .map(key => {
+            const prefix = key.split("_")[0];
+            const username = data[key];
+            const balance = data[`${prefix}_balance`] ?? 0;
+            return { username, balance: " $" + balance.toLocaleString() };
+          });
+
+        console.log("Users pulled:", usersArray);
+        setUsers(usersArray);
+
+      } catch (err) {
+        console.error("Failed to fetch player stats:", err);
+        setUsers([]);
+      }
+    };
+
+    fetchStats();
+    const interval = setInterval(fetchStats, 5000); // refresh every 5s
+    return () => clearInterval(interval);
   }, []);
 
-  const navigate = useNavigate();
-  let safeUsers = [{ username: "This could be you", balance: "$10000" }];
-  if (users){
-    safeUsers = [{ 
-      username: users.act0_username, 
-      balance: "$" + users.act0_balance
-    }];
-  }
-  // repeat enough times to fill screen width
-  const repeatedUsers = [];
   const minItems = 20;
-  while (repeatedUsers.length < minItems) {
-    repeatedUsers.push(...safeUsers);
+  const repeatedUsers = [];
+
+  if (users.length > 0) {
+    let i = 0;
+    while (repeatedUsers.length < minItems) {
+      repeatedUsers.push(users[i % users.length]);
+      i++;
+    }
+  } else {
+    repeatedUsers.push({
+      username: "This could be you",
+      balance: "$10,000"
+    });
   }
 
-  const handleUserClick = (username, balance) => {
-  navigate("/leaderBoard");
+  const handleUserClick = (username) => {
+    navigate(`/leaderBoard/${username}`);
   };
 
   return (
@@ -54,30 +68,48 @@ function UserTicker() {
       <div className="ticker-wrapper">
         {/* Top ticker */}
         <div className="ticker-container">
-        <div className="ticker-content">
-          {repeatedUsers.map((user, index) => (
-            <div className="ticker-item" key={`top-${index}`}>
-              <span className="username clickable"
-              onClick={()=>handleUserClick(user.username)} > {user.username} </span>
-              <span className="score clicable" onClick={()=>handleUserClick(user.username)} > {user.balance}</span>
-            </div>
-          ))}
+          <div className="ticker-content">
+            {repeatedUsers.map((user, index) => (
+              <div className="ticker-item" key={`top-${index}`}>
+                <span
+                  className="username clickable"
+                  onClick={() => handleUserClick(user.username)}
+                >
+                  {user.username}
+                </span>
+                <span
+                  className="score clickable"
+                  onClick={() => handleUserClick(user.username)}
+                >
+                  {user.balance}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* Bottom ticker going opposite direction */}
-      <div className="ticker-container reverse">
-        <div className="ticker-content">
-          {repeatedUsers.map((user, index) => (
-            <div className="ticker-item" key={`top-${index}` + repeatedUsers.length}>
-              <span className="username clickable"
-              onClick={()=>handleUserClick(user.username)} > {user.username} </span>
-              <span className="score clickable" onClick={()=>handleUserClick(user.username)} > {user.balance}</span>
-            </div>
-          ))}
+        {/* Bottom ticker moving opposite direction */}
+        <div className="ticker-container reverse">
+          <div className="ticker-content">
+            {repeatedUsers.map((user, index) => (
+              <div className="ticker-item" key={`bottom-${index}`}>
+                <span
+                  className="username clickable"
+                  onClick={() => handleUserClick(user.username)}
+                >
+                  {user.username}
+                </span>
+                <span
+                  className="score clickable"
+                  onClick={() => handleUserClick(user.username)}
+                >
+                  {user.balance}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-    </div>
     </div>
   );
 }
