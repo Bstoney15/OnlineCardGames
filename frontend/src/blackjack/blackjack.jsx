@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import BlackjackWebSocket from "./blackjackWebSocket";
 import BlackjackTable from "../components/blackjackTable/blackjackTable";
 import ActionBar from "../components/actionBar/actionBar";
+import BalanceDisplay from "../components/balanceDisplay/balanceDisplay";
 
 
 function Blackjack() {
@@ -72,6 +73,14 @@ function Blackjack() {
     }
   };
 
+  const handleDouble = () => {
+    if (wsRef.current) {
+      wsRef.current.send({
+        Action: "double"
+      });
+    }
+  };
+
   const handleExit = () => {
     // Send leave action to server
     if (wsRef.current) {
@@ -85,30 +94,32 @@ function Blackjack() {
     navigate("/");
   };
 
+  // Find current user's balance from players array
+  const currentPlayer = gameState?.Players?.find(p => 
+    JSON.stringify(p.Hand) === JSON.stringify(gameState?.YourHand)
+  );
+  const userBalance = currentPlayer?.Balance ?? 0;
 
   return (
-    <div className='h-screen flex flex-col p-4 overflow-hidden'>
-      {/* Exit Button - Top Right */}
-      <div className="fixed top-4 right-4 z-50">
+    <div className=''>
+
+      {/* Top Bar */}
+      <div className="flex justify-between items-center px-6 py-3 mb-4">
+        <BalanceDisplay balance={userBalance} />
         <button
           onClick={handleExit}
-          className="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition-colors shadow-lg border-2 border-red-800"
+          className="glow-button glow-red px-4 py-2"
         >
-          Exit Game
+          Leave Table
         </button>
       </div>
 
-      {/* Main game area with fixed positioning */}
-      <div className="flex-1 flex items-center justify-center mb-48"> {/* Added margin bottom for Action Bar */}
-        {/* Blackjack Table */}
-        <div className="scale-75 origin-top"> {/* Scale down the table */}
-          <BlackjackTable
-            dealerHand={gameState?.DealerHand || []}
-            players={gameState?.Players || []}
-            showDealer={true}
-          />
-        </div>
-      </div>
+      {/* Blackjack Table */}
+      <BlackjackTable
+        dealerHand={gameState?.DealerHand || []}
+        players={gameState?.Players || []}
+        currentTurnId={gameState?.ActivePlayerID ?? -1}
+      />
 
       {/* Action Bar */}
       <ActionBar
@@ -119,6 +130,7 @@ function Blackjack() {
         onHit={handleHit}
         onStand={handleStand}
         onBet={handleChipClick}
+        onDouble={handleDouble}
         onClearBet={handleClearBet}
         onPlaceBet={handlePlaceBet}
         chipValues={chipValues}

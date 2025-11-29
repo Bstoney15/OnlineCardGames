@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { getActivePlayers, getUserInformation, getCurrency } from "/src/lib/apiClient";
+import { getActivePlayers, getUserInformation, getCurrency, logoutUser } from "/src/lib/apiClient";
 
 function NavBar() {
     const [activePlayers, setActivePlayers] = useState(0);
@@ -36,8 +36,8 @@ function NavBar() {
         fetchData();
     }, []);
 
-    function handleLogout() {
-        document.cookie = "session=; Max-Age=0; path=/;";
+    async function handleLogout() {
+        await logoutUser();
         navigate("/login");
     }
 

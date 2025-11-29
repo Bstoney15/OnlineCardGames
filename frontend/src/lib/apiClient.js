@@ -31,6 +31,11 @@ export const loginUser = (data) =>
     body: JSON.stringify(data),
   });
 
+export const logoutUser = () =>
+  request("/api/logout", {
+    method: "POST",
+  });
+
 export const getCurrency = () => request("/api/currency");
 
 // Add currency amount to user's balance
