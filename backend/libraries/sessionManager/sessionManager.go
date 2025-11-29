@@ -3,6 +3,7 @@ package sessionmanager
 import (
 	"crypto/rand"
 	"encoding/hex"
+	"log"
 	"sync"
 	"time"
 )
@@ -64,6 +65,7 @@ func (sm *SessionManager) deleteExpired() {
 	for id, data := range sm.sessions {
 		if data.IsExpired() {
 			delete(sm.sessions, id)
+			log.Println("removed ", id, " from active sessions due to expiry")
 		}
 	}
 }
@@ -79,7 +81,6 @@ func generateRandomString(length int) (string, error) {
 func (sm *SessionManager) Create(userID uint) (sessionID string) {
 	randomString, err := generateRandomString(32)
 	if err != nil {
-		// This is a panic because if we can't generate a random string, the system is in a bad state
 		panic(err)
 	}
 
@@ -123,5 +124,21 @@ func (sm *SessionManager) CheckIfActiveSession(userID uint) (sessionData, bool) 
 	defer sm.mu.RUnlock()
 
 	session, ok := sm.idToSession[userID]
-	return session, ok
+	if !ok || session.IsExpired() {
+		return sessionData{}, false
+	}
+	return session, true
+}
+
+func (sm *SessionManager) Delete(sessionID string) {
+	sm.mu.Lock()
+	defer sm.mu.Unlock()
+
+	data, ok := sm.sessions[sessionID]
+	if !ok {
+		return
+	}
+
+	delete(sm.sessions, sessionID)
+	delete(sm.idToSession, data.UserID)
 }

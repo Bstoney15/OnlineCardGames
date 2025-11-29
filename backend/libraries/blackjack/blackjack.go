@@ -227,7 +227,7 @@ func (b *BlackJackInstance) AddPlayer(playerID uint) *Player {
 func (b *BlackJackInstance) MarkPlayerDisconnected(playerID uint) {
 	b.mu.Lock()
 	defer b.mu.Unlock()
-	
+
 	p := b.findPlayerByID(playerID)
 	if p != nil {
 		p.Connected = false
@@ -237,7 +237,7 @@ func (b *BlackJackInstance) MarkPlayerDisconnected(playerID uint) {
 func (b *BlackJackInstance) removePlayer(playerID uint) {
 	b.mu.Lock()
 	defer b.mu.Unlock()
-	
+
 	p := b.findPlayerByID(playerID)
 	if p != nil {
 		p.Connected = false // rest of logic will be handled in resetRound. makes sure user can still win the round if they disconnected mid round
@@ -400,8 +400,9 @@ func (b *BlackJackInstance) processUpdate(update IncomingUpdate) bool {
 				if !b.moveToNextPlayer() {
 					b.gamePhase = DealerTurn
 				}
-				needsTimerReset = true
 			}
+			// Reset timer on any hit action
+			needsTimerReset = true
 			b.broadcastUpdate()
 		}
 	case StandAction:

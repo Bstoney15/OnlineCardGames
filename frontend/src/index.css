@@ -150,8 +150,8 @@ body::before {
 
 /* Title on main page */
 .casino-title {
-  font-family: 'outrunner', sans-serif;
-  font-size: 20em;
+  font-family: 'rage-italic', sans-serif;
+  font-size: 10em;
   color: var(--vice-pink);
   text-shadow: 0 0 10px var(--vice-pink), 0 0 20px var(--vice-pink);
 }

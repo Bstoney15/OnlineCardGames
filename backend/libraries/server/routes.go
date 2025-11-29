@@ -6,6 +6,7 @@ func (s *Server) setupRoutes() {
 
 	s.Router.HandleFunc("POST /api/register", s.registerHandler)
 	s.Router.HandleFunc("POST /api/login", s.loginHandler)
+	s.Router.HandleFunc("POST /api/logout", s.logoutHandler)
 
 	s.Router.HandleFunc("GET /api/leaderboards", s.pingHandler) // needs to be implemented
 

@@ -30,6 +30,11 @@ function App() {
     {!isLoading &&  <WelcomeAnimation onComplete={() => setIsLoading(true)} />}
     <div className='min-h-screen flex flex-col items-center justify-center'>
 
+      {/* Title with retro font and pink glow */}
+      <h1 className="casino-title mb-12">
+        VICE CASINO
+      </h1>
+
       <div className='my-5'>
         <Link to="/login" className='btn-cyan-glow mx-4'>Go to Login Page</Link>
         <Link to="/register" className='btn-pink-glow mx-4'>Go to Register Page</Link>
