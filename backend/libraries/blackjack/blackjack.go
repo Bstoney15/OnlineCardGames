@@ -5,6 +5,7 @@ import (
 	"cardgames/backend/models"
 	"log"
 	"strconv"
+	"sync"
 	"time"
 
 	"gorm.io/gorm"
@@ -22,6 +23,7 @@ const (
 
 // GamePhase represents the current phase of the game.
 type GamePhase string
+
 const (
 	Betting    GamePhase = "betting"
 	PlayerTurn GamePhase = "player_turn"
@@ -30,6 +32,7 @@ const (
 
 // Action represents the type of action a player can take.
 type Action string
+
 const (
 	BetAction    Action = "bet"
 	HitAction    Action = "hit"
@@ -41,6 +44,7 @@ const (
 
 // IncomingUpdate is a message from a player to the game instance.
 type PlayerStatus string
+
 const (
 	PlayerStatusPlaying   PlayerStatus = "playing"
 	PlayerStatusBusted    PlayerStatus = "busted"
@@ -71,10 +75,10 @@ type OutgoingUpdate struct {
 
 // PlayerInfo contains public information about a player.
 type PlayerInfo struct {
-	ID     uint
-	Hand   []carddeck.Card
-	Bet    int
-	Status PlayerStatus
+	ID      uint
+	Hand    []carddeck.Card
+	Bet     int
+	Status  PlayerStatus
 	Balance int
 }
 
@@ -115,6 +119,7 @@ func (p *Player) ToPlayerInfo() PlayerInfo {
 		ID:      p.ID,
 		Hand:    p.Hand,
 		Bet:     p.Bet,
+		Status:  p.Status,
 		Balance: p.Account.Balance,
 	}
 }
@@ -127,6 +132,7 @@ type BlackJackInstance struct {
 	incoming         chan IncomingUpdate
 	DB               *gorm.DB
 	currentTurnIndex int
+	mu               sync.Mutex
 }
 
 func NewBlackJackInstance(db *gorm.DB) *BlackJackInstance {
@@ -146,9 +152,41 @@ func NewBlackJackInstance(db *gorm.DB) *BlackJackInstance {
 	return b
 }
 
-// AddPlayer adds a player to the blackjack instance
+// AddPlayer adds a player to the blackjack instance or reconnects an existing player
 func (b *BlackJackInstance) AddPlayer(playerID uint) *Player {
-	// TODO: need to add a check if the player is already in the game and disconnected. If so add implementation to reconnect them to the current player account.
+	b.mu.Lock()
+	defer b.mu.Unlock()
+
+	existingPlayer := b.findPlayerByID(playerID)
+	if existingPlayer != nil {
+		// Player already exists - reconnect them
+		// Create new channels (old ones will be garbage collected when old goroutines exit)
+		oldIncoming := existingPlayer.Incoming
+		oldOutgoing := existingPlayer.Outgoing
+
+		existingPlayer.Incoming = make(chan IncomingUpdate)
+		existingPlayer.Outgoing = make(chan OutgoingUpdate, 10)
+		existingPlayer.Connected = true
+
+		// Close old channels to signal old goroutines to exit
+		close(oldIncoming)
+		close(oldOutgoing)
+
+		// Reload account balance from database
+		var account models.Account
+		if err := b.DB.Where("id = ?", playerID).First(&account).Error; err == nil {
+			existingPlayer.Account = &account
+		}
+
+		// Start new goroutine to forward incoming updates
+		go func() {
+			for update := range existingPlayer.Incoming {
+				b.incoming <- update
+			}
+		}()
+
+		return existingPlayer
+	}
 
 	if len(b.Players) >= MaxPlayersPerInstance {
 		// Table full
@@ -168,9 +206,9 @@ func (b *BlackJackInstance) AddPlayer(playerID uint) *Player {
 		Account:   &account,
 		Status:    PlayerStatusStandby,
 		Incoming:  make(chan IncomingUpdate),
-		Outgoing:  make(chan OutgoingUpdate, 10), // Buffered channel to prevent blocking
-		Connected: true,                          //assumes this is called in the beggining of the websocket connection
-		Wager:    &models.Wager{AccountID: playerID},             // Initialize a new wager for the player
+		Outgoing:  make(chan OutgoingUpdate, 10),      // Buffered channel to prevent blocking
+		Connected: true,                               //assumes this is called in the beggining of the websocket connection
+		Wager:     &models.Wager{AccountID: playerID}, // Initialize a new wager for the player
 	}
 	b.Players = append(b.Players, p)
 
@@ -184,9 +222,26 @@ func (b *BlackJackInstance) AddPlayer(playerID uint) *Player {
 	return p
 }
 
-func (b *BlackJackInstance) removePlayer(playerID uint) {
+// MarkPlayerDisconnected marks a player as disconnected without closing channels
+// This is called when a WebSocket connection closes
+func (b *BlackJackInstance) MarkPlayerDisconnected(playerID uint) {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	
 	p := b.findPlayerByID(playerID)
-	p.Connected = false // rest of logic will be handled in resetRound. makes sure user can still win the round if they disconnected mid round
+	if p != nil {
+		p.Connected = false
+	}
+}
+
+func (b *BlackJackInstance) removePlayer(playerID uint) {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	
+	p := b.findPlayerByID(playerID)
+	if p != nil {
+		p.Connected = false // rest of logic will be handled in resetRound. makes sure user can still win the round if they disconnected mid round
+	}
 }
 
 func (b *BlackJackInstance) lockBets() {
@@ -213,7 +268,6 @@ func (b *BlackJackInstance) checkForBlackjack() {
 	}
 }
 
-
 // GameLoop is the main loop for the game instance.
 func (b *BlackJackInstance) GameLoop() {
 	timer := time.NewTimer(time.Duration(BettingTimeLimit) * time.Second)
@@ -238,10 +292,17 @@ func (b *BlackJackInstance) GameLoop() {
 					b.broadcastUpdate()
 					timer = time.NewTimer(1 * time.Millisecond) // Fire immediately
 				} else {
-					// Start with first player
-					b.currentTurnIndex = 0
-					b.broadcastUpdate()
-					timer = time.NewTimer(time.Duration(ActionTimeLimit) * time.Second)
+					// Start with first player who needs to act (skip blackjacks)
+					b.currentTurnIndex = -1 // Start at -1 so moveToNextPlayer finds the first valid player
+					if b.moveToNextPlayer() {
+						b.broadcastUpdate()
+						timer = time.NewTimer(time.Duration(ActionTimeLimit) * time.Second)
+					} else {
+						// All players have blackjack, go to dealer turn
+						b.gamePhase = DealerTurn
+						b.broadcastUpdate()
+						timer = time.NewTimer(1 * time.Millisecond)
+					}
 				}
 
 			case PlayerTurn:
@@ -326,8 +387,8 @@ func (b *BlackJackInstance) processUpdate(update IncomingUpdate) bool {
 		}
 	case HitAction:
 		p := b.findPlayerByID(update.PlayerID)
-		// Only allow action if it's the active player's turn
-		if p != nil && b.gamePhase == PlayerTurn && b.Players[b.currentTurnIndex].ID == update.PlayerID {
+		// Only allow action if it's the active player's turn and they are in playing status
+		if p != nil && b.gamePhase == PlayerTurn && b.Players[b.currentTurnIndex].ID == update.PlayerID && p.Status == PlayerStatusPlaying {
 
 			// Deal a card to the player
 			card := b.Deck.Draw()
@@ -345,8 +406,8 @@ func (b *BlackJackInstance) processUpdate(update IncomingUpdate) bool {
 		}
 	case StandAction:
 		p := b.findPlayerByID(update.PlayerID)
-		// Only allow action if it's the active player's turn
-		if p != nil && b.gamePhase == PlayerTurn && b.Players[b.currentTurnIndex].ID == update.PlayerID {
+		// Only allow action if it's the active player's turn and they are in playing status
+		if p != nil && b.gamePhase == PlayerTurn && b.Players[b.currentTurnIndex].ID == update.PlayerID && p.Status == PlayerStatusPlaying {
 			p.Status = PlayerStatusStand
 			// Move to next player after stand
 			if !b.moveToNextPlayer() {
@@ -361,7 +422,42 @@ func (b *BlackJackInstance) processUpdate(update IncomingUpdate) bool {
 	case SplitAction:
 		// TODO: Implement split logic
 	case DoubleAction:
-		// TODO: Implement double logic this one should be much easier than split thank god
+		p := b.findPlayerByID(update.PlayerID)
+		// Only allow double if it's the active player's turn, they have exactly 2 cards, and have enough balance
+		if p != nil && b.gamePhase == PlayerTurn && b.Players[b.currentTurnIndex].ID == update.PlayerID && p.Status == PlayerStatusPlaying {
+			// Check if player has exactly 2 cards (can only double on first action)
+			if len(p.Hand) != 2 {
+				return needsTimerReset
+			}
+			// Check if player has enough balance to double
+			if p.Account.Balance < p.Bet {
+				return needsTimerReset
+			}
+
+			// Double the bet and deduct from balance
+			p.Account.Balance -= p.Bet
+			b.DB.Save(p.Account)
+			p.Bet *= 2
+			p.Wager.WagerAmount = p.Bet
+
+			// Deal exactly one card
+			card := b.Deck.Draw()
+			p.Hand = append(p.Hand, card)
+
+			// Check for bust
+			if b.calculateHandValue(p.Hand) > 21 {
+				p.Status = PlayerStatusBusted
+			} else {
+				p.Status = PlayerStatusStand // After double, player must stand
+			}
+
+			// Move to next player
+			if !b.moveToNextPlayer() {
+				b.gamePhase = DealerTurn
+			}
+			needsTimerReset = true
+			b.broadcastUpdate()
+		}
 	}
 
 	return needsTimerReset
@@ -385,6 +481,8 @@ func (b *BlackJackInstance) broadcastUpdate() {
 	activePlayerID := uint(0)
 	if b.gamePhase == PlayerTurn && b.currentTurnIndex < len(b.Players) {
 		activePlayerID = b.Players[b.currentTurnIndex].ID
+	} else {
+		activePlayerID = 0 // No active player
 	}
 
 	// edit dealer hand visibility based on phase
@@ -398,6 +496,11 @@ func (b *BlackJackInstance) broadcastUpdate() {
 	}
 
 	for _, p := range b.Players {
+		// Skip disconnected players
+		if !p.Connected {
+			continue
+		}
+
 		update := OutgoingUpdate{
 			Phase:          b.gamePhase,
 			YourHand:       p.Hand,

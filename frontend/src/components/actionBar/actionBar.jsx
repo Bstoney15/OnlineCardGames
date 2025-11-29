@@ -9,6 +9,7 @@ const ActionBar = ({
     onHit,
     onStand,
     onBet,
+    onDouble,
     onClearBet,
     onPlaceBet,
     chipValues = []
@@ -99,7 +100,7 @@ const ActionBar = ({
                                 STAND
                             </button>
                             <button
-                                onClick={() => { }}
+                                onClick={onDouble}
                                 className="btn-white-glow min-w-[120px] text-lg tracking-widest"
                             >
                                 DOUBLE

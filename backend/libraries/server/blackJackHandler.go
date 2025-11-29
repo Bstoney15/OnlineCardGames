@@ -32,12 +32,13 @@ func (s *Server) blackJackWSHandler(w http.ResponseWriter, r *http.Request) {
 	player := game.AddPlayer(userID)
 	if player == nil {
 		http.Error(w, "Unable to join game", http.StatusForbidden)
-		log.Println("Unable to join game")	
+		log.Println("Unable to join game")
 		return
 	}
 
 	wsLogic := func(ws *websocket.Conn) {
 		defer ws.Close()
+		defer game.MarkPlayerDisconnected(player.ID)
 
 		cookie, _ := r.Cookie("sessionId")
 
@@ -47,32 +48,47 @@ func (s *Server) blackJackWSHandler(w http.ResponseWriter, r *http.Request) {
 		// This is a placeholder for the actual game handling code
 
 		done := make(chan struct{})
-		incoming := make(chan blackjack.IncomingUpdate)
 
+		// Goroutine to read from WebSocket
 		go func() {
 			defer close(done)
 			for {
 				var msg blackjack.IncomingUpdate
 				if err := websocket.JSON.Receive(ws, &msg); err != nil {
-					continue
+					// WebSocket closed or error
+					return
 				}
 				// Set the PlayerID from the authenticated user, not from the client
 				msg.PlayerID = userID
-				incoming <- msg
+
+				// Refresh user session on activity
+				if cookie != nil {
+					s.SM.Get(cookie.Value)
+				}
+
+				// Non-blocking send to player's incoming channel
+				select {
+				case player.Incoming <- msg:
+				default:
+					// Channel full or closed, skip
+				}
 			}
 		}()
 
 		for {
 			select {
-			case update := <-player.Outgoing:
+			case <-done:
+				// WebSocket read goroutine exited
+				return
+			case update, ok := <-player.Outgoing:
+				if !ok {
+					// Channel closed (player reconnected elsewhere)
+					return
+				}
 				if err := websocket.JSON.Send(ws, update); err != nil {
 					return
 				}
-			case msg := <-incoming:
-				s.SM.Get(cookie.Value) // refresh user session
-				player.Incoming <- msg
 			}
-
 		}
 	}
 
