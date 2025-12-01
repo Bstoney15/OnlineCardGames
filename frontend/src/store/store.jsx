@@ -129,6 +129,12 @@ export default function Store() {
     }
 
     try {
+      // terrible quick fix for icon purchase not working
+      //  (you need to pass it as kind="item", not "icon")
+      //  ( I think someone changed the name of these from item to icon )
+      if (kind === "icon"){
+        kind = "item"
+      }
       const res = await buyStoreItem(kind, index);
       if (!res?.success) {
         setError(res?.error || "Purchase failed");
