@@ -1,3 +1,9 @@
+/*
+getFriendsHandler.go
+Description: Handles requests to get list of user friends.
+Created by: Ryan Grimsley
+Date Created: 11/18/25
+*/
 package server
 
 import (

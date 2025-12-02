@@ -1,3 +1,12 @@
+/*
+playerStatsHandler.go
+Description: Handles calls from the frontend for player stats through the playerStatsHandler.
+
+	Also handles requests for the leaderboard stats.
+
+Created By: Ryan Grimsley
+Date Created: 11/03/25
+*/
 package server
 
 import (

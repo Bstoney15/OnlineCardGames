@@ -1,3 +1,11 @@
+/* 
+account.css
+Description: css styling for use in the account page
+Created by: Ryan Grimsley
+Date Created: 11/18/25
+*/
+
+/* css for box around friends names */
 .friend-box {
     /* background-color: #a9a9a9; */
     border: 2px solid var(--vice-blue-light);
@@ -7,7 +15,7 @@
     background: linear-gradient(25deg, var(--vice-blue-light) 20%, rgba(0,0,0,0) 100%);
     transition: transform 0.2s ease;
   }
-  
+  /* make friend box hover when mouse is over it */
   .friend-box:hover {
     transform: scale(1.05);
   }

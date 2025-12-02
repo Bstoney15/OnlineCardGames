@@ -1,3 +1,10 @@
+/*
+index.jsx
+Description: Login page for displayed for users. 
+            Allows users to log in to their account when they input an email and password.
+Created by: Ryan Grimsley
+Date Created: 10/23/25
+*/
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from "react";
 import { loginUser } from '/src/lib/apiClient';

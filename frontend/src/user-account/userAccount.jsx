@@ -1,26 +1,37 @@
+/* 
+userAccount.jsx
+Description: page to display user account(friends, stats, etc)
+Created by: Ryan Grimsley
+Date Created: 11/18/25
+*/
 import { useState, useEffect } from "react";
 import { getPlayerStats, getUserFriends, getEquipped, getOwned } from "../lib/apiClient";
 import LoadingSpinner from "../components/LoadingSpinner/LoadingSpinner";
 import './account.css'
 
+//function that returns component to be displayed
 function UserAccount() {
+    // set up state variables
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [friends, setFriends] = useState(null);
     const [owned, setOwned] = useState(null);
     const [equipped, setEquipped] = useState(null);
-
+    // when something changes on the page, this func is called
     useEffect(() => {
+        // function to fetch the actual account data
         const fetchData = async () => {
             try {
                 setLoading(true);
+                // set variables with results of get...
                 const [statsResponse, friendsResponse, equippedResponse, ownedResponse] = await Promise.all([
                     getPlayerStats(),
                     getUserFriends(),
                     getEquipped(),
                     getOwned(),
                 ]);
+                //set state variables with the data returned from backend
                 setStats(statsResponse.data);
                 setFriends(friendsResponse.data);
                 setOwned(ownedResponse.data);
@@ -36,7 +47,7 @@ function UserAccount() {
         
         fetchData();
     }, []);
-
+    //if page is loading, display loading spinner
     if (loading) {
         return (
             <div className='min-h-screen flex flex-col items-center justify-center'>
@@ -44,7 +55,7 @@ function UserAccount() {
             </div>
         );
     }
-
+    // if there is an error, display it
     if (error) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center">
@@ -52,19 +63,19 @@ function UserAccount() {
             </div>
         )
     }
-
+    // tailwind syntax class names to be used in some html items
     const stats_box_css = "round-box w-full"
     const friends_box_css = "friend-box w-full"
     const p_css = "pl-4"
-
+    // set variables only if they exist
     const ownedItems = owned?.items || "";
     const ownedColors = owned?.colors || "";
     const equippedItem = equipped?.item ?? null;
     const equippedColor = equipped?.color ?? null;
-
+    // set item and color names to be displayed
     const itemNames = ["Icon 1", "Icon 2"];
     const colorNames = ["Color 1", "Color 2"];
-
+    // check which items and colors are owned
     const ownedItemList = ownedItems.split("").map((c, i) => ({
         id: i,
         owned: c === "1",
@@ -79,6 +90,7 @@ function UserAccount() {
 
     return (
         <div className='pt-10'>
+            {/* display username and pfp */}
             <div className="flex items-end ml-8 mt-8 mr-8 mb-4">
                 <img 
                 src="/src/assets/default-pfp-vice-city.png" 
@@ -87,9 +99,9 @@ function UserAccount() {
                 />
                 <h2 className='pl-4'><span className="text-[var(--vice-pink-rich)] text-[2rem] font-bold">{stats.username}</span></h2>
             </div>
-
+            {/* div to hold friends, stats, and items */}
             <div className="flex items-start space-x-8 ml-8 mr-8">
-
+                {/* div to hold friends list */}
                 <div className="flex-1 flex flex-col items-start justify-start">
                     <div className='space-y-4 w-full'>
                         {friends && friends.length > 0 ? (
@@ -115,7 +127,7 @@ function UserAccount() {
                         )}
                     </div>
                 </div>
-
+                {/* div to hold stats */}
                 <div className='flex-1 flex-col items-center justify-center '>
                     {stats && (
                         <div className='space-y-4 w-full'>
@@ -143,7 +155,7 @@ function UserAccount() {
                         </div>
                     )}
                 </div>
-
+                {/* div to hold items */}
                 <div className="flex-1">
                     <p><strong><u>Owned Items:</u></strong></p>
                     {ownedItemList.map((it) => (
