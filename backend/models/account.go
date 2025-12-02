@@ -11,10 +11,6 @@ type Account struct {
 	PasswordHash string `json:"-"`           // The '-' tag excludes this field from JSON output
 	Balance      int
 	Username     string `gorm:"default:'Player'"` // Username with default value "Player"
-	WagersWon    int    // Number of wagers won
-	WagersLost   int    // Number of wagers lost
-	AmountWon    int    // Total amount won in cents
-	WagersPlaced int    // total games played
 	OwnedItems 		string 	`gorm:"default:'__'"`	//owned items, currently has two slots to indicate if two items are owned
 	OwnedColors 	string 	`gorm:"default:'__'"`	//owned colors, currently has two slots to indicate colors that are owned
 	EquipedItem 	int
