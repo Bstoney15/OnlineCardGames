@@ -78,7 +78,7 @@ function UserAccount() {
     }));
 
     return (
-        <>
+        <div className='pt-10'>
             <div className="flex items-end ml-8 mt-8 mr-8 mb-4">
                 <img 
                 src="/src/assets/default-pfp-vice-city.png" 
@@ -164,7 +164,7 @@ function UserAccount() {
                     <p>Color: {equippedColor != null ? colorNames[equippedColor] : "None"}</p>
                 </div>
             </div>
-        </>
+        </div>
     );
 }
 
