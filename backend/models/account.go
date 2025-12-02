@@ -15,8 +15,8 @@ type Account struct {
 	WagersLost   int    // Number of wagers lost
 	AmountWon    int    // Total amount won in cents
 	WagersPlaced int    // total games played
-	OwnedItems 		string 	`gorm:"default:'__'"`	//owned items, currently has two slots to indicate if two items are owned
-	OwnedColors 	string 	`gorm:"default:'__'"`	//owned colors, currently has two slots to indicate colors that are owned
+	OwnedItems 		string 	`gorm:"default:'____________'"`	//owned items, currently has two slots to indicate if two items are owned
+	OwnedColors 	string 	`gorm:"default:'___'"`	//owned colors, currently has two slots to indicate colors that are owned
 	EquipedItem 	int
 	EquipedColor	int
 }

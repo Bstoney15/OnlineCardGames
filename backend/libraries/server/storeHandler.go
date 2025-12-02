@@ -87,6 +87,11 @@ func (s *Server) buyItemHandler(w http.ResponseWriter, r *http.Request) {
 	switch body.Kind {
 
 	case "item":
+		if (len(account.OwnedItems) < len(itemCosts)){
+			for i:=len(account.OwnedItems); i < len(itemCosts); i++{
+				account.OwnedItems += "_"
+			}
+		}
 		if body.Index < 0 || body.Index >= len(itemCosts) {
 			http.Error(w, "invalid item index", http.StatusBadRequest)
 			return
@@ -104,6 +109,11 @@ func (s *Server) buyItemHandler(w http.ResponseWriter, r *http.Request) {
 		account.OwnedItems = setOwned(account.OwnedItems, body.Index)
 
 	case "color":
+		if (len(account.OwnedItems) < len(colorCosts)){
+			for i:=len(account.OwnedItems); i < len(colorCosts); i++{
+				account.OwnedItems += "_"
+			}
+		}
 		if body.Index < 0 || body.Index >= len(colorCosts) {
 			http.Error(w, "invalid color index", http.StatusBadRequest)
 			return
