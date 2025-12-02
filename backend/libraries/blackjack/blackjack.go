@@ -66,6 +66,7 @@ type IncomingUpdate struct {
 // OutgoingUpdate is a message from the game instance to a player.
 type OutgoingUpdate struct {
 	Phase          GamePhase
+	YourID         uint
 	YourHand       []carddeck.Card
 	DealerHand     []carddeck.Card
 	Players        []PlayerInfo // Info about all players
@@ -504,6 +505,7 @@ func (b *BlackJackInstance) broadcastUpdate() {
 
 		update := OutgoingUpdate{
 			Phase:          b.gamePhase,
+			YourID:         p.ID,
 			YourHand:       p.Hand,
 			DealerHand:     broadcastDealerHand,
 			Players:        playersInfo,
