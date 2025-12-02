@@ -94,10 +94,8 @@ function Blackjack() {
     navigate("/");
   };
 
-  // Find current user's balance from players array
-  const currentPlayer = gameState?.Players?.find(p => 
-    JSON.stringify(p.Hand) === JSON.stringify(gameState?.YourHand)
-  );
+  // Find current user's player info by ID
+  const currentPlayer = gameState?.Players?.find(p => p.ID === gameState?.YourID);
   const userBalance = currentPlayer?.Balance ?? 0;
 
   return (
