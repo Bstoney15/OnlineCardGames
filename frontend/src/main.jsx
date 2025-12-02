@@ -11,7 +11,6 @@ import PlayerStats from './stats/playerStats.jsx';
 import UserAccount from './user-account/userAccount.jsx';
 import LeaderBoard from './stats/leaderboard.jsx';
 import Store from './store/store.jsx';
-import Friends from './components/friends/Friends.jsx';
 import LayoutWithNav from './components/LayoutWithNav.jsx';
 
 const router = createBrowserRouter([
@@ -35,7 +34,6 @@ const router = createBrowserRouter([
         element: <LayoutWithNav />, 
         children: [
           { path: "/home", element: <Home /> },
-          { path: "/friends", element: <Friends /> },
           { path: "/user-account", element: <UserAccount /> },
           { path: "/store", element: <Store /> },
           { path: "/leaderboard", element: <LeaderBoard /> },

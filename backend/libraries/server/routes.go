@@ -26,11 +26,6 @@ func (s *Server) setupRoutes() {
 	s.Router.HandleFunc("GET /api/user-info", s.userInfoHandler)
 
 	s.Router.HandleFunc("GET /api/user-friends", s.getFriendsHandler)
-	s.Router.HandleFunc("POST /api/friend-request/send", s.sendFriendRequestHandler)
-	s.Router.HandleFunc("POST /api/friend-request/accept", s.acceptFriendRequestHandler)
-	s.Router.HandleFunc("POST /api/friend-request/reject", s.rejectFriendRequestHandler)
-	s.Router.HandleFunc("GET /api/friend-request/pending", s.getPendingRequestsHandler)
-	s.Router.HandleFunc("POST /api/online-status", s.getOnlineStatusHandler)
 
 	s.Router.HandleFunc("GET /api/getOwned", s.getOwnedHandler)
 	s.Router.HandleFunc("GET /api/getEquipped", s.getEquippedHandler)

@@ -15,7 +15,6 @@ type Friend struct {
 	DeletedAt *time.Time `gorm:"default:null;index"`
 	UserID   uint `gorm:"not null"` // The user who initiated the friendship
 	FriendID uint `gorm:"not null"` // The user who is the friend
-	Status   string `gorm:"default:'pending'"` // pending, accepted, rejected
 	// Optional: Reference to the Account model
 	User   Account `gorm:"foreignKey:UserID"`
 	Friend Account `gorm:"foreignKey:FriendID"`
