@@ -19,7 +19,6 @@ import (
 	carddeck "cardgames/backend/libraries/cardDeck"
 	"cardgames/backend/models"
 	"log"
-	"os/user"
 	"strconv"
 	"sync"
 	"time"
