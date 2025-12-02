@@ -9,14 +9,19 @@ export class ApiError extends Error {
 // In production, use the same origin (your deployed backend)
 
 async function request(path, options = {}) {
-  const res = await fetch(`${path}`, {
-    ...options,
-    headers: { "Content-Type": "application/json", ...(options.headers || {}) },
-    credentials: "include",
-  });
+  try {
+    const res = await fetch(`${path}`, {
+      ...options,
+      headers: { "Content-Type": "application/json", ...(options.headers || {}) },
+      credentials: "include",
+    });
 
-  const text = await res.text();
-  return text ? JSON.parse(text) : null;
+    const text = await res.text();
+    return text ? JSON.parse(text) : { success: false, data: "Empty response from server" };
+  } catch (error) {
+    console.error("API request error:", error);
+    return { success: false, data: error.message || "Network error" };
+  }
 }
 
 export const createUser = (data) =>
@@ -84,6 +89,33 @@ export const getLeaderBoardWagersPlaced = () =>
 export const getUserInformation = () => request("/api/user-info");
 
 export const getUserFriends = () => request("/api/user-friends");
+
+export const sendFriendRequest = (username) =>
+  request("/api/friend-request/send", {
+    method: "POST",
+    body: JSON.stringify({ username }),
+  });
+
+export const acceptFriendRequest = (requestId) =>
+  request("/api/friend-request/accept", {
+    method: "POST",
+    body: JSON.stringify({ requestId }),
+  });
+
+export const rejectFriendRequest = (requestId) =>
+  request("/api/friend-request/reject", {
+    method: "POST",
+    body: JSON.stringify({ requestId }),
+  });
+
+export const getPendingFriendRequests = () =>
+  request("/api/friend-request/pending");
+
+export const getOnlineStatus = (userIds) =>
+  request("/api/online-status", {
+    method: "POST",
+    body: JSON.stringify({ userIds }),
+  });
 
 // Henry's backend uses exact these routes:
 export const getOwned = () => request("/api/get-owned");

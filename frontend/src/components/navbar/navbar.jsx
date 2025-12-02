@@ -1,10 +1,29 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { getActivePlayers, getUserInformation, getCurrency, logoutUser } from "/src/lib/apiClient";
 
+/**
+ * NavBar Component
+ * 
+ * A fixed navigation bar displayed at the top of the application that shows:
+ * - Casino logo/branding
+ * - Current user information (username, avatar initial, balance)
+ * - Active player count with live indicator
+ * 
+ * Features responsive design with mobile-specific layout adjustments.
+ * Uses a glassmorphism effect with backdrop blur and glowing borders.
+ * 
+ * @component
+ * @returns {JSX.Element} The navigation bar component
+ */
 function NavBar() {
+    // State for tracking number of currently active players
     const [activePlayers, setActivePlayers] = useState(0);
+    
+    // State for storing the current user's username
     const [username, setUsername] = useState(null);
+    
+    // State for storing the current user's account balance
     const [balance, setBalance] = useState(null);
 
     const navigate = useNavigate();
@@ -16,12 +35,23 @@ function NavBar() {
         return null;
     }
 
+    /**
+     * Effect hook to fetch and initialize navbar data on component mount.
+     * Retrieves active player count and current user information from the API.
+     */
     useEffect(() => {
+        /**
+         * Asynchronously fetches active player count and user information.
+         * Updates component state with retrieved data.
+         */
         async function fetchData() {
+            // Fetch and set the number of active players
             const activePlayersRes = await getActivePlayers();
             setActivePlayers(activePlayersRes.data);
 
+            // Fetch current user's information (username and balance)
             const userInfo = await getUserInformation();
+            console.log("User Info:", userInfo);
             if (userInfo?.success && userInfo?.data) {
                 setUsername(userInfo.data.Username ?? userInfo.data.username);
                 setBalance(
@@ -76,10 +106,11 @@ function NavBar() {
 
                 {/* CENTER - Navigation Buttons */}
                 <div className="hidden sm:flex items-center space-x-6 text-white/90">
-                    <Link to="/home" className="hover:text-cyan-300">Home</Link>
-                    <Link to="/store" className="hover:text-cyan-300">Store</Link>
-                    <Link to="/user-account" className="hover:text-cyan-300">Account</Link>
-                    <Link to="/leaderboard" className="hover:text-cyan-300">Leaderboard</Link>
+                    <NavLink to="/home" className={({ isActive }) => isActive ? "text-cyan-300" : "hover:text-cyan-300"}>Home</NavLink>
+                    <NavLink to="/friends" className={({ isActive }) => isActive ? "text-cyan-300" : "hover:text-cyan-300"}>Friends</NavLink>
+                    <NavLink to="/store" className={({ isActive }) => isActive ? "text-cyan-300" : "hover:text-cyan-300"}>Store</NavLink>
+                    <NavLink to="/user-account" className={({ isActive }) => isActive ? "text-cyan-300" : "hover:text-cyan-300"}>Account</NavLink>
+                    <NavLink to="/leaderboard" className={({ isActive }) => isActive ? "text-cyan-300" : "hover:text-cyan-300"}>Leaderboard</NavLink>
                 </div>
 
                 {/* RIGHT - Active Players + Logout */}

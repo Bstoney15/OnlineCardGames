@@ -5,8 +5,9 @@ Created by: Ryan Grimsley
 Date Created: 11/18/25
 */
 import { useState, useEffect } from "react";
-import { getPlayerStats, getUserFriends, getEquipped, getOwned } from "../lib/apiClient";
+import { getPlayerStats, getUserFriends, getEquipped, getOwned, getOnlineStatus } from "../lib/apiClient";
 import LoadingSpinner from "../components/LoadingSpinner/LoadingSpinner";
+import FriendProfileModal from "../components/friendProfile/FriendProfileModal";
 import './account.css'
 
 //function that returns component to be displayed
@@ -18,6 +19,8 @@ function UserAccount() {
     const [friends, setFriends] = useState(null);
     const [owned, setOwned] = useState(null);
     const [equipped, setEquipped] = useState(null);
+    const [selectedFriend, setSelectedFriend] = useState(null);
+    const [onlineStatus, setOnlineStatus] = useState({});
     // when something changes on the page, this func is called
     useEffect(() => {
         // function to fetch the actual account data
@@ -36,6 +39,16 @@ function UserAccount() {
                 setFriends(friendsResponse.data);
                 setOwned(ownedResponse.data);
                 setEquipped(equippedResponse.data);
+                
+                // Fetch online status for all friends
+                if (friendsResponse.data && friendsResponse.data.length > 0) {
+                    const friendIds = friendsResponse.data.map(f => f.id);
+                    const statusRes = await getOnlineStatus(friendIds);
+                    if (statusRes?.success && statusRes?.data) {
+                        setOnlineStatus(statusRes.data);
+                    }
+                }
+                
                 setError(null);
             } catch (err) {
                 console.log("Error fetching User Info", err);
@@ -76,6 +89,26 @@ function UserAccount() {
     const itemNames = ["Icon 1", "Icon 2"];
     const colorNames = ["Color 1", "Color 2"];
     // check which items and colors are owned
+    function getFriendStatus(friendId) {
+        return onlineStatus[friendId] ? "online" : "offline";
+    }
+
+    function formatJoinDate(dateString) {
+        if (!dateString) return "Unknown";
+        try {
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return "Unknown";
+            return date.toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+            });
+        } catch (e) {
+            console.error("Error formatting date:", e, dateString);
+            return "Unknown";
+        }
+    }
+
     const ownedItemList = ownedItems.split("").map((c, i) => ({
         id: i,
         owned: c === "1",
@@ -110,7 +143,11 @@ function UserAccount() {
                                     <strong><u>Friends:</u></strong>
                                 </div>
                                 {friends.map((friend) => (
-                                    <div key={friend.id} className={friends_box_css}>
+                                    <div 
+                                        key={friend.id} 
+                                        className={`${friends_box_css} cursor-pointer`}
+                                        onClick={() => setSelectedFriend(friend)}
+                                    >
                                         <p className={p_css}>{friend.username}</p>
                                     </div>
                                 ))}
@@ -176,6 +213,13 @@ function UserAccount() {
                     <p>Color: {equippedColor != null ? colorNames[equippedColor] : "None"}</p>
                 </div>
             </div>
+
+            {/* Friend Profile Modal */}
+            <FriendProfileModal 
+                friend={selectedFriend}
+                onClose={() => setSelectedFriend(null)}
+                isOnline={selectedFriend ? getFriendStatus(selectedFriend.id) === "online" : false}
+            />
         </div>
     );
 }

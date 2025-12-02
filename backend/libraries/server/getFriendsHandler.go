@@ -36,10 +36,8 @@ func (s *Server) getFriendsHandler(w http.ResponseWriter, r *http.Request) {
 	//get userId from session
 	userId := session.UserID
 	var friends []models.Friend
-	//query for friends based on userID
-	// ! might want to update to query for where UserID=userId and FriendID=userId,
-	// 		im not sure if the table will have all a users friends under just their UserID
-	if err := s.DB.Where(&models.Friend{UserID: userId}).Find(&friends).Error; err != nil {
+	//query for accepted friends where user is either the sender or receiver
+	if err := s.DB.Where("(user_id = ? OR friend_id = ?) AND status = ?", userId, userId, "accepted").Find(&friends).Error; err != nil {
 		SendGenericResponse(w, false, http.StatusNotFound, "UserId not found in friends table")
 		return
 	}
@@ -68,7 +66,12 @@ func (s *Server) getFriendsHandler(w http.ResponseWriter, r *http.Request) {
 	//Collect all friend IDs from the Friend records
 	friendIDs := make([]uint, 0, len(friends))
 	for _, f := range friends {
-		friendIDs = append(friendIDs, f.FriendID)
+		// Add the friend ID that is not the current user
+		if f.UserID == userId {
+			friendIDs = append(friendIDs, f.FriendID)
+		} else {
+			friendIDs = append(friendIDs, f.UserID)
+		}
 	}
 
 	// Query the Account table to get usernames for each friendID
@@ -80,12 +83,19 @@ func (s *Server) getFriendsHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	//Build array of usernames (with ids optionally)
+	//Build array of usernames (with ids, join dates, and stats)
 	friendList := make([]map[string]interface{}, 0, len(friendAccounts))
 	for _, acc := range friendAccounts {
+		winRate := 0.0
+		if acc.WagersPlaced > 0 {
+			winRate = (float64(acc.WagersWon) / float64(acc.WagersPlaced)) * 100
+		}
 		friendList = append(friendList, map[string]interface{}{
-			"id":       acc.ID,
-			"username": acc.Username,
+			"id":           acc.ID,
+			"username":     acc.Username,
+			"createdAt":    acc.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
+			"wagersPlaced": acc.WagersPlaced,
+			"winRate":      winRate,
 		})
 	}
 
