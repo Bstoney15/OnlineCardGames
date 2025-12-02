@@ -38,7 +38,6 @@ function App() {
       <div className='my-5'>
         <Link to="/login" className='btn-cyan-glow mx-4'>Go to Login Page</Link>
         <Link to="/register" className='btn-pink-glow mx-4'>Go to Register Page</Link>
-        <Link to="/home" className='btn-cyan-glow mx-4'>Go to Home Page</Link>
 
       </div>
     </div>
