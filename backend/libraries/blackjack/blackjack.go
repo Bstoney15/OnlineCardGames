@@ -1,9 +1,25 @@
 package blackjack
 
+// blackjack.go
+// This file contains the main logic for the Blackjack game instance, including player management, game phases, and actions.
+
+// This package implements a multiplayer Blackjack game instance.
+// It handles player actions, game phases, and interactions with the database for player stats and wagers.
+
+// It uses a WebSocket-like model for real-time updates and interactions.
+// The game follows standard Blackjack rules with support for betting, hitting, standing, doubling down, and splitting hands.
+
+// It also manages player connections, disconnections, and game state transitions.
+// The game instance can handle multiple players and provides real-time updates to all connected players.
+
+//Author : Benjamin Stonesreet
+// Date : 2025-11-07
+
 import (
 	carddeck "cardgames/backend/libraries/cardDeck"
 	"cardgames/backend/models"
 	"log"
+	"os/user"
 	"strconv"
 	"sync"
 	"time"
@@ -14,7 +30,6 @@ import (
 //------------------------------------------------------------------
 // Constants and Types
 //------------------------------------------------------------------
-
 const (
 	BettingTimeLimit      = 5 // seconds
 	ActionTimeLimit       = 5 // seconds
@@ -32,7 +47,6 @@ const (
 
 // Action represents the type of action a player can take.
 type Action string
-
 const (
 	BetAction    Action = "bet"
 	HitAction    Action = "hit"
@@ -44,7 +58,6 @@ const (
 
 // IncomingUpdate is a message from a player to the game instance.
 type PlayerStatus string
-
 const (
 	PlayerStatusPlaying   PlayerStatus = "playing"
 	PlayerStatusBusted    PlayerStatus = "busted"
@@ -76,11 +89,12 @@ type OutgoingUpdate struct {
 
 // PlayerInfo contains public information about a player.
 type PlayerInfo struct {
-	ID      uint
-	Hand    []carddeck.Card
-	Bet     int
-	Status  PlayerStatus
-	Balance int
+	ID       uint
+	Username string
+	Hand     []carddeck.Card
+	Bet      int
+	Status   PlayerStatus
+	Balance  int
 }
 
 // Map defining allowed actions for each game phase.
@@ -117,11 +131,12 @@ type Player struct {
 // ToPlayerInfo returns a PlayerInfo struct with public information.
 func (p *Player) ToPlayerInfo() PlayerInfo {
 	return PlayerInfo{
-		ID:      p.ID,
-		Hand:    p.Hand,
-		Bet:     p.Bet,
-		Status:  p.Status,
-		Balance: p.Account.Balance,
+		ID:       p.ID,
+		Username: p.Account.Username,
+		Hand:     p.Hand,
+		Bet:      p.Bet,
+		Status:   p.Status,
+		Balance:  p.Account.Balance,
 	}
 }
 

@@ -1,5 +1,14 @@
 package carddeck
 
+// deck.go
+// This file defines the structure and methods for a standard deck of playing cards.
+// It includes functions to create a new deck, shuffle it, and draw cards from it.
+// It is part of the card games backend library.
+// Author: Benjamin Stonestreet
+// Date: 2025-11-05
+
+
+
 import (
 	"math/rand"
 	"time"
