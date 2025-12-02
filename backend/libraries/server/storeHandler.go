@@ -32,7 +32,7 @@ var itemCosts = []int{
 	160, // Red Flower
 }
 
-// Must match frontend color list
+// Match your frontend COLORS list
 var colorCosts = []int{
 	100, // Gold
 	120, // Crimson
@@ -78,11 +78,6 @@ func (s *Server) buyItemHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if body.Index < 0 {
-		http.Error(w, "invalid index", http.StatusBadRequest)
-		return
-	}
-
 	var account models.Account
 	if err := s.DB.First(&account, userID).Error; err != nil {
 		http.Error(w, "user not found", http.StatusNotFound)
@@ -90,8 +85,9 @@ func (s *Server) buyItemHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	switch body.Kind {
+
 	case "item":
-		if body.Index >= len(itemCosts) {
+		if body.Index < 0 || body.Index >= len(itemCosts) {
 			http.Error(w, "invalid item index", http.StatusBadRequest)
 			return
 		}
@@ -108,7 +104,7 @@ func (s *Server) buyItemHandler(w http.ResponseWriter, r *http.Request) {
 		account.OwnedItems = setOwned(account.OwnedItems, body.Index)
 
 	case "color":
-		if body.Index >= len(colorCosts) {
+		if body.Index < 0 || body.Index >= len(colorCosts) {
 			http.Error(w, "invalid color index", http.StatusBadRequest)
 			return
 		}
@@ -179,7 +175,6 @@ func (s *Server) lootboxHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	account.Balance -= lootboxCost
-
 	s.DB.Save(&account)
 
 	SendGenericResponse(w, true, http.StatusOK, map[string]any{
