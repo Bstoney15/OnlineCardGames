@@ -4,6 +4,7 @@ import (
 	"cardgames/backend/models"
 	"net/http"
 	"encoding/json"
+	"strconv"
 )
 
 // handler to get players stats and return them for player stats page
@@ -113,41 +114,15 @@ func (s *Server) leaderboardStatsHandler(w http.ResponseWriter, r *http.Request)
 			return
 		}
 
-		stats := map[string]interface{}{
-			"act0_balance":      acct_rows[0].Balance,
-			"act0_wins":         acct_rows[0].WagersWon,
-			"act0_losses":       acct_rows[0].WagersLost,
-			"act0_amountWon":    acct_rows[0].AmountWon,
-			"act0_wagersPlaced": acct_rows[0].WagersPlaced,
-			"act0_username":     acct_rows[0].Username,
+		stats := make(map[string]interface{})
 
-			"act1_balance":      acct_rows[1].Balance,
-			"act1_wins":         acct_rows[1].WagersWon,
-			"act1_losses":       acct_rows[1].WagersLost,
-			"act1_amountWon":    acct_rows[1].AmountWon,
-			"act1_wagersPlaced": acct_rows[1].WagersPlaced,
-			"act1_username":     acct_rows[1].Username,
-
-			"act2_balance":      acct_rows[2].Balance,
-			"act2_wins":         acct_rows[2].WagersWon,
-			"act2_losses":       acct_rows[2].WagersLost,
-			"act2_amountWon":    acct_rows[2].AmountWon,
-			"act2_wagersPlaced": acct_rows[2].WagersPlaced,
-			"act2_username":     acct_rows[2].Username,
-
-			"act3_balance":      acct_rows[3].Balance,
-			"act3_wins":         acct_rows[3].WagersWon,
-			"act3_losses":       acct_rows[3].WagersLost,
-			"act3_amountWon":    acct_rows[3].AmountWon,
-			"act3_wagersPlaced": acct_rows[3].WagersPlaced,
-			"act3_username":     acct_rows[3].Username,
-
-			"act4_balance":      acct_rows[4].Balance,
-			"act4_wins":         acct_rows[4].WagersWon,
-			"act4_losses":       acct_rows[4].WagersLost,
-			"act4_amountWon":    acct_rows[4].AmountWon,
-			"act4_wagersPlaced": acct_rows[4].WagersPlaced,
-			"act4_username":     acct_rows[4].Username,
+		for i:=0; i< len(acct_rows); i++ {
+			stats["act" + strconv.Itoa(i) + "_balance"]=       acct_rows[i].Balance
+			stats["act" + strconv.Itoa(i) + "_wins"]=          acct_rows[i].WagersWon
+			stats["act" + strconv.Itoa(i) + "_losses"]=        acct_rows[i].WagersLost
+			stats["act" + strconv.Itoa(i) + "_amountWon"]=     acct_rows[i].AmountWon
+			stats["act" + strconv.Itoa(i) + "_wagersPlaced"]=  acct_rows[i].WagersPlaced
+			stats["act" + strconv.Itoa(i) + "_username"]=      acct_rows[i].Username
 		}
 
 		SendGenericResponse(w, true, 200, stats)
