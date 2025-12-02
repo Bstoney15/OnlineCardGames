@@ -159,7 +159,7 @@ func (s *Server) leaderboardStatsHandler(w http.ResponseWriter, r *http.Request)
 
 	// Sort by requested field
 	switch field {
-	case "WagersWon", "wins":
+	case "Wagers_Won", "wins":
 		for i := 0; i < len(accountStats)-1; i++ {
 			for j := i + 1; j < len(accountStats); j++ {
 				if accountStats[j].WagersWon > accountStats[i].WagersWon {
@@ -167,7 +167,7 @@ func (s *Server) leaderboardStatsHandler(w http.ResponseWriter, r *http.Request)
 				}
 			}
 		}
-	case "WagersLost", "losses":
+	case "Wagers_Lost", "losses":
 		for i := 0; i < len(accountStats)-1; i++ {
 			for j := i + 1; j < len(accountStats); j++ {
 				if accountStats[j].WagersLost > accountStats[i].WagersLost {
@@ -175,7 +175,7 @@ func (s *Server) leaderboardStatsHandler(w http.ResponseWriter, r *http.Request)
 				}
 			}
 		}
-	case "AmountWon", "amountWon":
+	case "Amount_Won", "amountWon":
 		for i := 0; i < len(accountStats)-1; i++ {
 			for j := i + 1; j < len(accountStats); j++ {
 				if accountStats[j].AmountWon > accountStats[i].AmountWon {
@@ -183,7 +183,7 @@ func (s *Server) leaderboardStatsHandler(w http.ResponseWriter, r *http.Request)
 				}
 			}
 		}
-	case "WagersPlaced", "wagersPlaced":
+	case "Wagers_Placed", "wagersPlaced":
 		for i := 0; i < len(accountStats)-1; i++ {
 			for j := i + 1; j < len(accountStats); j++ {
 				if accountStats[j].WagersPlaced > accountStats[i].WagersPlaced {
