@@ -2,7 +2,8 @@ import { useState } from "react";
 import "./createAccount.css";
 import { Link, Route } from "react-router-dom";
 import { createUser, ApiError } from "/src/lib/apiClient";
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
+
 
 
 export default function Register() {
@@ -12,6 +13,8 @@ export default function Register() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const navigate = useNavigate();
+
   
   const handleSubmit = async (e) => {
   e.preventDefault();
@@ -28,7 +31,7 @@ export default function Register() {
     const res = await createUser({ email, password, username });
 
     // Handle backend failure (e.g., UNIQUE constraint on email)
-    if (!res || res.success === false) {
+    if (res.success === false) {
       // If backend sends a message in `error`, show it; otherwise generic text
       setError(res?.error || "Failed to create account. Try a different email.");
       return;
@@ -43,6 +46,7 @@ export default function Register() {
     // use backend response to show email
     navigate("/home");
   } catch (err) {
+    console.log("Error creating user account", err);
     if (err instanceof ApiError) setError(err.message);
     else setError("An unexpected error occurred. Please try again.");
   }
