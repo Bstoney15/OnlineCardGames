@@ -86,9 +86,9 @@ export const buyStoreItem = (kind, index) => {
   let body = {};
 
   if (kind === "item" || kind === "icon") {
-    body = { itemId: index };
+    body = { itemId: index, kind: "item" };
   } else if (kind === "color") {
-    body = { colorId: index };
+    body = { colorId: index, kind: "color" };
   }
 
   return request("/api/store/buy", {
