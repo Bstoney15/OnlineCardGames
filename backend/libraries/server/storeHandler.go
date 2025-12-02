@@ -15,8 +15,29 @@ type buyItemRequest struct {
 
 const lootboxCost = 50
 
-var itemCosts = []int{100, 150}
-var colorCosts = []int{80, 120}
+// Must match frontend PFP_MAP
+var itemCosts = []int{
+	100, // Airplane
+	120, // Snowflake
+	90,  // Ball
+	150, // Car
+	200, // Cat
+	110, // Chess
+	140, // Dog
+	130, // Water Droplet
+	80,  // Duck
+	95,  // Fish
+	170, // Guitar
+	125, // Kick
+	160, // Red Flower
+}
+
+// Must match frontend color list
+var colorCosts = []int{
+	100, // Gold
+	120, // Crimson
+	90,  // Emerald
+}
 
 func ensureOwnedSize(s string, index int) string {
 	for len(s) <= index {
@@ -56,6 +77,7 @@ func (s *Server) buyItemHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "bad request", http.StatusBadRequest)
 		return
 	}
+
 	if body.Index < 0 {
 		http.Error(w, "invalid index", http.StatusBadRequest)
 		return
@@ -67,7 +89,6 @@ func (s *Server) buyItemHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var cost int
 	switch body.Kind {
 	case "item":
 		if body.Index >= len(itemCosts) {
@@ -78,13 +99,14 @@ func (s *Server) buyItemHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "already owned", http.StatusBadRequest)
 			return
 		}
-		cost = itemCosts[body.Index]
+		cost := itemCosts[body.Index]
 		if account.Balance < cost {
 			http.Error(w, "insufficient funds", http.StatusBadRequest)
 			return
 		}
 		account.Balance -= cost
 		account.OwnedItems = setOwned(account.OwnedItems, body.Index)
+
 	case "color":
 		if body.Index >= len(colorCosts) {
 			http.Error(w, "invalid color index", http.StatusBadRequest)
@@ -94,22 +116,20 @@ func (s *Server) buyItemHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "already owned", http.StatusBadRequest)
 			return
 		}
-		cost = colorCosts[body.Index]
+		cost := colorCosts[body.Index]
 		if account.Balance < cost {
 			http.Error(w, "insufficient funds", http.StatusBadRequest)
 			return
 		}
 		account.Balance -= cost
 		account.OwnedColors = setOwned(account.OwnedColors, body.Index)
+
 	default:
 		http.Error(w, "invalid kind", http.StatusBadRequest)
 		return
 	}
 
-	if err := s.DB.Save(&account).Error; err != nil {
-		http.Error(w, "could not save account", http.StatusInternalServerError)
-		return
-	}
+	s.DB.Save(&account)
 
 	SendGenericResponse(w, true, http.StatusOK, map[string]any{
 		"balance": account.Balance,
@@ -142,34 +162,25 @@ func (s *Server) lootboxHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	rand.Seed(time.Now().UnixNano())
+
 	kind := "item"
 	if rand.Intn(2) == 1 {
 		kind = "color"
 	}
 
 	var index int
+
 	if kind == "item" {
-		if len(account.OwnedItems) == 0 {
-			http.Error(w, "no items defined", http.StatusBadRequest)
-			return
-		}
-		index = rand.Intn(len(account.OwnedItems))
+		index = rand.Intn(len(itemCosts))
 		account.OwnedItems = setOwned(account.OwnedItems, index)
 	} else {
-		if len(account.OwnedColors) == 0 {
-			http.Error(w, "no colors defined", http.StatusBadRequest)
-			return
-		}
-		index = rand.Intn(len(account.OwnedColors))
+		index = rand.Intn(len(colorCosts))
 		account.OwnedColors = setOwned(account.OwnedColors, index)
 	}
 
 	account.Balance -= lootboxCost
 
-	if err := s.DB.Save(&account).Error; err != nil {
-		http.Error(w, "could not save account", http.StatusInternalServerError)
-		return
-	}
+	s.DB.Save(&account)
 
 	SendGenericResponse(w, true, http.StatusOK, map[string]any{
 		"balance": account.Balance,

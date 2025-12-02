@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getPlayerStats, getUserFriends, getEquipped, getOwned } from "../lib/apiClient";
+import { getPlayerStats, getUserFriends, getEquipped, getOwned, equipItem } from "../lib/apiClient";
 import LoadingSpinner from "../components/LoadingSpinner/LoadingSpinner";
 import { PFP_MAP } from "../assets/pfps";
 import { COLOR_MAP, COLOR_NAMES } from "../assets/colors";
@@ -25,14 +25,15 @@ function UserAccount() {
                 ]);
                 setStats(statsResponse.data);
                 setFriends(friendsResponse.data);
-                //used to test if pfps are working
-                /* const mockOwned = {
-                    items: "1111111111111",
-                    colors: "111111",
-                };
-                setOwned(mockOwned);*/
+
                 setOwned(ownedResponse.data);
-                setEquipped(equippedResponse.data);
+
+                // normalize equipped data
+                setEquipped({
+                    pfp: equippedResponse.data?.item ?? equippedResponse.data?.pfp ?? null,
+                    color: equippedResponse.data?.color ?? equippedResponse.data?.equiped_color ?? null
+                });
+
                 setError(null);
             } catch (err) {
                 console.log("Error fetching User Info", err);
@@ -67,7 +68,7 @@ function UserAccount() {
 
     const ownedItems = owned?.items || "";
     const ownedColors = owned?.colors || "";
-    const equippedItem = equipped?.pfp ?? equipped?.equiped_item ?? null;
+    const equippedItem = equipped?.pfp ?? null;
     const equippedColor = equipped?.color ?? null;
 
     const itemNames = Object.keys(PFP_MAP).map(id => `Icon ${id}`);
@@ -85,19 +86,34 @@ function UserAccount() {
         name: colorNames[i] || `Color ${i+1}`
     }));
 
+    // only treat an item/color as equipped if it's actually owned
+    const safeEquippedItem =
+        equippedItem != null &&
+        ownedItemList[equippedItem] &&
+        ownedItemList[equippedItem].owned
+            ? equippedItem
+            : null;
+
+    const safeEquippedColor =
+        equippedColor != null &&
+        ownedColorList[equippedColor] &&
+        ownedColorList[equippedColor].owned
+            ? equippedColor
+            : null;
+
     return (
     <>
     <div className="flex items-start space-x-8 mt-16 ml-8 mr-8">
         <img 
-            src={equipped?.pfp !== undefined && equipped?.pfp !== null
-                ? PFP_MAP[equipped.pfp].src
+            src={safeEquippedItem !== null
+                ? PFP_MAP[safeEquippedItem].src
                 : "/src/assets/default-pfp-vice-city.png"}
             alt="User Profile Picture" 
             className="w-20 h-20 rounded-full object-cover border-6 border-gray-300" 
             style={{
                 borderColor:
-                    equipped?.color !== undefined && equipped?.color !== null
-                        ? COLOR_MAP[equipped.color]
+                    safeEquippedColor !== null
+                        ? COLOR_MAP[safeEquippedColor]
                         : "gray",
                 borderStyle: "solid",
             }}
@@ -170,11 +186,14 @@ function UserAccount() {
                             key={item.id} 
                             className="flex flex-col items-center cursor-pointer"
                             onClick={async () => {
+
                                 const updated = {
                                     ...equipped,
                                     pfp: item.id,
-                                    equiped_item: item.id,
                                 };
+
+                                // SAVE TO BACKEND
+                                await equipItem(item.id, null);
 
                                 setEquipped(updated);
                             }}
@@ -183,7 +202,7 @@ function UserAccount() {
                                     src={PFP_MAP[item.id].src}
                                     alt={item.name}
                                     className={`w-20 h-20 rounded-full object-cover border-4 ${
-                                        equipped?.pfp === item.id ? "border-[var(--vice-pink-rich)]" : "border-gray-400"
+                                        safeEquippedItem === item.id ? "border-[var(--vice-pink-rich)]" : "border-gray-400"
                                     }`}
                                 />
                             </div>
@@ -198,20 +217,22 @@ function UserAccount() {
                                     key={color.id}
                                     className="flex flex-col items-center cursor-pointer"
                                     onClick={async () => {
+
                                         const updated = {
                                             ...equipped,
                                             color: color.id,
-                                            equiped_color: color.id,
                                         };
+
+                                        // SAVE TO BACKEND
+                                        await equipItem(null, color.id);
 
                                         setEquipped(updated);
                                     }}
                                 >
                                     <div
                                         className={`w-10 h-10 rounded-full border-4 ${
-                                            equipped?.color === color.id
-                                                ? "border-[var(--vice-pink-rich)]"
-                                                : "border-gray-400"
+                                            safeEquippedColor === color.id
+                                                ? "border-[var(--vice-pink-rich)]" : "border-gray-400"
                                         }`}
                                         style={{
                                             backgroundColor: COLOR_MAP[color.id]
@@ -223,10 +244,10 @@ function UserAccount() {
                         <div className="mt-4">
                             <p><strong><u>Equipped:</u></strong></p>
                             <p>
-                                Item: {equippedItem != null ? PFP_MAP[equippedItem].name : "None"}
+                                Item: {safeEquippedItem != null ? PFP_MAP[safeEquippedItem].name : "None"}
                             </p>
                             <p>
-                                Color: {equippedColor != null ? COLOR_NAMES[equippedColor] : "None"}
+                                Color: {safeEquippedColor != null ? COLOR_NAMES[safeEquippedColor] : "None"}
                             </p>
                         </div>
                     </div>
@@ -241,7 +262,7 @@ function UserAccount() {
                 </div>
             </div>
         </div>
-        </>
+    </>
     );
 }
 

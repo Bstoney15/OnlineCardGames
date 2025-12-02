@@ -9,14 +9,12 @@ import {
 } from "/src/lib/apiClient";
 import NavBar from "/src/components/navbar/navbar.jsx";
 
-const ICONS = [
-  { id: 0, name: "Icon 1", price: 100 },
-  { id: 1, name: "Icon 2", price: 150 },
-];
+import ICONS from "/src/assets/pfps/index.js";
 
 const COLORS = [
-  { id: 0, name: "Color 1", price: 80 },
-  { id: 1, name: "Color 2", price: 120 },
+  { id: 0, name: "Gold", price: 100, hex: "#FFD700" },
+  { id: 1, name: "Crimson", price: 120, hex: "#DC143C" },
+  { id: 2, name: "Emerald", price: 90, hex: "#50C878" },
 ];
 
 function parseOwned(raw, count) {
@@ -129,6 +127,10 @@ export default function Store() {
     }
 
     try {
+        if (kind === "icon") {
+            kind = "item";
+        }
+        
       const res = await buyStoreItem(kind, index);
       if (!res?.success) {
         setError(res?.error || "Purchase failed");
@@ -233,14 +235,20 @@ export default function Store() {
                 key={icon.id}
                 className="border border-cyan-400/60 rounded-xl p-4 flex flex-col items-center bg-black/30"
               >
+                <img
+                  src={icon.src}
+                  alt={icon.name}
+                  className="w-24 h-24 rounded-full object-cover mb-2"
+                />
                 <span className="mb-1">{icon.name}</span>
                 <span className="mb-3">${icon.price}</span>
+
                 {ownedIcons[idx] ? (
                   <span className="text-green-400 text-sm">Owned</span>
                 ) : (
                   <button
                     type="button"
-                    onClick={() => handleBuy("icon", icon.id)}
+                    onClick={() => handleBuy("item", icon.id)}
                     className="btn-cyan-glow"
                   >
                     Buy

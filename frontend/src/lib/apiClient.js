@@ -5,9 +5,6 @@ export class ApiError extends Error {
   }
 }
 
-// In development, Vite proxy will forward /api requests to localhost:8080
-// In production, use the same origin (your deployed backend)
-
 async function request(path, options = {}) {
   const res = await fetch(`${path}`, {
     ...options,
@@ -80,18 +77,37 @@ export const getUserInformation = () => request("/api/user-info");
 
 export const getUserFriends = () => request("/api/user-friends");
 
-// Henry's backend uses exact these routes:
+// Henry's backend uses exactly these routes:
 export const getOwned = () => request("/api/get-owned");
 export const getEquipped = () => request("/api/get-equipped");
 
-// Buy item or color
-export const buyStoreItem = (kind, index) =>
-  request("/api/store/buy", {
+// Buy item or color – send itemId / colorId so backend knows what to update
+export const buyStoreItem = (kind, index) => {
+  let body = {};
+
+  if (kind === "item" || kind === "icon") {
+    body = { itemId: index };
+  } else if (kind === "color") {
+    body = { colorId: index };
+  }
+
+  return request("/api/store/buy", {
     method: "POST",
-    body: JSON.stringify({ kind, index }),
+    body: JSON.stringify(body),
   });
+};
 
 export const getItems = () => request("/api/items");
+
+// Equip item or color
+export const equipItem = (itemId, colorId) =>
+  request("/api/equip", {
+    method: "POST",
+    body: JSON.stringify({
+      itemId: itemId !== null ? itemId : undefined,
+      colorId: colorId !== null ? colorId : undefined,
+    }),
+  });
 
 // Lootbox
 export const openLootbox = () =>

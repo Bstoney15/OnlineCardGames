@@ -34,5 +34,6 @@ func (s *Server) setupRoutes() {
 	s.Router.HandleFunc("/api/get-owned", s.getOwnedHandler)
 	s.Router.HandleFunc("/api/store/buy", s.buyItemHandler)
 	s.Router.HandleFunc("/api/store/lootbox", s.lootboxHandler)
+	s.Router.HandleFunc("/api/equip", s.equipHandler)
 
 }
