@@ -1,5 +1,20 @@
+/**
+ * BalanceDisplay component for showing the user's current balance.
+ * Displays animated change indicators when the balance increases or decreases.
+ *
+ * @author Benjamin Stonestreet
+ * @date 2025-11-09
+ */
+
 import { useState, useEffect, useRef } from 'react';
 
+/**
+ * BalanceDisplay - Renders the user's balance with animated change notifications.
+ * Shows a green or red indicator that fades up when balance changes.
+ * @param {Object} props - Component props
+ * @param {number} props.balance - The current balance amount to display
+ * @returns {JSX.Element} The balance display component
+ */
 const BalanceDisplay = ({ balance = 0 }) => {
   const prevBalanceRef = useRef(balance);
   const [change, setChange] = useState(null); // { amount: number, isPositive: boolean }

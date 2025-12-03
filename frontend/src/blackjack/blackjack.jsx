@@ -1,3 +1,12 @@
+/**
+ * Blackjack game component that manages the main game interface.
+ * Handles WebSocket connections, game state management, and user interactions
+ * for playing blackjack including betting, hitting, standing, and doubling down.
+ *
+ * @author Benjamin Stonestreet
+ * @date 2025-11-18
+ */
+
 import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import BlackjackWebSocket from "./blackjackWebSocket";
@@ -6,6 +15,11 @@ import ActionBar from "../components/actionBar/actionBar";
 import BalanceDisplay from "../components/balanceDisplay/balanceDisplay";
 
 
+/**
+ * Blackjack - Main game component for the blackjack game interface.
+ * Establishes WebSocket connection, manages game state, and renders the game UI.
+ * @returns {JSX.Element} The blackjack game interface
+ */
 function Blackjack() {
   const { id } = useParams(); // Get the lobby id from the URL path
   const navigate = useNavigate();

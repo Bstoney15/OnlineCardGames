@@ -1,3 +1,16 @@
+/**
+ * API client module for making HTTP requests to the backend server.
+ * Provides functions for authentication, user management, game lobbies,
+ * currency operations, player statistics, and store interactions.
+ *
+ * @author Multiple Contributors
+ * @date 2025-10-13
+ */
+
+/**
+ * Custom error class for API-related errors.
+ * Includes HTTP status code for error handling.
+ */
 export class ApiError extends Error {
   constructor(message, status) {
     super(message);

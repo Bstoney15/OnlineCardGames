@@ -1,10 +1,17 @@
+// Package server provides HTTP handlers and server functionality for the card games application.
+// This file contains the handler for user logout operations.
+//
+// Author: Benjamin Stonestreet
+// Date: 2025-11-06
 package server
 
 import (
 	"net/http"
 )
 
-// logoutHandler handles user logout by invalidating the session token.
+// logoutHandler handles user logout requests by invalidating the session.
+// It extracts the session ID from the cookie, removes the session from the
+// session manager, and clears the session cookie from the client's browser.
 func (s *Server) logoutHandler(w http.ResponseWriter, r *http.Request) {
 	// Extract the session token from the request (e.g., from headers or cookies).
 	cookie, err := r.Cookie("sessionId")

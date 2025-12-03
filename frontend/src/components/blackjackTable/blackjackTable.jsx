@@ -1,7 +1,26 @@
+/**
+ * BlackjackTable component that renders the visual game table.
+ * Displays the dealer's hand, player positions arranged in an arc,
+ * and bet chips for each player.
+ *
+ * @author Benjamin Stonestreet
+ * @date 2025-11-20
+ */
+
 import tableImage from '../../assets/bjTable.png';
 import Hand from '../hand/hand';
 import PlayerInfo from '../playerInfo/playerInfo';
 
+/**
+ * BlackjackTable - Renders the blackjack game table with dealer and player positions.
+ * @param {Object} props - Component props
+ * @param {Array} props.dealerHand - Array of card objects for the dealer's hand
+ * @param {Array} props.players - Array of player objects with their game state
+ * @param {boolean} props.showDealer - Whether to display the dealer's hand
+ * @param {number} props.currentTurnId - ID of the player whose turn it is
+ * @param {React.ReactNode} props.children - Optional child elements to render
+ * @returns {JSX.Element} The blackjack table component
+ */
 function BlackjackTable({ dealerHand = [], players = [], showDealer = true, currentTurnId = -1, children }) {
   // Position styles for each player slot - arc shape with ends highest
   const playerPositionStyles = [
