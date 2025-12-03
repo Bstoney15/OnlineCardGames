@@ -1,6 +1,12 @@
+// Author: Abdelrahman Zeidan
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { getActivePlayers, getUserInformation, getCurrency, logoutUser } from "/src/lib/apiClient";
+import {
+    getActivePlayers,
+    getUserInformation,
+    getCurrency,
+    logoutUser
+} from "/src/lib/apiClient";
 
 function NavBar() {
     const [activePlayers, setActivePlayers] = useState(0);
@@ -10,12 +16,13 @@ function NavBar() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    // hide navbar on login / register / blackjack pages
+    // Hides the navbar on pages where it shouldn't appear
     const hideRoutes = ["/login", "/register", "/blackjack"];
-    if (hideRoutes.some((r) => location.pathname.startsWith(r))) {
+    if (hideRoutes.some(r => location.pathname.startsWith(r))) {
         return null;
     }
 
+    // Loads username, balance, and active player count
     useEffect(() => {
         async function fetchData() {
             const activePlayersRes = await getActivePlayers();
@@ -32,10 +39,10 @@ function NavBar() {
                 );
             }
         }
-
         fetchData();
     }, []);
 
+    // Logs the user out and returns them to login page
     async function handleLogout() {
         await logoutUser();
         navigate("/login");
@@ -45,7 +52,7 @@ function NavBar() {
         <nav className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-md border-b border-white/10 shadow-[0_0_20px_rgba(0,255,255,0.3)]">
             <div className="flex justify-between items-center px-6 py-3 max-w-7xl mx-auto">
 
-                {/* LEFT - Logo & Username */}
+                {/* App title and user info */}
                 <div className="flex items-center space-x-6">
                     <h1
                         className="text-xl font-bold text-[var(--vice-cyan)] [text-shadow:0_0_10px_var(--vice-cyan)] cursor-pointer"
@@ -56,6 +63,7 @@ function NavBar() {
 
                     {username && (
                         <div className="flex items-center space-x-4">
+                            {/* Simple profile bubble */}
                             <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[var(--vice-pink)] to-[var(--vice-cyan)] p-[1px]">
                                 <div className="w-full h-full rounded-full bg-[var(--vice-night)] flex items-center justify-center">
                                     <span className="text-xs font-bold text-[var(--vice-cyan)]">
@@ -64,6 +72,7 @@ function NavBar() {
                                 </div>
                             </div>
 
+                            {/* Username + balance */}
                             <div className="hidden sm:flex flex-col">
                                 <span className="text-sm text-white/90">{username}</span>
                                 <span className="text-xs text-[var(--vice-yellow-gold)] font-semibold [text-shadow:0_0_5px_var(--vice-yellow-gold)]">
@@ -74,7 +83,7 @@ function NavBar() {
                     )}
                 </div>
 
-                {/* CENTER - Navigation Buttons */}
+                {/* Navigation links */}
                 <div className="hidden sm:flex items-center space-x-6 text-white/90">
                     <Link to="/home" className="hover:text-cyan-300">Home</Link>
                     <Link to="/store" className="hover:text-cyan-300">Store</Link>
@@ -82,7 +91,7 @@ function NavBar() {
                     <Link to="/leaderboard" className="hover:text-cyan-300">Leaderboard</Link>
                 </div>
 
-                {/* RIGHT - Active Players + Logout */}
+                {/* Active players + logout */}
                 <div className="flex items-center space-x-4">
 
                     <div className="flex items-center space-x-2">

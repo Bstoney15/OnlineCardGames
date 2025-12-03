@@ -1,3 +1,4 @@
+// Author: Abdelrahman Zeidan
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -9,30 +10,25 @@ import {
 } from "/src/lib/apiClient";
 import NavBar from "/src/components/navbar/navbar.jsx";
 
+// Base icon list (local version used before switching to full PFP map)
 const ICONS = [
   { id: 0, name: "Icon 1", price: 100 },
   { id: 1, name: "Icon 2", price: 150 },
 ];
 
+// Base color list
 const COLORS = [
   { id: 0, name: "Color 1", price: 80 },
   { id: 1, name: "Color 2", price: 120 },
 ];
 
+// Converts backend-owned string into boolean array
 function parseOwned(raw, count) {
   if (!raw) return Array(count).fill(false);
-
-  if (Array.isArray(raw)) {
-    return raw.slice(0, count).map((x) => !!x);
-  }
-
+  if (Array.isArray(raw)) return raw.slice(0, count).map(x => !!x);
   if (typeof raw === "string") {
-    return raw
-      .split("")
-      .slice(0, count)
-      .map((ch) => ch === "1");
+    return raw.split("").slice(0, count).map(ch => ch === "1");
   }
-
   return Array(count).fill(false);
 }
 
@@ -41,7 +37,7 @@ export default function Store() {
   const [amount, setAmount] = useState("");
   const [ownedIcons, setOwnedIcons] = useState(Array(ICONS.length).fill(false));
   const [ownedColors, setOwnedColors] = useState(
-    Array(COLORS.length).fill(false),
+    Array(COLORS.length).fill(false)
   );
   const [msg, setMsg] = useState("");
   const [error, setError] = useState("");
@@ -49,6 +45,7 @@ export default function Store() {
 
   const navigate = useNavigate();
 
+  // Loads user currency and owned items/colors
   useEffect(() => {
     async function init() {
       try {
@@ -58,13 +55,9 @@ export default function Store() {
         ]);
 
         if (currencyRes?.success && currencyRes?.data) {
-          const data = currencyRes.data;
+          const d = currencyRes.data;
           const bal =
-            data.balance ??
-            data.Balance ??
-            data.currentBalance ??
-            data.currency ??
-            0;
+            d.balance ?? d.Balance ?? d.currentBalance ?? d.currency ?? 0;
           setBalance(bal);
         }
 
@@ -72,13 +65,12 @@ export default function Store() {
           setOwnedIcons(parseOwned(ownedRes.data.items, ICONS.length));
           setOwnedColors(parseOwned(ownedRes.data.colors, COLORS.length));
         }
-      } catch (e) {
+      } catch {
         setError("Failed to load store data");
       } finally {
         setLoading(false);
       }
     }
-
     init();
   }, []);
 
@@ -87,6 +79,7 @@ export default function Store() {
     setError("");
   }
 
+  // Adds credits to balance
   async function handleAddCurrency(e) {
     e.preventDefault();
     clearMessages();
@@ -100,12 +93,9 @@ export default function Store() {
     try {
       const res = await addCurrency(value);
       if (res?.success && res?.data) {
-        const newBalance =
-          res.data.balance ??
-          res.data.Balance ??
-          res.data.currentBalance ??
-          0;
-        setBalance(newBalance);
+        const d = res.data;
+        const newBal = d.balance ?? d.Balance ?? d.currentBalance ?? 0;
+        setBalance(newBal);
         setMsg("Currency added");
         setAmount("");
       } else {
@@ -116,6 +106,7 @@ export default function Store() {
     }
   }
 
+  // Handles both item and color purchases
   async function handleBuy(kind, index) {
     clearMessages();
 
@@ -123,36 +114,28 @@ export default function Store() {
       setError("You already own this icon");
       return;
     }
+
     if (kind === "color" && ownedColors[index]) {
       setError("You already own this color");
       return;
     }
 
     try {
-      // terrible quick fix for icon purchase not working
-      //  (you need to pass it as kind="item", not "icon")
-      //  ( I think someone changed the name of these from item to icon )
-      if (kind === "icon"){
-        kind = "item"
-      }
+      // Converts older icon type into backend's expected type
+      if (kind === "icon") kind = "item";
+
       const res = await buyStoreItem(kind, index);
       if (!res?.success) {
         setError(res?.error || "Purchase failed");
         return;
       }
 
-      const data = res.data || {};
+      const d = res.data || {};
+      const newBal = d.balance ?? d.Balance ?? d.currentBalance ?? balance;
+      setBalance(newBal);
 
-      const newBalance =
-        data.balance ?? data.Balance ?? data.currentBalance ?? balance;
-      setBalance(newBalance);
-
-      if (data.items) {
-        setOwnedIcons(parseOwned(data.items, ICONS.length));
-      }
-      if (data.colors) {
-        setOwnedColors(parseOwned(data.colors, COLORS.length));
-      }
+      if (d.items) setOwnedIcons(parseOwned(d.items, ICONS.length));
+      if (d.colors) setOwnedColors(parseOwned(d.colors, COLORS.length));
 
       setMsg("Purchase complete");
     } catch {
@@ -160,6 +143,7 @@ export default function Store() {
     }
   }
 
+  // Lootbox logic: random item or color
   async function handleLootbox() {
     clearMessages();
 
@@ -170,21 +154,15 @@ export default function Store() {
         return;
       }
 
-      const data = res.data || {};
+      const d = res.data || {};
+      const newBal = d.balance ?? d.Balance ?? d.currentBalance ?? balance;
+      setBalance(newBal);
 
-      const newBalance =
-        data.balance ?? data.Balance ?? data.currentBalance ?? balance;
-      setBalance(newBalance);
+      if (d.items) setOwnedIcons(parseOwned(d.items, ICONS.length));
+      if (d.colors) setOwnedColors(parseOwned(d.colors, COLORS.length));
 
-      if (data.items) {
-        setOwnedIcons(parseOwned(data.items, ICONS.length));
-      }
-      if (data.colors) {
-        setOwnedColors(parseOwned(data.colors, COLORS.length));
-      }
-
-      if (typeof data.index === "number" && data.kind) {
-        setMsg(`You received ${data.kind} #${data.index + 1}`);
+      if (typeof d.index === "number" && d.kind) {
+        setMsg(`You received ${d.kind} #${d.index + 1}`);
       } else {
         setMsg("Loot box opened");
       }
@@ -207,16 +185,18 @@ export default function Store() {
   return (
     <>
       <NavBar />
+
       <div className="min-h-screen flex flex-col items-center pt-24 text-white">
         <h1 className="text-3xl mb-2">Store</h1>
         <p className="mb-6">Balance: ${balance}</p>
 
-        {/* Currency section */}
+        {/* Add currency section */}
         <form
           onSubmit={handleAddCurrency}
           className="mb-10 flex flex-col items-center space-y-3"
         >
           <span className="text-lg">Add Credits</span>
+
           <input
             type="number"
             min="1"
@@ -225,14 +205,16 @@ export default function Store() {
             className="px-3 py-2 rounded bg-black/40 border border-cyan-400 outline-none"
             placeholder="Amount"
           />
+
           <button type="submit" className="btn-cyan-glow">
             Add to Balance
           </button>
         </form>
 
-        {/* Icons */}
+        {/* Item section */}
         <section className="mb-8 w-full max-w-3xl px-4">
           <h2 className="text-xl mb-4">Icons</h2>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {ICONS.map((icon, idx) => (
               <div
@@ -241,6 +223,7 @@ export default function Store() {
               >
                 <span className="mb-1">{icon.name}</span>
                 <span className="mb-3">${icon.price}</span>
+
                 {ownedIcons[idx] ? (
                   <span className="text-green-400 text-sm">Owned</span>
                 ) : (
@@ -257,9 +240,10 @@ export default function Store() {
           </div>
         </section>
 
-        {/* Colors */}
+        {/* Color section */}
         <section className="mb-10 w-full max-w-3xl px-4">
           <h2 className="text-xl mb-4">Colors</h2>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {COLORS.map((color, idx) => (
               <div
@@ -268,6 +252,7 @@ export default function Store() {
               >
                 <span className="mb-1">{color.name}</span>
                 <span className="mb-3">${color.price}</span>
+
                 {ownedColors[idx] ? (
                   <span className="text-green-400 text-sm">Owned</span>
                 ) : (
@@ -284,9 +269,10 @@ export default function Store() {
           </div>
         </section>
 
-        {/* Loot box */}
+        {/* Lootbox section */}
         <section className="mb-6">
           <h2 className="text-xl mb-3">Loot box</h2>
+
           <button
             type="button"
             onClick={handleLootbox}
@@ -296,6 +282,7 @@ export default function Store() {
           </button>
         </section>
 
+        {/* Messages */}
         {error && <p className="text-red-400 mt-2">{error}</p>}
         {msg && <p className="text-green-400 mt-2">{msg}</p>}
 

@@ -1,3 +1,4 @@
+// Author: Abdelrahman Zeidan
 package server
 
 import (
@@ -19,25 +20,29 @@ type RegisterResponse struct {
 	Balance int    `json:"balance"`
 }
 
-// registerHandler creates a new user account
+// Handles creating a new user account
 func (s *Server) registerHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost { // can be set in the router and probably should be
+	// Ensures the route only accepts POST
+	if r.Method != http.MethodPost {
 		SendGenericResponse(w, false, http.StatusMethodNotAllowed, "method not allowed")
 		return
 	}
 
+	// Reads the incoming JSON request
 	var req RegisterRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		SendGenericResponse(w, false, http.StatusBadRequest, "invalid request")
 		return
 	}
 
+	// Hashes the user's password before saving
 	hashed, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
 		SendGenericResponse(w, false, http.StatusInternalServerError, "error creating user")
 		return
 	}
 
+	// Builds the account model that will be stored in the database
 	account := models.Account{
 		Email:        req.Email,
 		PasswordHash: string(hashed),
@@ -45,6 +50,7 @@ func (s *Server) registerHandler(w http.ResponseWriter, r *http.Request) {
 		Username:     req.Username,
 	}
 
+	// Attempts to write the new account to the database
 	if err := s.DB.Create(&account).Error; err != nil {
 		SendGenericResponse(w, false, http.StatusConflict, "email already exists")
 		return
@@ -52,13 +58,16 @@ func (s *Server) registerHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("Created new user: %s", account.Email)
 
+	// Builds the response returned after registration
 	res := RegisterResponse{
 		Email:   account.Email,
 		Balance: account.Balance,
 	}
 
+	// Creates a session cookie for the new user
 	cookie := createCookie(s.SM.Create(account.ID))
 	http.SetCookie(w, cookie)
 
+	// Sends success response
 	SendGenericResponse(w, true, http.StatusCreated, res)
 }

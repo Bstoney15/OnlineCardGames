@@ -1,3 +1,4 @@
+// Author: Abdelrahman Zeidan
 package server
 
 import (
@@ -15,9 +16,11 @@ type buyItemRequest struct {
 
 const lootboxCost = 50
 
+// Cost lists for items and colors
 var itemCosts = []int{100, 150}
 var colorCosts = []int{80, 120}
 
+// Ensures the owned string is long enough to store a new index
 func ensureOwnedSize(s string, index int) string {
 	for len(s) <= index {
 		s += "_"
@@ -25,6 +28,7 @@ func ensureOwnedSize(s string, index int) string {
 	return s
 }
 
+// Checks whether the user owns a given item or color
 func ownedAt(s string, index int) bool {
 	if index < 0 || index >= len(s) {
 		return false
@@ -32,6 +36,7 @@ func ownedAt(s string, index int) bool {
 	return s[index] == '1'
 }
 
+// Marks an item or color as owned
 func setOwned(s string, index int) string {
 	s = ensureOwnedSize(s, index)
 	b := []byte(s)
@@ -39,6 +44,7 @@ func setOwned(s string, index int) string {
 	return string(b)
 }
 
+// Handles purchasing items and colors
 func (s *Server) buyItemHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
@@ -68,7 +74,9 @@ func (s *Server) buyItemHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var cost int
+
 	switch body.Kind {
+
 	case "item":
 		if body.Index >= len(itemCosts) {
 			http.Error(w, "invalid item index", http.StatusBadRequest)
@@ -85,6 +93,7 @@ func (s *Server) buyItemHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		account.Balance -= cost
 		account.OwnedItems = setOwned(account.OwnedItems, body.Index)
+
 	case "color":
 		if body.Index >= len(colorCosts) {
 			http.Error(w, "invalid color index", http.StatusBadRequest)
@@ -101,6 +110,7 @@ func (s *Server) buyItemHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		account.Balance -= cost
 		account.OwnedColors = setOwned(account.OwnedColors, body.Index)
+
 	default:
 		http.Error(w, "invalid kind", http.StatusBadRequest)
 		return
@@ -118,6 +128,7 @@ func (s *Server) buyItemHandler(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// Handles lootbox purchases and random rewards
 func (s *Server) lootboxHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
@@ -142,12 +153,14 @@ func (s *Server) lootboxHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	rand.Seed(time.Now().UnixNano())
+
 	kind := "item"
 	if rand.Intn(2) == 1 {
 		kind = "color"
 	}
 
 	var index int
+
 	if kind == "item" {
 		if len(account.OwnedItems) == 0 {
 			http.Error(w, "no items defined", http.StatusBadRequest)
