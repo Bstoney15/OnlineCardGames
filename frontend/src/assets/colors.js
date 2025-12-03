@@ -1,3 +1,8 @@
+/**
+ * created by Mya Hoersdig
+ * color map for the pfps colors 
+ */
+
 export const COLOR_MAP = {
     0: "gray",      // default / none
     1: "#ef4444",   // red-500

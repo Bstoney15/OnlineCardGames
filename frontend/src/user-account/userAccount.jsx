@@ -74,12 +74,14 @@ function UserAccount() {
     const itemNames = Object.keys(PFP_MAP).map(id => `Icon ${id}`);
     const colorNames = Object.keys(COLOR_MAP).map(id => `Color ${id}`);
 
+    //function to convert owned items map into a list
     const ownedItemList = ownedItems.split("").map((c, i) => ({
         id: i,
         owned: c === "1",
         name: itemNames[i] || `Item ${i+1}`
     }));
 
+    //function to convert owned colors into a list
     const ownedColorList = ownedColors.split("").map((c, i) => ({
         id: i,
         owned: c === "1",
@@ -177,6 +179,13 @@ function UserAccount() {
 
                 )}
             </div>
+            {/*
+            profile customization
+            created by Mya Hoersdig
+
+            this div block contains all UI related to the showing and equipping of pfps
+            sends data back to the backend regarding equipped items ensuring the users chosen pfp stays the same if they log out
+            */}
             <div className="flex-1">
                 <strong><u>Owned Profile Pictures:</u></strong>
 

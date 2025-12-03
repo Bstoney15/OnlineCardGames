@@ -1,3 +1,9 @@
+/**
+ * Profile picture map
+ * Created by Mya Hoersdig
+ * each pfp entry contains path, name of image, and price of item
+ */
+
 export const PFP_MAP = {
   0: { src: "/src/assets/pfps/airplane.jpg", name: "Airplane", price: 100, },
   1: { src: "/src/assets/pfps/snowflake.jpg", name: "Snowflake", price: 120, },
