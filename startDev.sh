@@ -1,4 +1,9 @@
 #!/bin/bash
+# 
+# Description: Bash script that launches the server
+# 
+# Author: Multiple Contributors
+# Date: 2025-10-15
 set -e
 
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)

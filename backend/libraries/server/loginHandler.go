@@ -1,3 +1,8 @@
+// Package server provides HTTP handlers and server functionality for login
+// This file contains the handler for loggin in a user
+//
+// Author: Benjamin Stonestreet
+// Date: 2025-10-22
 package server
 
 import (

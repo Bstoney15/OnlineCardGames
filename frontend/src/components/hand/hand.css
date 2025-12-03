@@ -1,3 +1,10 @@
+/*
+* File contains style information for hand
+*
+* Author: Benjamin Stonestreet
+* Date: 2025-11-11
+*
+*/
 .hand {
   display: flex;
   align-items: center;

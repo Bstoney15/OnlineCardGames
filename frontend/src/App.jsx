@@ -1,4 +1,8 @@
-//import { useState } from 'react';
+// File contains react for ??
+//
+// Author: Multiple Contributors
+// Date: 2025-10-23
+
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { checkAuth } from '/src/lib/apiClient.js';

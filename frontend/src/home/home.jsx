@@ -1,9 +1,15 @@
+// File contains react for displaying the home screen
+//
+// Author: Multiple Contributors
+// Date: 2025-10-28
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import UserTicker from "./userticker";
 import NavBar from "../components/navbar/navbar.jsx";
 import { joinLobby as joinLobbyAPI } from "../lib/apiClient.js";
 
+// React function that creates the home screen
 function Home() {
   const [selectedGame, setSelectedGame] = useState(null);
   const [isJoining, setIsJoining] = useState(false);

@@ -64,30 +64,35 @@ export const checkAuth = () => request("/api/auth");
 
 export const getPlayerStats = () => request("/api/player-stats");
 
+// Function for getting the top 5 accounts ordered by balance
 export const getLeaderBoardBalance = () =>
   request("/api/leaderboard-stats", {
     method: "POST",
     body: JSON.stringify({ field: "Balance" }),
   });
 
+// Function for getting the top 5 accounts ordered by wagers won
 export const getLeaderBoardWagersWon = () =>
   request("/api/leaderboard-stats", {
     method: "POST",
     body: JSON.stringify({ field: "Wagers_Won" }),
   });
 
+// Function for getting the top 5 accounts ordered by wagers lost
 export const getLeaderBoardWagersLost = () =>
   request("/api/leaderboard-stats", {
     method: "POST",
     body: JSON.stringify({ field: "Wagers_Lost" }),
   });
 
+// Function for getting the top 5 accounts ordered by amount won
 export const getLeaderBoardAmountWon = () =>
   request("/api/leaderboard-stats", {
     method: "POST",
     body: JSON.stringify({ field: "Amount_Won" }),
   });
 
+// Function for getting the top 5 accounts ordered by wagers placed
 export const getLeaderBoardWagersPlaced = () =>
   request("/api/leaderboard-stats", {
     method: "POST",
@@ -108,8 +113,6 @@ export const buyStoreItem = (kind, index) =>
     method: "POST",
     body: JSON.stringify({ kind, index }),
   });
-
-export const getItems = () => request("/api/items");
 
 // Lootbox
 export const openLootbox = () =>

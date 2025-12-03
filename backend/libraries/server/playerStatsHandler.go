@@ -4,7 +4,7 @@ Description: Handles calls from the frontend for player stats through the player
 
 	Also handles requests for the leaderboard stats.
 
-Created By: Ryan Grimsley
+Authors: Ryan Grimsley, Henry Michael Hoopes
 Date Created: 11/03/25
 */
 package server
@@ -217,6 +217,7 @@ func (s *Server) leaderboardStatsHandler(w http.ResponseWriter, r *http.Request)
 
 	stats := make(map[string]interface{})
 
+	//loop through accounts, adding them to stats map
 	for i := 0; i < len(accountStats); i++ {
 		stats["act"+strconv.Itoa(i)+"_balance"] = accountStats[i].Balance
 		stats["act"+strconv.Itoa(i)+"_wins"] = accountStats[i].WagersWon

@@ -1,3 +1,8 @@
+// File contains functions for creating server, migrating server, and starting server
+//
+// Author: Benjamin Stonestreet
+// Date: 2025-10-22
+
 package server
 
 import (
@@ -51,6 +56,7 @@ func NewServer() *Server {
 	return s
 }
 
+// Runs migrations
 func runMigrations(db *gorm.DB) {
 	err := db.AutoMigrate(
 		&models.Account{},

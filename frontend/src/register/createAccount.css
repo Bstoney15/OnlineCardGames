@@ -1,3 +1,10 @@
+/*
+* File contains style information for error text
+*
+* Author: Benjamin Stonestreet
+* Date: 2025-10-24
+*
+*/
 .error-text {
   color: #ff6363;
   font-size: 0.9rem;

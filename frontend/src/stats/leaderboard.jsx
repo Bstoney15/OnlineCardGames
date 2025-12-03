@@ -1,3 +1,9 @@
+// Page used to display the leaderboard of players. Displays the top 5 players in terms of
+// balance, wagers won, wagers lost, amount won, and wagers placed
+//
+// Author: Henry Michael Hoopes
+// Date: 2025-11-05
+
 import { useState, useEffect } from "react";
 import { getLeaderBoardBalance, getLeaderBoardWagersWon, getLeaderBoardWagersLost, getLeaderBoardAmountWon, getLeaderBoardWagersPlaced } from "../lib/apiClient";
 import LoadingSpinner from "../components/LoadingSpinner/LoadingSpinner.jsx";

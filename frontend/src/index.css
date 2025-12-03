@@ -1,4 +1,10 @@
-/* src/index.css */
+/*
+* File contains style information for the whole app
+*
+* Author: Benjamin Stonestreet
+* Date: 2025-10-24
+*
+*/
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
 @import "tailwindcss";
 

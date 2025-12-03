@@ -1,3 +1,8 @@
+// File contains html for ??
+//
+// Author: Benjamin Stonestreet
+// Date: 2025-10-28
+
 import Hand from '../hand/hand';
 
 const statusConfig = {

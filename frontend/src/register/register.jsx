@@ -1,10 +1,13 @@
+// File contains react for displaying the register screen
+//
+// Author: Multiple Contributors
+// Date: 2025-10-23
+
 import { useState } from "react";
 import "./createAccount.css";
 import { Link, Route } from "react-router-dom";
 import { createUser, ApiError } from "/src/lib/apiClient";
 import { useNavigate } from 'react-router-dom'
-
-
 
 export default function Register() {
   const [username, setUsername] = useState("");

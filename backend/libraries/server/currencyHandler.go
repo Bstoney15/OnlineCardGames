@@ -1,3 +1,9 @@
+// Package server provides HTTP handlers and server functionality for the dealing with currency.
+// This file contains utility functions and handelrs for adding and gettin currency.
+//
+// Author: Abdelrahman Zeidan, Connor Williamson
+// Date: 2025-11-08
+
 package server
 
 import (

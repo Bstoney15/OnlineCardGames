@@ -1,3 +1,7 @@
+// File for blackjack card
+//
+// Author: Benjamin Stonestreet
+// Date: 2025-10-24
 import './card.css'; // <-- Import your styles
 
 const Card = ({ suit = 0, rank = 0 }) => {

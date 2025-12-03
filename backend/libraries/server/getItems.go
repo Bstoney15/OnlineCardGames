@@ -1,3 +1,8 @@
+// Package server provides HTTP handlers and server functionality for dealing with items.
+// This file contains handlers for getting equipped and owned items.
+//
+// Author: Henry Michael Hoopes
+// Date: 2025-11-19
 package server
 
 import (
@@ -5,6 +10,8 @@ import (
 	"net/http"
 )
 
+
+//function for getting equipped item and color
 func (s *Server) getEquippedHandler(w http.ResponseWriter, r *http.Request) {
 	// get session cookie (same as authHandler)
 	cookie, err := r.Cookie("sessionId")
@@ -46,6 +53,7 @@ func (s *Server) getEquippedHandler(w http.ResponseWriter, r *http.Request) {
 	SendGenericResponse(w, true, 200, stats)
 }
 
+//function for getting owned items and colors
 func (s *Server) getOwnedHandler(w http.ResponseWriter, r *http.Request) {
 	// get session cookie (same as authHandler)
 	cookie, err := r.Cookie("sessionId")
