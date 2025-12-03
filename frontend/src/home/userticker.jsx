@@ -1,3 +1,15 @@
+/**
+ * userticker.jsx
+ * 
+ * created by Mya Hoersdig
+ * displays a scrolling ticker of user stats across the top of the website
+ * pulls from different leaderboard categories from the backend (balance, wagers won and lost, total amount won)
+ * and shows the top user from each category
+ * 
+ * fetches all leaderboard stats, if no stats are available a placeholder is created
+ * clicking any username should navigate to the leaderboard page
+ */
+
 import { getLeaderBoardBalance, getLeaderBoardWagersWon, getLeaderBoardWagersLost, getLeaderBoardAmountWon, getLeaderBoardWagersPlaced } from "../lib/apiClient";
 import './ticker.css'
 import { useState, useEffect } from "react";

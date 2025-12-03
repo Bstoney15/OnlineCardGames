@@ -1,3 +1,10 @@
+/*   
+created by Mya Hoersdig
+ticker scroller animation css 
+
+main container
+Wraps each scrolling line (top & bottom)
+*/
 .ticker-container {
   position: relative;
   overflow: hidden;
@@ -9,22 +16,35 @@
   padding: 0.5rem 0;
 }
 
+/*   
+moving content
+animates ticker from left -> right
+*/
 .ticker-content {
   display: inline-block;
   white-space: nowrap;
   animation: ticker-scroll 35s linear infinite;
 }
 
+/*   
+hover pause
+*/
 .ticker-container:hover .ticker-content,
 .ticker-container.reverse:hover .ticker-content {
   animation-play-state: paused;
 }
 
+/*   
+stop items when hovered over and make them bigger
+*/
 .ticker-item:hover {
   transform: scale(1.2);
   transition: transform 0.2s ease;
 }
 
+/*   
+username and score, color styling
+*/
 .ticker-item {
   display: inline-block;
   margin-right: 3rem;
@@ -39,6 +59,9 @@
   color: #ffcc00;
 }
 
+/*   
+reverse scroller
+*/
 .ticker-container.reverse .ticker-content {
   animation: ticker-scroll-reverse 35s linear infinite;
 }
