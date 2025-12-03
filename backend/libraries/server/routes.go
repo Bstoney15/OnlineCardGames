@@ -1,14 +1,17 @@
+// Package server provides HTTP handlers and server functionality for the card games application.
+// This file defines the HTTP route configuration for all API endpoints.
+//
+// Author: Multiple Contributors
+// Date: 2025-11-06
 package server
 
 // setupRoutes registers all the HTTP handlers for the server.
+// It configures routes for authentication, game lobbies, WebSocket connections,
+// currency management, player statistics, user information, and store operations.
 func (s *Server) setupRoutes() {
-	s.Router.HandleFunc("GET /api/ping", s.pingHandler)
-
 	s.Router.HandleFunc("POST /api/register", s.registerHandler)
 	s.Router.HandleFunc("POST /api/login", s.loginHandler)
 	s.Router.HandleFunc("POST /api/logout", s.logoutHandler)
-
-	s.Router.HandleFunc("GET /api/leaderboards", s.pingHandler) // needs to be implemented
 
 	// Routes that require auth go down here.
 	s.Router.HandleFunc("GET /api/auth", s.authHandler)

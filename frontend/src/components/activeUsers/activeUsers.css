@@ -1,3 +1,11 @@
+/**
+ * Styles for the ActiveUsers component.
+ * Positions and styles the active users counter display.
+ *
+ * @author Benjamin Stonestreet
+ * @date 2025-10-28
+ */
+
 .active-users-container {
   position: fixed;
   top: 0;

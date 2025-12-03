@@ -1,3 +1,8 @@
+// Package server provides HTTP handlers and server functionality for the card games application.
+// This file contains the WebSocket handler for managing blackjack game connections.
+//
+// Author: Benjamin Stonestreet
+// Date: 2025-11-06
 package server
 
 import (
@@ -8,6 +13,10 @@ import (
 	"golang.org/x/net/websocket"
 )
 
+// blackJackWSHandler handles WebSocket connections for blackjack games.
+// It authenticates the user, validates the game ID, adds the player to the game,
+// and manages bidirectional communication between the client and game instance.
+// The handler processes incoming player actions and broadcasts game state updates.
 func (s *Server) blackJackWSHandler(w http.ResponseWriter, r *http.Request) {
 	// Implementation for handling WebSocket connections for BlackJack game
 	userID, isAuth := s.checkCookie(r)

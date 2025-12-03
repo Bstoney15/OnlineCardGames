@@ -1,3 +1,11 @@
+/**
+ * Main entry point for the React frontend application.
+ * Configures the router with all application routes and renders the app.
+ *
+ * @author Multiple Contributors
+ * @date 2025-10-13
+ */
+
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import './index.css'

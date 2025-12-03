@@ -1,9 +1,18 @@
+// Package server provides HTTP handlers and server functionality for the card games application.
+// This file contains the handler for authenticating users via session cookies.
+//
+// Author: Benjamin Stonestreet
+// Date: 2025-11-06
 package server
 
 import (
 	"net/http"
 )
 
+// authHandler handles authentication requests by validating session cookies.
+// It checks for the presence of a valid session cookie, verifies the session
+// exists and is not expired, and returns the user ID if authentication succeeds.
+// Returns unauthorized status if the session is missing, invalid, or expired.
 func (s *Server) authHandler(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("sessionId")
 	if err != nil {

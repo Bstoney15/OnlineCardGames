@@ -74,5 +74,5 @@ func runMigrations(db *gorm.DB) {
 // Start runs the HTTP server on a given address.
 func (s *Server) Start(addr string) {
 	log.Printf("Server starting on %s", addr)
-	log.Fatal(http.ListenAndServe(addr, corsMiddleware(s.Router)))
+	log.Fatal(http.ListenAndServe(addr, s.Router))
 }

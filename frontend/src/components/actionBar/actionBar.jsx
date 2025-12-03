@@ -1,6 +1,31 @@
+/**
+ * ActionBar component for the blackjack game interface.
+ * Displays the dealer's hand, player's hand, and interactive controls
+ * for betting, hitting, standing, and doubling based on the current game phase.
+ *
+ * @author Benjamin Stonestreet
+ * @date 2025-11-20
+ */
+
 import React from 'react';
 import Hand from '../hand/hand';
 
+/**
+ * ActionBar - Renders the bottom action bar with game controls and hand displays.
+ * @param {Object} props - Component props
+ * @param {Array} props.dealerHand - Array of card objects representing the dealer's hand
+ * @param {Array} props.playerHand - Array of card objects representing the player's hand
+ * @param {string} props.phase - Current game phase (betting, player_turn, dealer_turn, etc.)
+ * @param {number} props.betAmount - Current bet amount selected by the player
+ * @param {Function} props.onHit - Callback when player chooses to hit
+ * @param {Function} props.onStand - Callback when player chooses to stand
+ * @param {Function} props.onBet - Callback when player clicks a chip to add to bet
+ * @param {Function} props.onDouble - Callback when player chooses to double down
+ * @param {Function} props.onClearBet - Callback to clear the current bet
+ * @param {Function} props.onPlaceBet - Callback to confirm and place the bet
+ * @param {Array} props.chipValues - Array of available chip denominations
+ * @returns {JSX.Element} The action bar component
+ */
 const ActionBar = ({
     dealerHand = [],
     playerHand = [],

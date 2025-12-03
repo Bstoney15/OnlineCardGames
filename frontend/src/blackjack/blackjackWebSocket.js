@@ -1,7 +1,18 @@
 /**
- * BlackjackWebSocket - Manages WebSocket connection for Blackjack game
+ * BlackjackWebSocket - Manages WebSocket connection for Blackjack game.
+ * Handles connection establishment, message sending/receiving, automatic
+ * reconnection with exponential backoff, and connection state management.
+ *
+ * @author Benjamin Stonestreet
+ * @date 2025-11-18
  */
 class BlackjackWebSocket {
+  /**
+   * Creates a new BlackjackWebSocket instance.
+   * @param {string} gameID - The unique identifier for the game lobby
+   * @param {Function} onMessage - Callback function invoked when a message is received
+   * @param {Function} onConnectionChange - Callback function invoked when connection status changes
+   */
   constructor(gameID, onMessage, onConnectionChange) {
     this.gameID = gameID;
     this.onMessage = onMessage;
@@ -11,6 +22,10 @@ class BlackjackWebSocket {
     this.maxReconnectAttempts = 5;
   }
 
+  /**
+   * Establishes a WebSocket connection to the game server.
+   * Automatically determines the correct protocol (ws/wss) based on the page protocol.
+   */
   connect() {
     // Determine WebSocket URL based on environment
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
@@ -50,6 +65,10 @@ class BlackjackWebSocket {
     };
   }
 
+  /**
+   * Attempts to reconnect to the WebSocket server with exponential backoff.
+   * Will retry up to maxReconnectAttempts times before giving up.
+   */
   attemptReconnect() {
     if (this.reconnectAttempts < this.maxReconnectAttempts) {
       this.reconnectAttempts++;
@@ -64,6 +83,10 @@ class BlackjackWebSocket {
     }
   }
 
+  /**
+   * Sends a message to the game server via WebSocket.
+   * @param {Object} message - The message object to send (will be JSON stringified)
+   */
   send(message) {
     if (this.ws?.readyState === WebSocket.OPEN) {
       this.ws.send(JSON.stringify(message));
@@ -73,6 +96,9 @@ class BlackjackWebSocket {
     }
   }
 
+  /**
+   * Disconnects the WebSocket connection and prevents automatic reconnection.
+   */
   disconnect() {
     if (this.ws) {
       // Prevent reconnection attempts
@@ -85,6 +111,10 @@ class BlackjackWebSocket {
     }
   }
 
+  /**
+   * Checks if the WebSocket is currently connected.
+   * @returns {boolean} True if the connection is open, false otherwise
+   */
   isConnected() {
     return this.ws?.readyState === WebSocket.OPEN;
   }
