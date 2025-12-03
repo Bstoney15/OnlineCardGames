@@ -1,8 +1,8 @@
 #!/bin/bash
 # 
-# Description: Bash script that launches the server
+# Description: Bash script that launches the dev server, works on linux and macOS.
 # 
-# Author: Multiple Contributors
+# Author: Benjamin Stonestreet
 # Date: 2025-10-15
 set -e
 

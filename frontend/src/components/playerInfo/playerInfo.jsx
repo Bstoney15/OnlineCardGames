@@ -1,10 +1,16 @@
-// File contains html for ??
-//
-// Author: Benjamin Stonestreet
-// Date: 2025-10-28
+/**
+ * PlayerInfo component that displays a player's information at the blackjack table.
+ * Shows the player's hand, profile picture, username, balance, and current game status.
+ *
+ * @author Benjamin Stonestreet
+ * @date 2025-11-025
+ */
 
 import Hand from '../hand/hand';
 
+/**
+ * Configuration object mapping player statuses to display labels and glow styles.
+ */
 const statusConfig = {
   playing: { label: '', glowClass: '' },
   busted: { label: 'BUST', glowClass: 'border-red-500 text-red-500 shadow-[0_0_10px_#ef4444] [text-shadow:0_0_5px_#ef4444]' },
@@ -16,6 +22,17 @@ const statusConfig = {
   blackjack: { label: 'BLACKJACK!', glowClass: 'border-[var(--vice-pink)] text-[var(--vice-pink)] shadow-[0_0_10px_var(--vice-pink)] [text-shadow:0_0_5px_var(--vice-pink)]' },
 };
 
+/**
+ * PlayerInfo - Displays a player's game state at the blackjack table.
+ * @param {Object} props - Component props
+ * @param {string} props.username - Player's display name
+ * @param {number} props.balance - Player's current balance
+ * @param {string} props.profilePicture - URL to player's profile picture
+ * @param {Array} props.hand - Array of card objects in the player's hand
+ * @param {boolean} props.isCurrentTurn - Whether it's this player's turn
+ * @param {string} props.status - Player's current game status
+ * @returns {JSX.Element} The player info component
+ */
 const PlayerInfo = ({
   username = 'Player',
   balance = 0,
