@@ -1,3 +1,10 @@
+/**
+ * LoadingScreenAnimation.jsx
+ * 
+ * created by Mya Hoersdig
+ * displays a splash animation when user enters the website for the first time
+ */
+
 import { useEffect, useState } from "react";
 
 function WelcomeAnimation({onComplete}) 
