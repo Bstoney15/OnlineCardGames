@@ -1,5 +1,6 @@
 // Author: Abdelrahman Zeidan
 //Date: Date: 2025-11-2
+//Description: This file contains the handlers for purchasing items and lootboxes.
 package server
 
 import (

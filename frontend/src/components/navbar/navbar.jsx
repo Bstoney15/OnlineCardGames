@@ -1,5 +1,6 @@
 // Author: Abdelrahman Zeidan
 //Date: 2025-11-23
+//description: This file contains the navigation bar component for the application.
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import {

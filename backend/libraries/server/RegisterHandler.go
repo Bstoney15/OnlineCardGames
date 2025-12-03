@@ -1,5 +1,6 @@
 // Author: Abdelrahman Zeidan
 //Date: October 22, 2025
+//Description: This file contains the handler for user registration.
 package server
 
 import (

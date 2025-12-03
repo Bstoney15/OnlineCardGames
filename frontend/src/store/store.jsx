@@ -1,5 +1,6 @@
 // Author: Abdelrahman Zeidan
 //Date: 2025-10-25
+//description: This file contains the store component for purchasing items and lootboxes.
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
